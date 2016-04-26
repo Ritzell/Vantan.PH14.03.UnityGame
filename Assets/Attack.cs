@@ -12,8 +12,8 @@ public class Attack : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		
-		if (Input.GetKeyDown(KeyCode.Joystick1Button7)) {
-			missiles[mN].GetComponent<Rigidbody>().AddForce(transform.forward * 2500f);
+		if (Input.GetKeyDown(KeyCode.Joystick1Button7)||Input.GetKeyDown(KeyCode.C)) {
+			StartCoroutine(missiles[mN].GetComponent<missile>().straight());
 		}
 		if (Input.GetKey(KeyCode.Joystick1Button6)) {
 			missiles[mN].GetComponent<Rigidbody>().AddForce(transform.forward * 2500f);

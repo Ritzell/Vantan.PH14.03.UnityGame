@@ -48,6 +48,7 @@
      <Compile Include="Assets\Attack.cs" />
      <Compile Include="Assets\PlayerMove.cs" />
      <Compile Include="Assets\engineSound.cs" />
+     <Compile Include="Assets\missile.cs" />
      <Compile Include="Assets\stage.cs" />
      <Compile Include="Assets\title.cs" />
      <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Simple.shader" />
