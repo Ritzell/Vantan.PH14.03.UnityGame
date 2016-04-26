@@ -45,12 +45,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Attack.cs" />
-     <Compile Include="Assets\PlayerMove.cs" />
-     <Compile Include="Assets\engineSound.cs" />
-     <Compile Include="Assets\missile.cs" />
-     <Compile Include="Assets\stage.cs" />
-     <Compile Include="Assets\title.cs" />
+     <Compile Include="Assets\Resources\Scripts\Attack.cs" />
+     <Compile Include="Assets\Resources\Scripts\PlayerManager.cs" />
+     <Compile Include="Assets\Resources\Scripts\PlayerMove.cs" />
+     <Compile Include="Assets\Resources\Scripts\engineSound.cs" />
+     <Compile Include="Assets\Resources\Scripts\missile.cs" />
+     <Compile Include="Assets\Resources\Scripts\stage.cs" />
+     <Compile Include="Assets\Resources\Scripts\title.cs" />
      <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Simple.shader" />
      <None Include="Assets\Standard Assets\Environment\Water (Basic)\Shaders\FXWaterBasic.shader" />
      <None Include="Assets\sky5X\README.txt" />
