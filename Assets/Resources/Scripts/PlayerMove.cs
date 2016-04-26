@@ -19,7 +19,7 @@ public class PlayerMove : MonoBehaviour {
 
 		//myCamera.transform.LookAt(look.transform);
 		transform.Translate (Vector3.forward * Time.deltaTime * speed);
-		transform.Rotate (mX/2, 0f, mY*3);
+		transform.Rotate (mX/1.5f, 0f, mY*2.5f);
 
 		if (Input.GetKey(KeyCode.Joystick1Button13)) {
 			Speed= -1f;

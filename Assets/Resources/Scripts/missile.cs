@@ -2,12 +2,17 @@
 using System.Collections;
 
 public class missile : MonoBehaviour {
+	public AudioClip audioClip1;
+	public AudioClip audioClip2;
 	private float speed = 500f;
 	private Vector3 startPos;
 	private Quaternion startRot;
 	private static Transform root;
+	private AudioSource audioSource;
 
 	void Start () {
+		audioSource = gameObject.GetComponent<AudioSource>();
+		audioSource.clip = audioClip1;
 		startPos = transform.localPosition;
 		startRot = transform.localRotation;
 		root = GameObject.Find ("missiles").transform;
@@ -16,7 +21,7 @@ public class missile : MonoBehaviour {
 	// Update is called once per frame
 
 	public IEnumerator straight(){
-		
+		audioSource.Play ();
 		StartCoroutine (reloadMissile());
 		float timer = 0f;
 		transform.parent = null;
