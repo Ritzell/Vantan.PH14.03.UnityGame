@@ -5,7 +5,7 @@ public class missile : MonoBehaviour {
 	public AudioClip audioClip1;
 	public AudioClip audioClip2;
 	private AudioSource audioS;
-	private float speed = 500f;
+	private float speed = 850f;//時速3000km
 	private Vector3 startPos;
 	private Quaternion startRot;
 	public static Transform root;
@@ -17,19 +17,12 @@ public class missile : MonoBehaviour {
 		startRot = transform.localRotation;
 		root = GameObject.Find ("missiles").transform;
 	}
-	
-	// Update is called once per frame
 
 	public IEnumerator straight(){
 		StartCoroutine (GameManager.reloadMissile(gameObject.name,startPos,startRot));
 		transform.parent = null;
         audioS.Play();
-        for (float timer = 0f; timer < 0.1f;timer += Time.deltaTime)
-        {
-            transform.Translate(0, -0.1f, 0);
-            yield return null;
-        }
-        while (true){
+		while (!GameManager.GameOver){
             try
             {
                 transform.Translate(Vector3.back * Time.deltaTime * speed);
@@ -48,6 +41,4 @@ public class missile : MonoBehaviour {
 		yield return new WaitForSeconds (3);
 		Destroy (gameObject);
 	}
-
-
 }

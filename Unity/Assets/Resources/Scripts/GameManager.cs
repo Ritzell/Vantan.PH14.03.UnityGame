@@ -39,6 +39,5 @@ public class GameManager : MonoBehaviour {
             Timetext.text = (time.Minutes.ToString("D2") + ":" + time.Seconds.ToString("D2"));
             yield return null;
         }
-        yield return null;
     }
 }

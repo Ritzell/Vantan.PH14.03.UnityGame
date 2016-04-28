@@ -3,27 +3,25 @@ using System.Collections;
 
 public class engineSound : MonoBehaviour {
 	AudioSource audio;
-	private float pitch = 1;
 	// Use this for initialization
 	void Start () {
 		audio = GetComponent<AudioSource> ();
-		audio.pitch = pitch;
+		audio.pitch = audio.pitch;
 	}
 
 	public float Pitch{
 		set{
-			float v = (value - 80f)*0.01f;
-			if (pitch <= 3 && pitch >= 0.75f) {
-				pitch = v + 1;
-				if (pitch > 3) {
-					pitch = 3;
-				} else if (pitch < 0.75f) {
-					pitch = 0.75f;
+			float v = (value - 300f)*0.005f;
+			if (audio.pitch <= 3 && audio.pitch >= 0.5f) {
+				audio.pitch = v + 1;
+				if (audio.pitch > 3) {
+					audio.pitch = 3;
+				} else if (audio.pitch < 0.5f) {
+					audio.pitch = 0.5f;
 				}
 			}
-			audio.pitch = this.pitch;
 		}get{
-			return pitch;
+			return audio.pitch;
 		}
 	}
 }

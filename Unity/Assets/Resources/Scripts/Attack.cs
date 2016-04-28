@@ -29,7 +29,5 @@ public class Attack : MonoBehaviour {
             }
             yield return null;
         }
-        Debug.Log("end");
-        yield return null;
     }
 }

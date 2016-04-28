@@ -2,75 +2,57 @@
 using System.Collections;
 
 public class PlayerMove : MonoBehaviour {
-	public static float speed = 80.0f;
-	public	GameObject	body;
+	public static float speed = 300;
 	public	GameObject 	myCamera;
-	public	GameObject	look;
-	engineSound engineS;
+	private static engineSound engineS;
 	// Use this for initialization
 	void Start () {
 		engineS = GameObject.Find("engine").GetComponent<engineSound> ();
         StartCoroutine(move());
+		StartCoroutine(changeSpeed());
 	}
     public IEnumerator move()
     {
         while (!GameManager.GameOver)
         {
             Rm = new Vector3(Input.GetAxis("Vertical"), 0, Input.GetAxis("Horizontal"));
-            //myCamera.transform.LookAt(look.transform);
             transform.Translate(Vector3.forward * Time.deltaTime * speed);
-			if (Input.GetKey(KeyCode.JoystickButton13) || Input.GetKey(KeyCode.JoystickButton14))
-            {
-				if (Input.GetKey(KeyCode.JoystickButton13))
-                {
-                    Speed = -1f;
-				}else if (Input.GetKey(KeyCode.JoystickButton14))//Joystick1Button5 or Joystick8Button12 or JoystickButton14
-                {
-                    Speed = +1f;
-                }
-            }else if (myCamera.transform.localPosition.z >= -14.45f || myCamera.transform.localPosition.z <= -14.55f)
-            {
-                float dis = myCamera.transform.localPosition.z - (-14.5f);
-                myCamera.transform.Translate(0,0,-0.05f* System.Math.Sign(dis));
-                //myCamera.transform.localPosition = new Vector3(myCamera.transform.localPosition.x, myCamera.transform.localPosition.y, -14.5f);
-            }else
-            {
-                myCamera.transform.localPosition = new Vector3(-0.85f, 12.7f,-14.5f);
-            }
             yield return null;
         }
-        yield return null;
-    }
-    private float moveCamera
-    {
-        set
-        {
-            if (speed < 280 && speed > 60)
-            {
-                myCamera.transform.Translate(0, 0, -0.025f * (value / (value / value)));
-            }
-
-            if (myCamera.transform.localPosition.z < -16.5f)
-            {
-                myCamera.transform.localPosition = new Vector3(-0.85f, 12.7f, -16.5f);
-            }
-            else if (myCamera.transform.localPosition.z > -12)
-            {
-                myCamera.transform.localPosition = new Vector3(-0.85f, 12.7f, -12);
-            }
-        }
     }
 
-	public float Speed {
+	public IEnumerator changeSpeed(){
+		while (!GameManager.GameOver) {
+			if (Input.GetKey (KeyCode.JoystickButton13) || Input.GetKey (KeyCode.JoystickButton14)) {
+				CameraSystem.stopReset = true;
+				if (Input.GetKey (KeyCode.JoystickButton13)) {
+					Speed = speedConfig.decele;
+				} else if (Input.GetKey (KeyCode.JoystickButton14)) {//Joystick1Button5 or Joystick8Button12 or JoystickButton14
+					Speed = speedConfig.accele;
+				}
+			} else if (CameraSystem.stopReset) {
+				CameraSystem.stopReset = false;
+				StartCoroutine (CameraSystem.cameraPosReset ());
+			}
+			yield return null;
+		}
+	}
+
+	/// <summary>
+	/// 機体の速度を変更する。
+	/// 巡航速度1000Km 最高速度2484Km (speed*60*60=時速とする)
+	/// </summary>
+	/// <value>The speed.</value>
+	public static float Speed {
 		set{
-			if (speed >= 60f && speed <= 280f) {
-                moveCamera = value;
+			if (speed >= speedConfig.cruisingSpeed && speed <= speedConfig.maxSpeed) {
+				CameraSystem.moveCamera = value;
                 speed += value;
 			}
-			if (speed < 60) {
-				speed = 60f;
-			} else if (speed > 280) {
-				speed = 280f;
+			if (speed < speedConfig.cruisingSpeed) {
+				speed = speedConfig.cruisingSpeed;
+			} else if (speed > speedConfig.maxSpeed) {
+				speed = speedConfig.maxSpeed;
 			}
 			engineS.Pitch = speed;
 		}get{
@@ -85,4 +67,11 @@ public class PlayerMove : MonoBehaviour {
             myCamera.transform.Rotate(0, 0, -(value.z * 2.5f));//カメラ回転無効  
         }
     }
+}
+
+class speedConfig{
+	public const short accele = +1;
+	public const short decele = -1;
+	public const float cruisingSpeed = 300f;
+	public const float maxSpeed = 690f;
 }
