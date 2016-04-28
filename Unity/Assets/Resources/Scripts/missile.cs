@@ -40,6 +40,7 @@ public class missile : MonoBehaviour {
 
 	void OnTriggerEnter(Collider col){
 		Debug.Log ("missileHit!");
+		Destroy (gameObject);
 	}
 
 	private IEnumerator reloadMissile(){
