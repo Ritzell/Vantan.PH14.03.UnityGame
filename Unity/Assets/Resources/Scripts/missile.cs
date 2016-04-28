@@ -39,7 +39,8 @@ public class missile : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider col){
-		Debug.Log ("Hit to " + col.name);
+		audioS.clip = audioClip2;
+		audioS.Play ();
 		Destroy (gameObject);
 	}
 
