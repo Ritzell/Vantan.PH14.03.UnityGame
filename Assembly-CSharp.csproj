@@ -46,7 +46,11 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Resources\Scripts\Attack.cs" />
+<<<<<<< HEAD
      <Compile Include="Assets\Resources\Scripts\GameManager.cs" />
+=======
+     <Compile Include="Assets\Resources\Scripts\PlayerManager.cs" />
+>>>>>>> 37ffaef15fce39cf566d16ffa856979c0f36a069
      <Compile Include="Assets\Resources\Scripts\PlayerMove.cs" />
      <Compile Include="Assets\Resources\Scripts\engineSound.cs" />
      <Compile Include="Assets\Resources\Scripts\missile.cs" />
