@@ -10,10 +10,11 @@ public class EnemyBase : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+
 	}
 
-	void TriggerEnter(Collider col){
+	void OnTriggerEnter(Collider col){
+		Debug.Log (col.name);
 		Destroy (gameObject);
 	}
 }

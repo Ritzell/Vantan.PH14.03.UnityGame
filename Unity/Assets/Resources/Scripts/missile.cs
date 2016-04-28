@@ -39,7 +39,7 @@ public class missile : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider col){
-		Debug.Log ("missileHit!");
+		Debug.Log ("Hit to " + col.name);
 		Destroy (gameObject);
 	}
 
