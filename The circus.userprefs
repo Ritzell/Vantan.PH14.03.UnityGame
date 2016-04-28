@@ -1,20 +1,8 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-<<<<<<< HEAD
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Resources/Scripts/PlayerMove.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Unity/Assets/Resources/Scripts/missile.cs">
     <Files>
-      <File FileName="Assets/Resources/Scripts/missile.cs" Line="60" Column="1" />
-      <File FileName="Assets/Resources/Scripts/Attack.cs" Line="39" Column="1" />
-      <File FileName="Assets/Resources/Scripts/PlayerMove.cs" Line="73" Column="29" />
-=======
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/missile.cs">
-    <Files>
-      <File FileName="Assets/stage.cs" Line="1" Column="1" />
-      <File FileName="Assets/PlayerMove.cs" Line="21" Column="3" />
-      <File FileName="Assets/title.cs" Line="1" Column="1" />
-      <File FileName="Assets/Attack.cs" Line="9" Column="17" />
-      <File FileName="Assets/missile.cs" Line="27" Column="5" />
->>>>>>> 37ffaef15fce39cf566d16ffa856979c0f36a069
+      <File FileName="Unity/Assets/Resources/Scripts/missile.cs" Line="32" Column="22" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
