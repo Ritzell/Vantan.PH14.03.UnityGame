@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "The circus.CSharp.Plugins", "The circus.CSharp.Plugins.csproj", "{608982E6-3B05-CE9F-FD55-4456E970D25F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "The circus.CSharp", "The circus.CSharp.csproj", "{BE2C767A-795F-61B8-4E0B-2B63699AB6A3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{608982E6-3B05-CE9F-FD55-4456E970D25F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{608982E6-3B05-CE9F-FD55-4456E970D25F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{608982E6-3B05-CE9F-FD55-4456E970D25F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{608982E6-3B05-CE9F-FD55-4456E970D25F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE2C767A-795F-61B8-4E0B-2B63699AB6A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE2C767A-795F-61B8-4E0B-2B63699AB6A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE2C767A-795F-61B8-4E0B-2B63699AB6A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE2C767A-795F-61B8-4E0B-2B63699AB6A3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
