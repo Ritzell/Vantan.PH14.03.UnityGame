@@ -10,6 +10,22 @@ public class GameManager : MonoBehaviour {
     void Start () {
         StartCoroutine(Timer());
 	}
+
+	public static IEnumerator reloadMissile(string ObName, Vector3 startPos, Quaternion startRot){
+		float timer = 0f;
+		while (timer < 3f) {
+			timer += Time.deltaTime;
+			yield return null;
+		}
+		GameObject newMissile = (GameObject)Instantiate (Resources.Load("prefabs/"+ObName),Vector3.zero,Quaternion.identity);
+		newMissile.transform.parent = missile.root;
+		newMissile.name = ObName.Substring (0,8);
+		newMissile.transform.localPosition = startPos;
+		newMissile.transform.localRotation = startRot;
+		yield return new WaitForSeconds(0.35f);
+		Attack.missiles.Enqueue(newMissile);
+		yield return null;
+	}
 	
 	public IEnumerator Timer()
     {
