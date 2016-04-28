@@ -4,9 +4,7 @@ using System.Collections.Generic;
 
 public class Attack : MonoBehaviour {
 	public static Queue<GameObject> missiles = new Queue<GameObject> ();
-	//public GameObject[] missiles = new GameObject[4];
-	
-	// Use this for initialization
+
 	void Start () {
 		missiles.Enqueue (GameObject.Find ("missileA"));
 		missiles.Enqueue (GameObject.Find ("missileB"));

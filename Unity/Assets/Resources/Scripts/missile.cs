@@ -4,11 +4,11 @@ using System.Collections;
 public class missile : MonoBehaviour {
 	public AudioClip audioClip1;
 	public AudioClip audioClip2;
+	private AudioSource audioS;
 	private float speed = 500f;
 	private Vector3 startPos;
 	private Quaternion startRot;
 	public static Transform root;
-	private AudioSource audioS;
 
 	void Start () {
 		audioS = gameObject.GetComponent<AudioSource>();
