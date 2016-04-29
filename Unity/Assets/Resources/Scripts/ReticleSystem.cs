@@ -49,7 +49,6 @@ public class ReticleSystem : MonoBehaviour {
 		if (lockNow >= 1.5f) {
 			lockOnTgt = tgt;
 			lockNow = 0;
-			Debug.Log (lockOnTgt);
 		}
 	}
 }

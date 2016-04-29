@@ -2,10 +2,11 @@
 using System.Collections;
 
 public class PlayerMove : MonoBehaviour {
+	
 	public static float speed = 300;
 	public	GameObject 	myCamera;
 	private static engineSound engineS;
-	// Use this for initialization
+
 	void Start () {
 		engineS = GameObject.Find("engine").GetComponent<engineSound> ();
         StartCoroutine(move());
@@ -16,7 +17,7 @@ public class PlayerMove : MonoBehaviour {
         while (!GameManager.GameOver)
         {
             Rm = new Vector3(Input.GetAxis("Vertical"), 0, Input.GetAxis("Horizontal"));
-            transform.Translate(Vector3.forward * Time.deltaTime * speed);
+			transform.Translate(Vector3.forward * Time.deltaTime * speed);
             yield return null;
         }
     }
@@ -63,8 +64,8 @@ public class PlayerMove : MonoBehaviour {
     {
         set
         {
-            transform.Rotate(value.x / 1.5f, 0f, value.z * 2.5f);
-            myCamera.transform.Rotate(0, 0, -(value.z * 2.5f));//カメラ回転無効  
+			transform.Rotate (value.x / 1.5f, 0f, value.z * 2.5f);
+			myCamera.transform.Rotate (0, 0, -value.z * 2.5f);//カメラ回転無効  
         }
     }
 }

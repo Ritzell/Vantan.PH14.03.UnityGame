@@ -19,7 +19,7 @@ public class EnemyAttack : MonoBehaviour {
 		}
 	}
 	public void shootMissile(){
-		missileFactory script = GameObject.Find ("Game Manager").GetComponent<missileFactory> ();
+		missileFactory script = GameObject.Find ("GameManager").GetComponent<missileFactory> ();
 		script.NewMissile.transform.position = transform.position;
 		script.newMissile.layer = 12;
 		StartCoroutine (script.newMissile.GetComponent<missile> ().straight (GameObject.Find("eurofighter").transform));

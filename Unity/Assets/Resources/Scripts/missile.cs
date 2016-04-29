@@ -37,8 +37,6 @@ public class missile : MonoBehaviour {
 	public void GetAim(Transform tgt)
 	{
 		transform.LookAt (tgt);
-//		Vector3 tgtDis = tgt - transform.position;
-//		Vector3.Angle (tgtDis,transform.forward);
 	}
 	public IEnumerator straight(Transform tgt){
 		GetAim (tgt);
@@ -52,7 +50,7 @@ public class missile : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider col){
-		if (transform.parent.root != null) {
+		if (transform.parent != null) {
 			return;
 		}
 		StartCoroutine (breakMissile());

@@ -20,15 +20,18 @@ public class CameraSystem : MonoBehaviour {
 		}
 	}
 
+	private const float normalZ = -26f;
+	private const float normalY = 7.5f;
+
 	public static IEnumerator cameraPosReset(){
-		float dis = myCamera.transform.localPosition.z - (-14.5f);
-		while ((myCamera.transform.localPosition.z >= -14.45f || myCamera.transform.localPosition.z <= -14.55f)&& !stopReset) 
+		float dis = myCamera.transform.localPosition.z - (normalZ);
+		while ((myCamera.transform.localPosition.z >= normalZ+0.1f || myCamera.transform.localPosition.z <= normalZ-0.1f)&& !stopReset) 
 		{
 			myCamera.transform.Translate (0, 0, -0.05f * System.Math.Sign (dis));
 			yield return null;
 		}
-		if (myCamera.transform.localPosition.z <= -14.45f && myCamera.transform.localPosition.z >= -14.55f) {
-			myCamera.transform.localPosition = new Vector3 (-0.85f, 12.7f, -14.5f);
+		if (myCamera.transform.localPosition.z <= normalZ+0.1f && myCamera.transform.localPosition.z >= normalZ-0.1f) {
+			myCamera.transform.localPosition = new Vector3 (0, normalY, normalZ);
 		}
 		yield return null;
 	}
@@ -42,13 +45,13 @@ public class CameraSystem : MonoBehaviour {
 				myCamera.transform.Translate(0, 0, -0.025f * (value / (value / value)));
 			}
 
-			if (myCamera.transform.localPosition.z < -16.5f)
+			if (myCamera.transform.localPosition.z < normalZ-4)
 			{
-				myCamera.transform.localPosition = new Vector3(-0.85f, 12.7f, -16.5f);
+				myCamera.transform.localPosition = new Vector3(0,normalY,normalZ-4);
 			}
-			else if (myCamera.transform.localPosition.z > -12)
+			else if (myCamera.transform.localPosition.z > normalZ+4)
 			{
-				myCamera.transform.localPosition = new Vector3(-0.85f, 12.7f, -12);
+				myCamera.transform.localPosition = new Vector3(0, normalY, normalZ+4);
 			}
 		}
 	}
