@@ -1,21 +1,33 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
+
 public class ReticleSystem : MonoBehaviour {
-	Camera camera;
+	////Corgi(8)レイヤーとだけ衝突する
+	//int layerMask = 1 << 8;
+	////Corgi(8)、Shiba(9)レイヤーとだけ衝突する
+	//int layerMask = 1 << 8 | 1 << 9;
+	////Corgi(8)レイヤーとだけ衝突しない
+	//int layerMask = ~(1 << 8);
+	public Camera MainCamera, UICamera;
+	RectTransform rt = null;
+	public GameObject reticleUI;
 	// Use this for initialization
 	void Start () {
+		rt = GetComponent<RectTransform> ();
 		StartCoroutine (lockOn ());
 	}
 	public IEnumerator lockOn(){
 		RaycastHit hit;
+		int layerMask = 1 << 11 | 1 << 12;
 		while (!GameManager.GameOver) {
-			//GetComponent<RectTransform> ().localScale += new Vector3(0.01f,0.01f,0);
-			//Vector3 a = camera.ViewportToWorldPoint(transform.position);
-			if(Physics.Raycast(transform.position,transform.forward,out hit,30000)){
-				//Debug.Log (hit.transform.name);
+			var ray = RectTransformUtility.ScreenPointToRay (Camera.main,new Vector3(294.0f, 157.5f, 0.0f));
+			if(Physics.Raycast(ray,out hit,30000,layerMask)){
+				Debug.Log (hit.transform.name);
 			}
 			yield return null;
 		}
 	}
 }
+
