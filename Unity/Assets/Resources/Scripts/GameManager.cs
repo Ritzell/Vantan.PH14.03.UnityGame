@@ -3,6 +3,21 @@ using System.Collections;
 using System;
 using UnityEngine.UI;
 
+/// <summary>
+/// staticのため、衝突の恐れあり
+/// </summary>
+public class missileFactory : MonoBehaviour{
+	public static GameObject newMissile;
+
+	public static GameObject NewMissile{
+		get{
+			newMissile = (GameObject)Instantiate (Resources.Load("prefabs/missile"),Vector3.zero,Quaternion.identity);
+			newMissile.name = newMissile.name.Substring (0,7);
+			return newMissile;
+		}
+	}
+}
+
 public class GameManager : MonoBehaviour {
     public static bool GameOver = false;
     private static DateTime startTime = DateTime.Now;
@@ -11,19 +26,17 @@ public class GameManager : MonoBehaviour {
         StartCoroutine(Timer());
 	}
 
-	public static IEnumerator reloadMissile(string ObName, Vector3 startPos, Quaternion startRot){
+	public static IEnumerator reloadMissile(Vector3 startPos, Quaternion startRot){
 		float timer = 0f;
 		while (timer < 3f) {
 			timer += Time.deltaTime;
 			yield return null;
 		}
-		GameObject newMissile = (GameObject)Instantiate (Resources.Load("prefabs/"+ObName),Vector3.zero,Quaternion.identity);
-		newMissile.transform.parent = missile.root;
-		newMissile.name = ObName.Substring (0,8);
-		newMissile.transform.localPosition = startPos;
-		newMissile.transform.localRotation = startRot;
+		missileFactory.NewMissile.transform.transform.parent = missile.root;
+		missileFactory.newMissile.transform.localPosition = startPos;
+		missileFactory.newMissile.transform.localRotation = startRot;
 		yield return new WaitForSeconds(0.35f);
-		Attack.missiles.Enqueue(newMissile);
+		Attack.missiles.Enqueue(missileFactory.newMissile);
 		yield return null;
 	}
 	

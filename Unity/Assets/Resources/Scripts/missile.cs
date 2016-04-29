@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class missile : MonoBehaviour {
 	public AudioClip audioClip1;
@@ -19,7 +20,7 @@ public class missile : MonoBehaviour {
 	}
 
 	public IEnumerator straight(){
-		StartCoroutine (GameManager.reloadMissile(gameObject.name,startPos,startRot));
+		StartCoroutine (GameManager.reloadMissile(startPos,startRot));
 		transform.parent = null;
         audioS.Play();
 		while (!GameManager.GameOver){
@@ -31,7 +32,25 @@ public class missile : MonoBehaviour {
 		}
 	}
 
+	public void GetAim(Transform tgt)
+	{
+		transform.LookAt (tgt);
+//		Vector3 tgtDis = tgt - transform.position;
+//		Vector3.Angle (tgtDis,transform.forward);
+	}
+	public IEnumerator straight(Transform tgt){
+		GetAim (tgt);
+		while (!GameManager.GameOver){
+			try
+			{
+				transform.Translate(Vector3.forward * Time.deltaTime * speed);
+			}catch{}
+			yield return null;
+		}
+	}
+
 	void OnTriggerEnter(Collider col){
+		Debug.Log (col.gameObject.name);
 		StartCoroutine (breakMissile());
 	}
 	private IEnumerator breakMissile(){
