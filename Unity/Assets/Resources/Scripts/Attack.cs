@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Attack : MonoBehaviour {
+
+	private static float delay = 0.15f;
 	public static Queue<GameObject> missiles = new Queue<GameObject> ();
 
 	void Start () {
@@ -15,11 +17,11 @@ public class Attack : MonoBehaviour {
 
     public IEnumerator shoot()
     {
-       float reloading = 0.5f;
+       float reloading = 0.0f;
         while (!GameManager.GameOver)
         {
             reloading += Time.deltaTime;
-            if(reloading >= 0.3f)
+            if(reloading >= delay)
             {
                 if ((Input.GetAxis("RTrigger") == 1 || Input.GetKeyDown(KeyCode.C)) && missiles.Count >= 1)
                 {

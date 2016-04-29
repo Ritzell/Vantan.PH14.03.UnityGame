@@ -20,14 +20,16 @@ public class missile : MonoBehaviour {
 	}
 
 	public IEnumerator straight(){
-		StartCoroutine (GameManager.reloadMissile(startPos,startRot));
+		StartCoroutine (GameObject.Find("GameManager").GetComponent<GameManager>().reloadMissile(startPos,startRot));
 		transform.parent = null;
         audioS.Play();
 		while (!GameManager.GameOver){
             try
             {
                 transform.Translate(Vector3.back * Time.deltaTime * speed);
-            }catch{}
+            }catch{
+				
+			}
 			yield return null;
 		}
 	}
@@ -50,6 +52,9 @@ public class missile : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider col){
+		if (transform.parent.root != null) {
+			return;
+		}
 		StartCoroutine (breakMissile());
 	}
 	private IEnumerator breakMissile(){
