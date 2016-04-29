@@ -50,7 +50,6 @@ public class missile : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider col){
-		Debug.Log (col.gameObject.name);
 		StartCoroutine (breakMissile());
 	}
 	private IEnumerator breakMissile(){
