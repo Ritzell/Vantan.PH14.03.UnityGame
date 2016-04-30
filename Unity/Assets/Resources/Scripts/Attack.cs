@@ -4,7 +4,8 @@ using System.Collections.Generic;
 
 public class Attack : MonoBehaviour {
 
-	private static float delay = 0.15f;
+	private const float delay = 0.15f;
+
 	public static Queue<GameObject> missiles = new Queue<GameObject> ();
 
 	void Start () {

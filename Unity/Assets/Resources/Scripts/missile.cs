@@ -27,8 +27,8 @@ public class missile : MonoBehaviour {
             try
             {
                 transform.Translate(Vector3.back * Time.deltaTime * speed);
-            }catch{
-				
+			}catch{
+				break;
 			}
 			yield return null;
 		}
@@ -43,10 +43,14 @@ public class missile : MonoBehaviour {
 		while (!GameManager.GameOver){
 			try
 			{
-				transform.Translate(Vector3.forward * Time.deltaTime * speed);
+				moveForward();
 			}catch{}
 			yield return null;
 		}
+	}
+
+	public void moveForward(){
+		transform.Translate(Vector3.forward * Time.deltaTime * speed);
 	}
 
 	void OnTriggerEnter(Collider col){

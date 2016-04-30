@@ -13,20 +13,20 @@ public class ReticleSystem : MonoBehaviour {
 	public static GameObject lockOnTgt;
 	private float lockNow = 0f;
 	public Camera MainCamera, UICamera;
-	RectTransform rt = null;
 	public GameObject reticleUI;
 	// Use this for initialization
 	void Start () {
-		rt = GetComponent<RectTransform> ();
 		StartCoroutine (serchEnemy ());
+		StartCoroutine (releaseLock ());
 	}
+
 	public IEnumerator serchEnemy(){
 		RaycastHit hit;
 		int layerMask = 1 << 11 | 1 << 12;
 		while (!GameManager.GameOver) {
 			var ray = RectTransformUtility.ScreenPointToRay (Camera.main,new Vector3(294.0f, 157.5f, 0.0f));
 			if(Physics.Raycast(ray,out hit,30000,layerMask) && lockOnTgt == null){
-				LockNow = hit.transform.gameObject;//Time.deltaTime;
+				LockNow = hit.transform.gameObject;
 			}
 			yield return null;
 		}
@@ -49,6 +49,15 @@ public class ReticleSystem : MonoBehaviour {
 		if (lockNow >= 1.5f) {
 			lockOnTgt = tgt;
 			lockNow = 0;
+		}
+	}
+
+	public IEnumerator releaseLock(){
+		while (!GameManager.GameOver) {
+			if (Input.GetKeyDown (KeyCode.Alpha1) && lockOnTgt != null) {
+				lockOnTgt = null;
+			}
+			yield return null;
 		}
 	}
 }
