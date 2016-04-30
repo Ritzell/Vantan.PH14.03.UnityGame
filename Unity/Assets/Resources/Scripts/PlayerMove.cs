@@ -3,9 +3,16 @@ using System.Collections;
 
 public class PlayerMove : MonoBehaviour {
 	
-	public static float speed = 300;
 	public	GameObject 	myCamera;
 	private static engineSound engineS;
+
+	public struct speedConfig{
+		public static float speed = 300f;
+		public const short accele = +1;
+		public const short decele = -1;
+		public const float cruisingSpeed = 200f;
+		public const float maxSpeed = 690f;
+	}
 
 	void Start () {
 		engineS = GameObject.Find("engine").GetComponent<engineSound> ();
@@ -17,10 +24,14 @@ public class PlayerMove : MonoBehaviour {
         while (!GameManager.GameOver)
         {
             Rm = new Vector3(Input.GetAxis("Vertical"), 0, Input.GetAxis("Horizontal"));
-			transform.Translate(Vector3.forward * Time.deltaTime * speed);
+			moveForward ();
             yield return null;
         }
     }
+
+	public void moveForward(){
+		transform.Translate(Vector3.forward * Time.deltaTime * speedConfig.speed);
+	}
 
 	public IEnumerator changeSpeed(){
 		while (!GameManager.GameOver) {
@@ -46,18 +57,18 @@ public class PlayerMove : MonoBehaviour {
 	/// <value>The speed.</value>
 	public static float Speed {
 		set{
-			if (speed >= speedConfig.cruisingSpeed && speed <= speedConfig.maxSpeed) {
+			if (speedConfig.speed >= speedConfig.cruisingSpeed && speedConfig.speed <= speedConfig.maxSpeed) {
 				CameraSystem.moveCamera = value;
-                speed += value;
+				speedConfig.speed += value;
 			}
-			if (speed < speedConfig.cruisingSpeed) {
-				speed = speedConfig.cruisingSpeed;
-			} else if (speed > speedConfig.maxSpeed) {
-				speed = speedConfig.maxSpeed;
+			if (speedConfig.speed < speedConfig.cruisingSpeed) {
+				speedConfig.speed = speedConfig.cruisingSpeed;
+			} else if (speedConfig.speed > speedConfig.maxSpeed) {
+				speedConfig.speed = speedConfig.maxSpeed;
 			}
-			engineS.Pitch = speed;
+			engineS.Pitch = speedConfig.speed;
 		}get{
-			return speed;
+			return speedConfig.speed;
 		}
 	}
     private Vector3 Rm
@@ -68,11 +79,4 @@ public class PlayerMove : MonoBehaviour {
 			myCamera.transform.Rotate (0, 0, -value.z * 2.5f);//カメラ回転無効  
         }
     }
-}
-
-class speedConfig{
-	public const short accele = +1;
-	public const short decele = -1;
-	public const float cruisingSpeed = 300f;
-	public const float maxSpeed = 690f;
 }

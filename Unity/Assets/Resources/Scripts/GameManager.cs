@@ -2,6 +2,7 @@
 using System.Collections;
 using System;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
     public static bool GameOver = false;
@@ -22,18 +23,37 @@ public class GameManager : MonoBehaviour {
 		yield return null;
 
 	}
-	
+
+	private TimeSpan time;
+
 	public IEnumerator Timer()
     {
         Text Timetext = GameObject.Find("Timer").GetComponent<Text>();
-        TimeSpan time;
+		TimeSpan elapsedTime;
         TimeSpan limitTime = new TimeSpan(00, 10, 00);
         while (!GameOver)
         {
-            time = (TimeSpan)(DateTime.Now - startTime);
-            time = limitTime - time;
+			elapsedTime = (TimeSpan)(DateTime.Now - startTime);
+			Time = limitTime - elapsedTime;
             Timetext.text = (time.Minutes.ToString("D2") + ":" + time.Seconds.ToString("D2"));
             yield return null;
         }
     }
+
+	public TimeSpan Time{
+		set{
+			time = value;
+			if (time.Minutes + time.Seconds <= 0) {
+				GameManager.loadScene ();
+			}
+		}get{
+			return time;
+		}
+	}
+
+	public static void loadScene(){
+		//yield return new WaitForSeconds (3);
+		SceneManager.LoadScene ("Result");
+		//yield return null;
+	}
 }
