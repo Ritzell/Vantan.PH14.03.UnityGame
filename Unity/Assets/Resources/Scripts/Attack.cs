@@ -4,7 +4,10 @@ using System.Collections.Generic;
 
 public class Attack : MonoBehaviour {
 
-	private const float delay = 0.15f;
+	struct delay{
+		public const float missileDelay = 0.15f;
+		public const float gunDelay = 0.1f;
+	}
 
 	public static Queue<GameObject> missiles = new Queue<GameObject> ();
 
@@ -13,16 +16,17 @@ public class Attack : MonoBehaviour {
 		missiles.Enqueue (GameObject.Find ("missileB"));
 		missiles.Enqueue (GameObject.Find ("missileC"));
 		missiles.Enqueue (GameObject.Find ("missileD"));
-        StartCoroutine(shoot());
+        StartCoroutine(missileShoot());
+		StartCoroutine(gunShoot());
 	}
 
-    public IEnumerator shoot()
+    public IEnumerator missileShoot()
     {
        float reloading = 0.0f;
         while (!GameManager.GameOver)
         {
             reloading += Time.deltaTime;
-            if(reloading >= delay)
+			if(reloading >= delay.missileDelay)
             {
                 if ((Input.GetAxis("RTrigger") == 1 || Input.GetKeyDown(KeyCode.C)) && missiles.Count >= 1)
                 {
@@ -33,4 +37,21 @@ public class Attack : MonoBehaviour {
             yield return null;
         }
     }
+	public IEnumerator gunShoot(){
+		float reloading = 0.0f;
+		while (!GameManager.GameOver)
+		{
+			reloading += Time.deltaTime;
+			if(reloading >= delay.gunDelay)
+			{
+				if ((Input.GetKey(KeyCode.JoystickButton12) || Input.GetKey(KeyCode.F)))
+				{
+					StartCoroutine (GameObject.Find ("guns").GetComponent<gun> ().shoot ());
+					reloading = 0f;
+				}
+			}
+			yield return null;
+		}
+		yield return null;
+	}
 }

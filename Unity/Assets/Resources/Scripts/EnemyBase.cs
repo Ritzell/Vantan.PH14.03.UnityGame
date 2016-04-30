@@ -8,7 +8,7 @@ public class EnemyBase : MonoBehaviour {
 	
 	}
 
-	void OnTriggerEnter(Collider col){
+	void OnTriggerStay(Collider col){
 		Destroy(restChildren <= 0 ? gameObject : null);
 	}
 }

@@ -4,6 +4,11 @@ using System.Collections;
 public class engineSound : MonoBehaviour {
 	AudioSource audio;
 	// Use this for initialization
+	public struct engineConfig
+	{
+		public const float normalSpeed = 300;
+		public const float pitchUp = 0.005f;
+	}
 	void Start () {
 		audio = GetComponent<AudioSource> ();
 		audio.pitch = audio.pitch;
@@ -11,7 +16,7 @@ public class engineSound : MonoBehaviour {
 
 	public float Pitch{
 		set{
-			float v = (value - 300f)*0.005f;
+			float v = (value - engineConfig.normalSpeed)*engineConfig.pitchUp;
 			try{
 			if (audio.pitch <= 3 && audio.pitch >= 0.5f) {
 				audio.pitch = v + 1;

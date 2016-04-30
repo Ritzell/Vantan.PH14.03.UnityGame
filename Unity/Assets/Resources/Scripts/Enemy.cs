@@ -11,7 +11,7 @@ public class Enemy : MonoBehaviour {
 		EnemyBase.restChildren++;
 		tgt = GameObject.Find ("eurofighter");
 	}
-	void OnTriggerEnter(Collider col){
+	void OnTriggerStay(Collider col){
 		EnemyBase.restChildren--;
 		Destroy (gameObject);
 	}
