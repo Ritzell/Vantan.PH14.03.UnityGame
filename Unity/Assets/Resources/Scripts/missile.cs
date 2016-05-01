@@ -60,10 +60,15 @@ public class missile : MonoBehaviour {
 		StartCoroutine (breakMissile());
 	}
 	private IEnumerator breakMissile(){
-		audioS.clip = audioClip2;
-		audioS.volume = 0.5f;
-		audioS.Play ();
-		yield return new WaitForSeconds (3);
+		GameObject soundOb = new GameObject();
+		soundOb.AddComponent<explosion>();
 		Destroy (gameObject);
+		yield return null;
+//		audioS.clip = audioClip2;
+//		audioS.volume = 0.5f;
+//		audioS.Play ();
+//		yield return new WaitForSeconds (3);
+//		Destroy (gameObject);
 	}
 }
+

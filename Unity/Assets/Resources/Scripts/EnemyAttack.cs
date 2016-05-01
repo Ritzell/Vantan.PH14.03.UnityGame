@@ -22,6 +22,7 @@ public class EnemyAttack : MonoBehaviour {
 		missileFactory script = GameObject.Find ("GameManager").GetComponent<missileFactory> ();
 		script.NewMissile.transform.position = transform.position;
 		script.newMissile.layer = 12;
+		script.newMissile.transform.localScale = new Vector3 (100, 100, 100);
 		StartCoroutine (script.newMissile.GetComponent<missile> ().straight (GameObject.Find("eurofighter").transform));
 	}
 }

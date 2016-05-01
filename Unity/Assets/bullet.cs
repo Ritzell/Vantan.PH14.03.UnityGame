@@ -25,7 +25,6 @@ public class bullet : MonoBehaviour {
 			time += Time.deltaTime;
 			yield return null;
 		}
-		Debug.Log ("deth");
 		StartCoroutine (breakBullet());
 		yield return null;
 	}
