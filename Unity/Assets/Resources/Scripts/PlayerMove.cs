@@ -23,7 +23,7 @@ public class PlayerMove : MonoBehaviour {
     {
         while (!GameManager.GameOver)
         {
-            Rm = new Vector3(Input.GetAxis("Vertical"), 0, Input.GetAxis("Horizontal"));
+            Rotation = new Vector3(Input.GetAxis("Vertical"), 0, Input.GetAxis("Horizontal"));
 			moveForward ();
             yield return null;
         }
@@ -71,7 +71,7 @@ public class PlayerMove : MonoBehaviour {
 			return speedConfig.speed;
 		}
 	}
-    private Vector3 Rm
+    private Vector3 Rotation
     {
         set
         {

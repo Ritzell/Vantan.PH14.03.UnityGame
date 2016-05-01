@@ -12,12 +12,21 @@ public class ReticleSystem : MonoBehaviour {
 	//int layerMask = ~(1 << 8);
 	public static GameObject lockOnTgt;
 	private float lockNow = 0f;
-	public Camera MainCamera, UICamera;
+	public Camera MainCamera;
 	public GameObject reticleUI;
 	// Use this for initialization
 	void Start () {
 		StartCoroutine (serchEnemy ());
 		StartCoroutine (releaseLock ());
+		StartCoroutine (InputRstick());
+	}
+
+	public IEnumerator InputRstick(){
+		while (!GameManager.GameOver) {
+			reticleMove = new Vector3 (Input.GetAxisRaw ("5thAxis"), Input.GetAxisRaw ("4thAxis"), 0);
+			//transform.Translate(Input.GetAxisRaw ("5thAxis"),Input.GetAxisRaw ("4thAxis"),0);
+			yield return null;
+		}
 	}
 
 	public IEnumerator serchEnemy(){
@@ -58,6 +67,13 @@ public class ReticleSystem : MonoBehaviour {
 				lockOnTgt = null;
 			}
 			yield return null;
+		}
+	}
+	public Vector3 reticleMove {
+		set {
+			Debug.Log (value.x);
+			//transform.Translate(value.x,value.y,0);
+			MainCamera.transform.Rotate (value.y*-1, value.x,0);
 		}
 	}
 }

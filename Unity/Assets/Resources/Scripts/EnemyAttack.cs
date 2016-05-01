@@ -12,7 +12,7 @@ public class EnemyAttack : MonoBehaviour {
 		while (!GameManager.GameOver) {
 			timer += Time.deltaTime;
 			if (timer >= 1) {
-				//shootMissile ();
+				shootMissile ();
 				timer = 0;
 			}
 			yield return null;
@@ -20,9 +20,9 @@ public class EnemyAttack : MonoBehaviour {
 	}
 	public void shootMissile(){
 		missileFactory script = GameObject.Find ("GameManager").GetComponent<missileFactory> ();
-		script.NewMissile.transform.position = transform.position;
-		script.newMissile.layer = 12;
-		script.newMissile.transform.localScale = new Vector3 (100, 100, 100);
-		StartCoroutine (script.newMissile.GetComponent<missile> ().straight (GameObject.Find("eurofighter").transform));
+		script.NewMissileE.transform.position = transform.position;
+		script.newMissileE.layer = 12;
+		script.newMissileE.transform.localScale = new Vector3 (100, 100, 100);
+		StartCoroutine (script.newMissileE.GetComponent<missile> ().straight (GameObject.Find("eurofighter").transform));
 	}
 }

@@ -8,6 +8,8 @@ public class explosion : MonoBehaviour {
 		gameObject.AddComponent<AudioSource> ();
 		audio = GetComponent<AudioSource> ();
 		audio.clip = (AudioClip)Resources.Load ("Sounds/MissileHit!");
+		audio.spatialBlend = 1.0f;
+		audio.maxDistance = 2000;
 		audio.Play ();
 		StartCoroutine (deth ());
 	}

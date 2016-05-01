@@ -23,6 +23,7 @@ public class missile : MonoBehaviour {
 		StartCoroutine (GameObject.Find("GameManager").GetComponent<GameManager>().reloadMissile(startPos,startRot));
 		transform.parent = null;
         audioS.Play();
+		StartCoroutine (selfBreak ());
 		while (!GameManager.GameOver){
             try
             {
@@ -40,6 +41,7 @@ public class missile : MonoBehaviour {
 	}
 	public IEnumerator straight(Transform tgt){
 		GetAim (tgt);
+		StartCoroutine (selfBreak ());
 		while (!GameManager.GameOver){
 			try
 			{
@@ -59,16 +61,23 @@ public class missile : MonoBehaviour {
 		}
 		StartCoroutine (breakMissile());
 	}
+
+	private IEnumerator selfBreak(){
+		float time = 0f;
+		while (!GameManager.GameOver && time < 20f) {
+			time += Time.deltaTime;
+			yield return null;
+		}
+		Debug.Log (gameObject);
+		StartCoroutine (breakMissile ());
+		yield return null;
+	}
+
 	private IEnumerator breakMissile(){
 		GameObject soundOb = new GameObject();
 		soundOb.AddComponent<explosion>();
 		Destroy (gameObject);
 		yield return null;
-//		audioS.clip = audioClip2;
-//		audioS.volume = 0.5f;
-//		audioS.Play ();
-//		yield return new WaitForSeconds (3);
-//		Destroy (gameObject);
 	}
 }
 
