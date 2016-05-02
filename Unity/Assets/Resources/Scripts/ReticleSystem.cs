@@ -14,6 +14,8 @@ public class ReticleSystem : MonoBehaviour {
 	private float lockNow = 0f;
 	public Camera MainCamera;
 	public GameObject reticleUI;
+	public GameObject muzzleA;
+	public GameObject muzzleB;
 	// Use this for initialization
 	void Start () {
 		StartCoroutine (serchEnemy ());
@@ -71,8 +73,9 @@ public class ReticleSystem : MonoBehaviour {
 	}
 	public Vector3 reticleMove {
 		set {
-			Debug.Log (value.x);
 			//transform.Translate(value.x,value.y,0);
+			muzzleA.transform.Rotate (value.y*-1, value.x,0);
+			muzzleB.transform.Rotate (value.y*-1, value.x,0);
 			MainCamera.transform.Rotate (value.y*-1, value.x,0);
 		}
 	}

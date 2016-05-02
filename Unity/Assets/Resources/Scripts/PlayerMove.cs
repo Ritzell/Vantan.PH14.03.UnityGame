@@ -76,7 +76,7 @@ public class PlayerMove : MonoBehaviour {
         set
         {
 			transform.Rotate (value.x / 1.5f, 0f, value.z * 2.5f);
-			myCamera.transform.Rotate (0, 0, -value.z * 2.5f);//カメラ回転無効  
+			//myCamera.transform.Rotate (0, 0, -value.z * 2.5f);//カメラ回転無効  
         }
     }
 }
