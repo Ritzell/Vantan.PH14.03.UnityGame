@@ -23,7 +23,7 @@ public class PlayerMove : MonoBehaviour {
     {
         while (!GameManager.GameOver)
         {
-            Rotation = new Vector3(Input.GetAxis("Vertical"), 0, Input.GetAxis("Horizontal"));
+            Rotation = new Vector3(Input.GetAxis("Vertical"), 0, Input.GetAxis("Horizontal")*2);
 			moveForward ();
             yield return null;
         }
@@ -77,6 +77,7 @@ public class PlayerMove : MonoBehaviour {
         {
 			transform.Rotate (value.x / 1.5f, 0f, value.z * 2.5f);
 			//myCamera.transform.Rotate (0, 0, -value.z * 2.5f);//カメラ回転無効  
+			//myCamera.transform.localRotation = new Quaternion(myCamera.transform.rotation.x,myCamera.transform.rotation.y,0,myCamera.transform.rotation.w);
         }
     }
 }

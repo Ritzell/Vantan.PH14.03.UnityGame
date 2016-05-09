@@ -22,6 +22,7 @@ public class CameraSystem : MonoBehaviour {
 	private static IEnumerator cameraWork()
 	{
 		while(!GameManager.GameOver){
+			//myCamera.transform.rotation = new Quaternion(myCamera.transform.rotation.x,myCamera.transform.rotation.y,0,myCamera.transform.rotation.w);
 			if(Input.GetKeyDown(KeyCode.JoystickButton11)||Input.GetKeyUp(KeyCode.JoystickButton11)){
 				myCamera.transform.Rotate (0,180,0);
 			}

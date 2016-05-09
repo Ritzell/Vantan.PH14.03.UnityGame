@@ -73,9 +73,16 @@ public class ReticleSystem : MonoBehaviour {
 	}
 	public Vector3 reticleMove {
 		set {
-			//transform.Translate(value.x,value.y,0);
-			muzzleA.transform.Rotate (value.y*-1, value.x,0);
-			muzzleB.transform.Rotate (value.y*-1, value.x,0);
+			// 350 20 340 20
+			//transform.Translate (-value.x, -value.y, 0);
+//			if ((MainCamera.transform.localRotation.y <= 20 || MainCamera.transform.localRotation.y >= 340)  &&
+//				(MainCamera.transform.localRotation.x <= 20|| MainCamera.transform.localRotation.x >= 340)) {
+//				transform.Translate (value.x, value.y, 0);
+//			}
+			//MainCamera.transform.Rotate (value.y*-1, value.x,0);
+			//MainCamera.transform.localRotation = new Quaternion (MainCamera.transform.rotation.x, MainCamera.transform.rotation.y, 0, MainCamera.transform.rotation.w);
+			muzzleA.transform.Rotate (value.y*-1/4, value.x/4,0);
+			muzzleB.transform.Rotate (value.y*-1/4, value.x/4,0);
 			MainCamera.transform.Rotate (value.y*-1, value.x,0);
 		}
 	}
