@@ -9,6 +9,8 @@ public class EnemyBase : MonoBehaviour {
 	}
 
 	void OnTriggerStay(Collider col){
+		Debug.Log ("win");
+		GameManager.loadScene ();
 		Destroy(restChildren <= 0 ? gameObject : null);
 	}
 }

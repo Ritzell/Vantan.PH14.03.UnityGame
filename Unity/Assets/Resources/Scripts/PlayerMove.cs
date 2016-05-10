@@ -2,9 +2,6 @@
 using System.Collections;
 
 public class PlayerMove : MonoBehaviour {
-	
-	public	GameObject 	myCamera;
-	private static engineSound engineS;
 
 	public struct speedConfig{
 		public static float speed = 300f;
@@ -13,6 +10,9 @@ public class PlayerMove : MonoBehaviour {
 		public const float cruisingSpeed = 200f;
 		public const float maxSpeed = 690f;
 	}
+	
+	public	GameObject 	myCamera;
+	private static engineSound engineS;
 
 	void Start () {
 		engineS = GameObject.Find("engine").GetComponent<engineSound> ();
@@ -23,7 +23,7 @@ public class PlayerMove : MonoBehaviour {
     {
         while (!GameManager.GameOver)
         {
-            Rotation = new Vector3(Input.GetAxis("Vertical"), 0, Input.GetAxis("Horizontal")*2);
+            Rotation = new Vector3(Input.GetAxis("Vertical")*3, 0, Input.GetAxis("Horizontal")*2);
 			moveForward ();
             yield return null;
         }

@@ -2,16 +2,16 @@
 using System.Collections;
 
 public class PlayerSound : MonoBehaviour {
-	private static AudioSource audio;
+	private static AudioSource audioBox;
 	public AudioClip audioclip1;
 	// Use this for initialization
 	void Start () {
-		audio = GetComponent<AudioSource>();
-		audio.clip = audioclip1;
+		audioBox = GetComponent<AudioSource>();
+		audioBox.clip = audioclip1;
 	}
 	public static void audioPlay(){
-		audio.volume = 0.3f;
-		audio.pitch = 2;
-		audio.Play ();
+		audioBox.volume = 0.3f;
+		audioBox.pitch = 2;
+		audioBox.Play ();
 	}
 }

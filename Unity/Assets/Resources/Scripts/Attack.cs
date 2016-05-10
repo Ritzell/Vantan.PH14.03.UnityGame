@@ -32,7 +32,11 @@ public class Attack : MonoBehaviour {
                 {
                     StartCoroutine(missiles.Dequeue().GetComponent<missile>().straight());
                     reloading = 0f;
-                }
+				}else if ((Input.GetAxis("LTrigger") == 1 || Input.GetKeyDown(KeyCode.V)) && missiles.Count >= 1 && ReticleSystem.lockOnTgt != null)
+				{
+					StartCoroutine(missiles.Dequeue().GetComponent<missile>().Tracking(ReticleSystem.lockOnTgt.transform));
+					reloading = 0f;
+				}
             }
             yield return null;
         }

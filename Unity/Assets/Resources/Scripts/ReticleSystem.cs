@@ -25,7 +25,7 @@ public class ReticleSystem : MonoBehaviour {
 
 	public IEnumerator InputRstick(){
 		while (!GameManager.GameOver) {
-			reticleMove = new Vector3 (Input.GetAxisRaw ("5thAxis"), Input.GetAxisRaw ("4thAxis"), 0);
+			reticleMove = new Vector3 (Input.GetAxis ("3thAxis"), Input.GetAxis ("4thAxis"), 0);
 			//transform.Translate(Input.GetAxisRaw ("5thAxis"),Input.GetAxisRaw ("4thAxis"),0);
 			yield return null;
 		}
@@ -59,6 +59,7 @@ public class ReticleSystem : MonoBehaviour {
 	public void LockOn(GameObject tgt){
 		if (lockNow >= 1.5f) {
 			lockOnTgt = tgt;
+			Debug.Log (lockOnTgt);
 			lockNow = 0;
 		}
 	}
@@ -74,16 +75,16 @@ public class ReticleSystem : MonoBehaviour {
 	public Vector3 reticleMove {
 		set {
 			// 350 20 340 20
-			//transform.Translate (-value.x, -value.y, 0);
+			transform.Translate (value.x, -value.y, 0);
 //			if ((MainCamera.transform.localRotation.y <= 20 || MainCamera.transform.localRotation.y >= 340)  &&
 //				(MainCamera.transform.localRotation.x <= 20|| MainCamera.transform.localRotation.x >= 340)) {
 //				transform.Translate (value.x, value.y, 0);
 //			}
 			//MainCamera.transform.Rotate (value.y*-1, value.x,0);
 			//MainCamera.transform.localRotation = new Quaternion (MainCamera.transform.rotation.x, MainCamera.transform.rotation.y, 0, MainCamera.transform.rotation.w);
-			muzzleA.transform.Rotate (value.y*-1/4, value.x/4,0);
-			muzzleB.transform.Rotate (value.y*-1/4, value.x/4,0);
-			MainCamera.transform.Rotate (value.y*-1, value.x,0);
+			muzzleA.transform.Rotate (value.y*1/4, value.x/4,0);
+			muzzleB.transform.Rotate (value.y*1/4, value.x/4,0);
+			//MainCamera.transform.Rotate (value.y*-1, value.x,0);
 		}
 	}
 }

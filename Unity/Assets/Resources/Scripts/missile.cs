@@ -19,15 +19,26 @@ public class missile : MonoBehaviour {
 		root = GameObject.Find ("missiles").transform;
 	}
 
-	public IEnumerator straight(){
+	public IEnumerator shootReady(){
 		StartCoroutine (GameObject.Find("GameManager").GetComponent<GameManager>().reloadMissile(startPos,startRot));
 		transform.parent = null;
-        audioS.Play();
+		audioS.Play();
 		StartCoroutine (selfBreak ());
+		yield return null;
+	}
+
+	public IEnumerator shootReady_E(){
+		//audioS.Play();
+		StartCoroutine (selfBreak ());
+		yield return null;
+	}
+
+	public IEnumerator straight(){
+		StartCoroutine (shootReady ());
 		while (!GameManager.GameOver){
             try
             {
-                transform.Translate(Vector3.back * Time.deltaTime * speed);
+				StartCoroutine(moveForward());
 			}catch{
 				break;
 			}
@@ -35,53 +46,74 @@ public class missile : MonoBehaviour {
 		}
 	}
 
-	public IEnumerator GetAim(Transform tgt)
-	{
-		float dx = tgt.transform.position.x - transform.position.x;
-		float dy = tgt.transform.position.y - transform.position.y;
-		float dz = tgt.transform.position.z - transform.position.z;
-		float Yrad = (Mathf.Atan2(dy, dz)*Mathf.Rad2Deg)*-1;
-		float Xrad = (Mathf.Atan2 (dx, dz)*Mathf.Rad2Deg)-180;
-		transform.rotation = Quaternion.Euler (Yrad,Xrad,0);
-		yield return null;
+	public float atan (float p2a,float p1a,float p2b,float p1b){
+		float d1 = p2a - p1a;
+		float d2 = p2b - p1b;
+		return (Mathf.Atan2(d1, d2)*Mathf.Rad2Deg);
+
 	}
 
-	public IEnumerator GetAiming(Transform tgt){
-		float dx = (tgt.transform.position.x - transform.position.x) + Random.Range(-1,1);
-		float dy = (tgt.transform.position.y - transform.position.y) + Random.Range(-1,1);
-		float dz = (tgt.transform.position.z - transform.position.z) + Random.Range(-1,1);
-		float Yrad = (Mathf.Atan2(dy, dz)*Mathf.Rad2Deg)*-1;
-		float Xrad = (Mathf.Atan2 (dx, dz)*Mathf.Rad2Deg)-180;
-		transform.rotation = Quaternion.Euler (Yrad,Xrad,0);
+	public IEnumerator GetAiming(Transform tgt,bool player){
+		float Xrad = atan(tgt.transform.position.y,transform.position.y,tgt.transform.position.z,transform.position.z);
+		float Yrad = atan(tgt.transform.position.x , transform.position.x,tgt.transform.position.z , transform.position.z);
+		transform.eulerAngles = new Vector3 (Yrad,Xrad,0);
+		//transform.Rotate(Xrad,Yrad,0);
+//		//transform.rotation = Quaternion.Euler (Yrad*-1, 0, 0);
 		yield return null;
 	}
 
 	public IEnumerator straight(Transform tgt){
-		StartCoroutine(GetAim (tgt));
-		StartCoroutine (selfBreak ());
+		StartCoroutine (shootReady_E ());
+		transform.LookAt (tgt);
 		while (!GameManager.GameOver){
 			try
 			{
-				moveForward();
+				StartCoroutine(moveForward());
 			}catch{}
 			yield return null;
 		}
 	}
 
 	public IEnumerator Tracking(Transform tgt){
+		StartCoroutine (shootReady ());
+		float delay = 0f;
 		while (!GameManager.GameOver){
+			delay += Time.deltaTime;
 			try
 			{
-				StartCoroutine(GetAiming(tgt));
-				moveForward();
+				//if(delay >= 0.5f){
+				StartCoroutine(GetAiming(tgt,true));
+					delay = 0f;
+				//}
+				StartCoroutine(moveForward());
 			}catch{}
 			yield return null;
 		}
 		yield return null;
 	}
 
-	public void moveForward(){
+	public IEnumerator Tracking_E(Transform tgt){
+		StartCoroutine (shootReady_E ());
+		transform.LookAt (tgt);
+		float delay = 0f;
+		while (!GameManager.GameOver){
+			delay += Time.deltaTime;
+			try
+			{
+				//if(delay >= 0.5f){
+				StartCoroutine(GetAiming(tgt,false));
+					delay = 0f;
+				//}
+				StartCoroutine(moveForward());
+			}catch{}
+			yield return null;
+		}
+		yield return null;
+	}
+
+	public IEnumerator moveForward(){
 		transform.Translate(Vector3.forward * Time.deltaTime * speed);
+		yield return null;
 	}
 
 	void OnTriggerEnter(Collider col){
@@ -102,8 +134,9 @@ public class missile : MonoBehaviour {
 	}
 
 	private IEnumerator breakMissile(){
-		GameObject soundOb = new GameObject();
-		soundOb.AddComponent<explosion>();
+		//GameObject soundOb = new GameObject();
+		Instantiate(Resources.Load("prefabs/Explosion"),transform.position,Quaternion.identity);
+		//soundOb.name = "explosion"
 		Destroy (gameObject);
 		yield return null;
 	}

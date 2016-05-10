@@ -2,19 +2,14 @@
 using System.Collections;
 
 public class explosion : MonoBehaviour {
-	AudioSource audio;
-	// Use this for initialization
+	AudioSource audioBox;
 	void Start () {
-		gameObject.AddComponent<AudioSource> ();
-		audio = GetComponent<AudioSource> ();
-		audio.clip = (AudioClip)Resources.Load ("Sounds/MissileHit!");
-		audio.spatialBlend = 1.0f;
-		audio.maxDistance = 2000;
-		audio.Play ();
+		audioBox = GetComponent<AudioSource> ();
+		audioBox.Play ();
 		StartCoroutine (deth ());
 	}
 	private IEnumerator deth(){
-		while (audio.isPlaying) {
+		while (audioBox.isPlaying) {
 			yield return null;
 		}
 		Destroy (gameObject);

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
-using UnityEngine.UI;
+//using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour {
     private static DateTime startTime = DateTime.Now;
     // Use this for initialization
     void Start () {
-        StartCoroutine(Timer());
+		StartCoroutine (Timer ());
 	}
 
 	public IEnumerator reloadMissile(Vector3 startPos, Quaternion startRot){
@@ -28,14 +28,14 @@ public class GameManager : MonoBehaviour {
 
 	public IEnumerator Timer()
     {
-        Text Timetext = GameObject.Find("Timer").GetComponent<Text>();
+		GUIText Timetext = GameObject.Find("Timer").GetComponent<GUIText>();
 		TimeSpan elapsedTime;
         TimeSpan limitTime = new TimeSpan(00, 10, 00);
         while (!GameOver)
         {
 			elapsedTime = (TimeSpan)(DateTime.Now - startTime);
 			Time = limitTime - elapsedTime;
-            Timetext.text = (time.Minutes.ToString("D2") + ":" + time.Seconds.ToString("D2"));
+			Timetext.text = (time.Minutes.ToString("D2") + ":" + time.Seconds.ToString("D2"));
             yield return null;
         }
     }
@@ -54,6 +54,7 @@ public class GameManager : MonoBehaviour {
 	public static void loadScene(){
 		//yield return new WaitForSeconds (3);
 		SceneManager.LoadScene ("Result");
+		//Application.LoadLevel("Result");
 		//yield return null;
 	}
 }

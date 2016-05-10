@@ -8,7 +8,6 @@ public class Airframe : MonoBehaviour {
 	}
 
 	private void deth(){
-		//StartCoroutine(GameManager.loadScene ());
 		GameManager.loadScene();
 		PlayerSound.audioPlay ();
 		Destroy (gameObject);

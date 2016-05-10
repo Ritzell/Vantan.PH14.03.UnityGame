@@ -2,34 +2,40 @@
 using System.Collections;
 
 public class engineSound : MonoBehaviour {
-	AudioSource audio;
+	AudioSource audioBox;
 	// Use this for initialization
+
 	public struct engineConfig
 	{
 		public const float normalSpeed = 300;
-		public const float pitchUp = 0.005f;
+		public const float pitchUpSpeed = 0.005f;
 	}
+
 	void Start () {
-		audio = GetComponent<AudioSource> ();
-		audio.pitch = audio.pitch;
+		audioBox = GetComponent<AudioSource> ();
+		audioBox.pitch = audioBox.pitch;
 	}
 
 	public float Pitch{
 		set{
-			float v = (value - engineConfig.normalSpeed)*engineConfig.pitchUp;
+			float v = (value - engineConfig.normalSpeed)*engineConfig.pitchUpSpeed;
 			try{
-			if (audio.pitch <= 3 && audio.pitch >= 0.5f) {
-				audio.pitch = v + 1;
-				if (audio.pitch > 3) {
-					audio.pitch = 3;
-				} else if (audio.pitch < 0.5f) {
-					audio.pitch = 0.5f;
-				}
-			}
+				changePitch(v);
 			}catch{
 			}
 		}get{
-			return audio.pitch;
+			return audioBox.pitch;
+		}
+	}
+
+	public void changePitch(float v){
+		if (audioBox.pitch <= 3 && audioBox.pitch >= 0.5f) {
+			audioBox.pitch = v + 1;
+			if (audioBox.pitch > 3) {
+				audioBox.pitch = 3;
+			} else if (audioBox.pitch < 0.5f) {
+				audioBox.pitch = 0.5f;
+			}
 		}
 	}
 }
