@@ -4,15 +4,18 @@ using System.Collections;
 public class PlayerMove : MonoBehaviour
 {
 
+
+
 	public struct speedConfig
 	{
 		public static float speed = 300f;
 		public const short accele = +1;
 		public const short decele = -1;
-		public const float cruisingSpeed = 200f;
+		public const float minSpeed = 200f;
 		public const float maxSpeed = 690f;
 	}
 
+	private const float keep = 0;
 	public	GameObject myCamera;
 	private static engineSound engineS;
 
@@ -37,18 +40,23 @@ public class PlayerMove : MonoBehaviour
 		transform.Translate (Vector3.forward * Time.deltaTime * speedConfig.speed);
 	}
 
+	/// <summary>
+	/// 機体の速度を加減する。
+	/// </summary>
+	/// <returns>The speed.</returns>
 	public IEnumerator changeSpeed ()
 	{
 		while (!GameManager.GameOver) {
-			if (Input.GetKey (KeyCode.JoystickButton13) || Input.GetKey (KeyCode.JoystickButton14)) {
+			if (Input.GetKey (KeyCode.JoystickButton13) || Input.GetKey (KeyCode.JoystickButton14) || Input.GetKey (KeyCode.Alpha1) || Input.GetKey (KeyCode.Alpha2)) {
 				CameraSystem.stopReset = true;
-				if (Input.GetKey (KeyCode.JoystickButton13)) {
-					Speed = speedConfig.decele;
-				} else if (Input.GetKey (KeyCode.JoystickButton14)) {//Joystick1Button5 or Joystick8Button12 or JoystickButton14
-					Speed = speedConfig.accele;
+				if (Input.GetKey (KeyCode.JoystickButton13) || Input.GetKey (KeyCode.Alpha1)) {
+					fuelTank = speedConfig.decele;
+				} else if (Input.GetKey (KeyCode.JoystickButton14) || Input.GetKey (KeyCode.Alpha2)) {//Joystick1Button5 or Joystick8Button12 or JoystickButton14
+					fuelTank = speedConfig.accele;
 				}
 			} else if (CameraSystem.stopReset) {
 				CameraSystem.stopReset = false;
+				afterBurner (keep);
 				StartCoroutine (CameraSystem.cameraPosReset ());
 			}
 			yield return null;
@@ -56,24 +64,47 @@ public class PlayerMove : MonoBehaviour
 	}
 
 	/// <summary>
-	/// 機体の速度を変更する。
+	/// 機体の速度に制限。
 	/// 巡航速度1000Km 最高速度2484Km (speed*60*60=時速とする)
 	/// </summary>
 	/// <value>The speed.</value>
-	public static float Speed {
-		set {
-			if (speedConfig.speed >= speedConfig.cruisingSpeed && speedConfig.speed <= speedConfig.maxSpeed) {
+	public float fuelTank {
+		set{
+		if (speedConfig.speed >= speedConfig.minSpeed && speedConfig.speed <= speedConfig.maxSpeed) {
 				CameraSystem.moveCamera = value;
 				speedConfig.speed += value;
-			}
-			if (speedConfig.speed < speedConfig.cruisingSpeed) {
-				speedConfig.speed = speedConfig.cruisingSpeed;
-			} else if (speedConfig.speed > speedConfig.maxSpeed) {
-				speedConfig.speed = speedConfig.maxSpeed;
-			}
-			engineS.Pitch = speedConfig.speed;
-		}get {
-			return speedConfig.speed;
+				afterBurner (value);
+		}
+		if (speedConfig.speed < speedConfig.minSpeed) {
+			speedConfig.speed = speedConfig.minSpeed;
+		} else if (speedConfig.speed > speedConfig.maxSpeed) {
+			speedConfig.speed = speedConfig.maxSpeed;
+		}
+		engineS.Pitch = speedConfig.speed;
+		}
+	}
+
+	public void afterBurner (float fuel)
+	{
+		ParticleSystem burner = GameObject.Find ("Afterburner").GetComponent<ParticleSystem> ();
+		ParticleSystem glow = GameObject.Find ("Glow").GetComponent<ParticleSystem> ();
+		var em = glow.emission;
+		var rate = glow.emission.rate;
+
+		if (fuel > keep) {
+			burner.startSpeed = 25;
+			glow.startSpeed = 25;
+			rate.constantMax = 450f;
+			em.rate = rate;
+
+		} else if (fuel == keep) {
+			burner.startSpeed = 4;
+			glow.startSpeed = 4;
+			rate.constantMax = 100f;
+			em.rate = rate;
+
+		} else {
+			Debug.Log ("減速時のアフターバーナーの火力は如何致しましょうか？");
 		}
 	}
 

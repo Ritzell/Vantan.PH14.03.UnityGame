@@ -47,7 +47,7 @@ public class CameraSystem : MonoBehaviour {
 	{
 		set
 		{
-			if (PlayerMove.speedConfig.speed < PlayerMove.speedConfig.maxSpeed && PlayerMove.speedConfig.speed > PlayerMove.speedConfig.cruisingSpeed)
+			if (PlayerMove.speedConfig.speed < PlayerMove.speedConfig.maxSpeed && PlayerMove.speedConfig.speed > PlayerMove.speedConfig.minSpeed)
 			{
 				myCamera.transform.Translate(0, 0, -0.025f * (value / (value / value)));
 			}
