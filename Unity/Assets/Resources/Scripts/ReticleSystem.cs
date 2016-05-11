@@ -59,7 +59,7 @@ public class ReticleSystem : MonoBehaviour {
 	public void LockOn(GameObject tgt){
 		if (lockNow >= 1.5f) {
 			lockOnTgt = tgt;
-			Debug.Log (lockOnTgt);
+			Debug.Log (lockOnTgt + " をロックオン!");
 			lockNow = 0;
 		}
 	}

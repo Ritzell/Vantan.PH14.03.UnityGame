@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour {
 	public IEnumerator reloadMissile(Vector3 startPos, Quaternion startRot){
 		missileFactory script = GameObject.Find ("GameManager").GetComponent<missileFactory> ();
 		yield return new WaitForSeconds (3);
-		script.NewMissile.transform.transform.parent = missile.root;
+		script.NewMissile.transform.transform.parent = GameObject.Find ("missiles").transform;
 		script.newMissile.transform.localPosition = startPos;
 		script.newMissile.transform.localRotation = startRot;
 		yield return new WaitForSeconds(0.1f);

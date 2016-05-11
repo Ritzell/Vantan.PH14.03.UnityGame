@@ -2,8 +2,12 @@
 using System.Collections;
 
 public class Airframe : MonoBehaviour {
-	
-	void OnTriggerEnter(Collider col){
+
+	public void reload(Vector3 startPos,Quaternion startRot){
+		StartCoroutine (GameObject.Find("GameManager").GetComponent<GameManager>().reloadMissile(startPos,startRot));
+	}
+
+	private void OnTriggerEnter(Collider col){
 		deth ();
 	}
 

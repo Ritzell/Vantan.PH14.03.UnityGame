@@ -6,21 +6,21 @@ public class missile : MonoBehaviour {
 	public AudioClip audioClip1;
 	public AudioClip audioClip2;
 	private AudioSource audioS;
-	private float speed = 850f;//時速3000km
-	private Vector3 startPos;
-	private Quaternion startRot;
-	public static Transform root;
+	public float speed = 850f;//時速3000km
+	private static Airframe airframe;
+	public Vector3 startPos;
+	public Quaternion startRot;
 
 	void Start () {
+		airframe = GameObject.Find ("eurofighter").GetComponent<Airframe> ();
 		audioS = gameObject.GetComponent<AudioSource>();
 		audioS.clip = audioClip1;
 		startPos = transform.localPosition;
 		startRot = transform.localRotation;
-		root = GameObject.Find ("missiles").transform;
 	}
 
 	public IEnumerator shootReady(){
-		StartCoroutine (GameObject.Find("GameManager").GetComponent<GameManager>().reloadMissile(startPos,startRot));
+		airframe.reload (startPos,startRot); //StartCoroutine (GameObject.Find("GameManager").GetComponent<GameManager>().reloadMissile(startPos,startRot));
 		transform.parent = null;
 		audioS.Play();
 		StartCoroutine (selfBreak ());
@@ -134,9 +134,7 @@ public class missile : MonoBehaviour {
 	}
 
 	private IEnumerator breakMissile(){
-		//GameObject soundOb = new GameObject();
 		Instantiate(Resources.Load("prefabs/Explosion"),transform.position,Quaternion.identity);
-		//soundOb.name = "explosion"
 		Destroy (gameObject);
 		yield return null;
 	}
