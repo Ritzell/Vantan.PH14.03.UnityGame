@@ -1,39 +1,44 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerMove : MonoBehaviour {
+public class PlayerMove : MonoBehaviour
+{
 
-	public struct speedConfig{
+	public struct speedConfig
+	{
 		public static float speed = 300f;
 		public const short accele = +1;
 		public const short decele = -1;
 		public const float cruisingSpeed = 200f;
 		public const float maxSpeed = 690f;
 	}
-	
-	public	GameObject 	myCamera;
+
+	public	GameObject myCamera;
 	private static engineSound engineS;
 
-	void Start () {
-		engineS = GameObject.Find("engine").GetComponent<engineSound> ();
-        StartCoroutine(move());
-		StartCoroutine(changeSpeed());
+	void Start ()
+	{
+		engineS = GameObject.Find ("engine").GetComponent<engineSound> ();
+		StartCoroutine (move ());
+		StartCoroutine (changeSpeed ());
 	}
-    public IEnumerator move()
-    {
-        while (!GameManager.GameOver)
-        {
-            Rotation = new Vector3(Input.GetAxis("Vertical")*3, 0, Input.GetAxis("Horizontal")*2);
+
+	public IEnumerator move ()
+	{
+		while (!GameManager.GameOver) {
+			Rotation = new Vector3 (Input.GetAxis ("Vertical") * 3, 0, Input.GetAxis ("Horizontal") * 2);
 			moveForward ();
-            yield return null;
-        }
-    }
-
-	public void moveForward(){
-		transform.Translate(Vector3.forward * Time.deltaTime * speedConfig.speed);
+			yield return null;
+		}
 	}
 
-	public IEnumerator changeSpeed(){
+	public void moveForward ()
+	{
+		transform.Translate (Vector3.forward * Time.deltaTime * speedConfig.speed);
+	}
+
+	public IEnumerator changeSpeed ()
+	{
 		while (!GameManager.GameOver) {
 			if (Input.GetKey (KeyCode.JoystickButton13) || Input.GetKey (KeyCode.JoystickButton14)) {
 				CameraSystem.stopReset = true;
@@ -56,7 +61,7 @@ public class PlayerMove : MonoBehaviour {
 	/// </summary>
 	/// <value>The speed.</value>
 	public static float Speed {
-		set{
+		set {
 			if (speedConfig.speed >= speedConfig.cruisingSpeed && speedConfig.speed <= speedConfig.maxSpeed) {
 				CameraSystem.moveCamera = value;
 				speedConfig.speed += value;
@@ -67,17 +72,16 @@ public class PlayerMove : MonoBehaviour {
 				speedConfig.speed = speedConfig.maxSpeed;
 			}
 			engineS.Pitch = speedConfig.speed;
-		}get{
+		}get {
 			return speedConfig.speed;
 		}
 	}
-    private Vector3 Rotation
-    {
-        set
-        {
+
+	private Vector3 Rotation {
+		set {
 			transform.Rotate (value.x / 1.5f, 0f, value.z * 2.5f);
 			//myCamera.transform.Rotate (0, 0, -value.z * 2.5f);//カメラ回転無効  
 			//myCamera.transform.localRotation = new Quaternion(myCamera.transform.rotation.x,myCamera.transform.rotation.y,0,myCamera.transform.rotation.w);
-        }
-    }
+		}
+	}
 }

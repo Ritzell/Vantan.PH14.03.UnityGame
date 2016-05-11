@@ -28,14 +28,6 @@ public class EnemyAttack : MonoBehaviour {
 		}
 	}
 
-
-
-	public void missileConfig(){
-		script.NewMissileE.transform.position = transform.position;
-		script.newMissileE.layer = 12;
-		script.newMissileE.transform.localScale = new Vector3 (100, 100, 100);
-	}
-
 	public void shootMissile_S(){
 		missileConfig ();
 		StartCoroutine (script.newMissileE.GetComponent<missile> ().straight (GameObject.Find("eurofighter").transform));
@@ -44,5 +36,11 @@ public class EnemyAttack : MonoBehaviour {
 	public void shootMissile_T(){
 		missileConfig ();
 		StartCoroutine (script.newMissileE.GetComponent<missile> ().Tracking_E (GameObject.Find("eurofighter").transform));
+	}
+
+	public void missileConfig(){
+		script.NewMissileE.transform.position = transform.position;
+		script.newMissileE.layer = 12;
+		script.newMissileE.transform.localScale = new Vector3 (100, 100, 100);
 	}
 }
