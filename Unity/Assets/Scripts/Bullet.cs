@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class Bullet : MonoBehaviour {
-	private float speed = 800f;
+	private float Speed = 800f;
 
 	public IEnumerator Shot(){
 		transform.parent = null;
@@ -15,11 +15,11 @@ public class Bullet : MonoBehaviour {
 			yield return null;
 		}
 	}
-	public void MoveForward(){
-		transform.Translate(Vector3.forward * Time.deltaTime * speed);
+	private void MoveForward(){
+		transform.Translate(Vector3.forward * Time.deltaTime * Speed);
 	}
 
-	public IEnumerator  TimeLimit(){
+	private IEnumerator  TimeLimit(){
 		float time = 0f;
 		while (time < 5.5f && !GameManager.GameOver) {
 			time += Time.deltaTime;

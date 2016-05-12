@@ -3,7 +3,8 @@ using System.Collections;
 
 public class EnemyAttack : MonoBehaviour {
 	[SerializeField]
-	public MissileFactory Factory;
+	private MissileFactory Factory;
+
 	private Transform Player;
 
 	void Start () {
@@ -16,7 +17,7 @@ public class EnemyAttack : MonoBehaviour {
 		while (!GameManager.GameOver) {
 			timer += Time.deltaTime;
 			if (timer >= 1) {
-				ChooseAction ();
+				//ChooseAction ();
 				timer = 0;
 			}
 			yield return null;
@@ -32,18 +33,10 @@ public class EnemyAttack : MonoBehaviour {
 	}
 
 	public void StraightMissile(){
-		MissileConfig ();
-		StartCoroutine (Factory.newMissileE.GetComponent<Missile> ().Straight (Player));
+		StartCoroutine (Factory.NewMissileE(transform.position).GetComponent<Missile> ().Straight (Player));
 	}
 
 	public void TrackingMissile(){
-		MissileConfig ();
-		StartCoroutine (Factory.newMissileE.GetComponent<Missile> ().Tracking_E (Player));
-	}
-
-	public void MissileConfig(){
-		Factory.NewMissileE.transform.position = transform.position;
-		Factory.newMissileE.layer = 12;
-		Factory.newMissileE.transform.localScale = new Vector3 (100, 100, 100);
+		StartCoroutine (Factory.NewMissileE(transform.position).GetComponent<Missile> ().Tracking_E (Player));
 	}
 }
