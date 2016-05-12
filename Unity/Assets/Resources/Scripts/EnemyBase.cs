@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class EnemyBase : MonoBehaviour {
-	public static byte restChildren = 0;
+	public static byte RestChildren = 0;
 
 	void Start () {
 	
@@ -10,7 +10,7 @@ public class EnemyBase : MonoBehaviour {
 
 	void OnTriggerEnter(Collider col){
 		Debug.Log ("win");
-		Destroy(restChildren <= 0 ? gameObject : null);
+		Destroy(RestChildren <= 0 ? gameObject : null);
 	}
 
 	void OnDestroy(){

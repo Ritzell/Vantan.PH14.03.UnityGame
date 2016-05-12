@@ -8,12 +8,12 @@ public class Airframe : MonoBehaviour {
 	}
 
 	private void OnTriggerEnter(Collider col){
-		deth ();
+		Deth ();
 	}
 
-	private void deth(){
+	private void Deth(){
 		GameManager.loadScene();
-		PlayerSound.audioPlay ();
+		PlayerSound.AudioPlay ();
 		Destroy (gameObject);
 	}
 }

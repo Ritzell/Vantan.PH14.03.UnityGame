@@ -3,23 +3,23 @@ using System.Collections;
 
 public class CameraSystem : MonoBehaviour {
 	private static GameObject myCamera;
-	public static bool stopReset = false;
+	public static bool StopReset = false;
 
-	struct cameraLimiter{
-		public const float normalZ = -26f;
-		public const float normalY = 7.5f;
-		public const float maxNormalZ = normalZ+4;
-		public const float miniNormalZ = normalZ-4;
-		public const float maxNormalZError = normalZ+0.1f;
-		public const float miniNormalZError = normalZ-0.1f;
+	struct CameraLimitter{
+		public const float NormalZ = -26f;
+		public const float NormalY = 7.5f;
+		public const float MaxNormalZ = NormalZ+4;
+		public const float MinNormalZ = NormalZ-4;
+		public const float MaxNormalZ_Error = NormalZ+0.1f;
+		public const float MinNormalZ_Error = NormalZ-0.1f;
 	}
 
 	void Start () {
 		myCamera = GameObject.Find ("Main Camera");
-		StartCoroutine (cameraWork());
+		StartCoroutine (CameraWork());
 	}
 
-	private static IEnumerator cameraWork()
+	private static IEnumerator CameraWork()
 	{
 		while(!GameManager.GameOver){
 			//myCamera.transform.rotation = new Quaternion(myCamera.transform.rotation.x,myCamera.transform.rotation.y,0,myCamera.transform.rotation.w);
@@ -30,35 +30,35 @@ public class CameraSystem : MonoBehaviour {
 		}
 	}
 
-	public static IEnumerator cameraPosReset(){
-		float dis = myCamera.transform.localPosition.z - (cameraLimiter.normalZ);
-		while ((myCamera.transform.localPosition.z >= cameraLimiter.maxNormalZError || myCamera.transform.localPosition.z <= cameraLimiter.miniNormalZError)&& !stopReset) 
+	public static IEnumerator CameraPosReset(){
+		float dis = myCamera.transform.localPosition.z - (CameraLimitter.NormalZ);
+		while ((myCamera.transform.localPosition.z >= CameraLimitter.MaxNormalZ_Error || myCamera.transform.localPosition.z <= CameraLimitter.MinNormalZ_Error)&& !StopReset) 
 		{
 			myCamera.transform.Translate (0, 0, -0.05f * System.Math.Sign (dis));
 			yield return null;
 		}
-		if (myCamera.transform.localPosition.z <= cameraLimiter.maxNormalZError && myCamera.transform.localPosition.z >= cameraLimiter.miniNormalZError) {
-			myCamera.transform.localPosition = new Vector3 (0, cameraLimiter.normalY, cameraLimiter.normalZ);
+		if (myCamera.transform.localPosition.z <= CameraLimitter.MaxNormalZ_Error && myCamera.transform.localPosition.z >= CameraLimitter.MinNormalZ_Error) {
+			myCamera.transform.localPosition = new Vector3 (0, CameraLimitter.NormalY, CameraLimitter.NormalZ);
 		}
 		yield return null;
 	}
 
-	public static float moveCamera
+	public static float MoveCamera
 	{
 		set
 		{
-			if (PlayerMove.speedConfig.speed < PlayerMove.speedConfig.maxSpeed && PlayerMove.speedConfig.speed > PlayerMove.speedConfig.minSpeed)
+			if (PlayerMove.SpeedConfig.Speed < PlayerMove.SpeedConfig.MaxSpeed && PlayerMove.SpeedConfig.Speed > PlayerMove.SpeedConfig.MinSpeed)
 			{
 				myCamera.transform.Translate(0, 0, -0.025f * (value / (value / value)));
 			}
 
-			if (myCamera.transform.localPosition.z < cameraLimiter.miniNormalZ)
+			if (myCamera.transform.localPosition.z < CameraLimitter.MinNormalZ)
 			{
-				myCamera.transform.localPosition = new Vector3(0,cameraLimiter.normalY,cameraLimiter.miniNormalZ);
+				myCamera.transform.localPosition = new Vector3(0,CameraLimitter.NormalY,CameraLimitter.MinNormalZ);
 			}
-			else if (myCamera.transform.localPosition.z > cameraLimiter.maxNormalZ)
+			else if (myCamera.transform.localPosition.z > CameraLimitter.MaxNormalZ)
 			{
-				myCamera.transform.localPosition = new Vector3(0, cameraLimiter.normalY, cameraLimiter.maxNormalZ);
+				myCamera.transform.localPosition = new Vector3(0, CameraLimitter.NormalY, CameraLimitter.MaxNormalZ);
 			}
 		}
 	}

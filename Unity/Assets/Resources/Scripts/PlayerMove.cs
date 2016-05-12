@@ -6,58 +6,58 @@ public class PlayerMove : MonoBehaviour
 
 
 
-	public struct speedConfig
+	public struct SpeedConfig
 	{
-		public static float speed = 300f;
-		public const short accele = +1;
+		public static float Speed = 300f;
+		public const short Accele = +1;
 		public const short decele = -1;
-		public const float minSpeed = 200f;
-		public const float maxSpeed = 690f;
+		public const float MinSpeed = 200f;
+		public const float MaxSpeed = 690f;
 	}
 
-	private const float keep = 0;
-	public	GameObject myCamera;
-	private static engineSound engineS;
+	private const float Keep = 0;
+	public	GameObject MyCamera;
+	private static engineSound EngineS;
 
 	void Start ()
 	{
-		engineS = GameObject.Find ("engine").GetComponent<engineSound> ();
-		StartCoroutine (move ());
-		StartCoroutine (changeSpeed ());
+		EngineS = GameObject.Find ("engine").GetComponent<engineSound> ();
+		StartCoroutine (Move ());
+		StartCoroutine (ChangeSpeed ());
 	}
 
-	public IEnumerator move ()
+	public IEnumerator Move ()
 	{
 		while (!GameManager.GameOver) {
 			Rotation = new Vector3 (Input.GetAxis ("Vertical") * 3, 0, Input.GetAxis ("Horizontal") * 2);
-			moveForward ();
+			MoveForward ();
 			yield return null;
 		}
 	}
 
-	public void moveForward ()
+	public void MoveForward ()
 	{
-		transform.Translate (Vector3.forward * Time.deltaTime * speedConfig.speed);
+		transform.Translate (Vector3.forward * Time.deltaTime * SpeedConfig.Speed);
 	}
 
 	/// <summary>
 	/// 機体の速度を加減する。
 	/// </summary>
 	/// <returns>The speed.</returns>
-	public IEnumerator changeSpeed ()
+	public IEnumerator ChangeSpeed ()
 	{
 		while (!GameManager.GameOver) {
 			if (Input.GetKey (KeyCode.JoystickButton13) || Input.GetKey (KeyCode.JoystickButton14) || Input.GetKey (KeyCode.Alpha1) || Input.GetKey (KeyCode.Alpha2)) {
-				CameraSystem.stopReset = true;
+				CameraSystem.StopReset = true;
 				if (Input.GetKey (KeyCode.JoystickButton13) || Input.GetKey (KeyCode.Alpha1)) {
-					fuelTank = speedConfig.decele;
+					FuelTank = SpeedConfig.decele;
 				} else if (Input.GetKey (KeyCode.JoystickButton14) || Input.GetKey (KeyCode.Alpha2)) {//Joystick1Button5 or Joystick8Button12 or JoystickButton14
-					fuelTank = speedConfig.accele;
+					FuelTank = SpeedConfig.Accele;
 				}
-			} else if (CameraSystem.stopReset) {
-				CameraSystem.stopReset = false;
-				afterBurner (keep);
-				StartCoroutine (CameraSystem.cameraPosReset ());
+			} else if (CameraSystem.StopReset) {
+				CameraSystem.StopReset = false;
+				AfterBurner (Keep);
+				StartCoroutine (CameraSystem.CameraPosReset ());
 			}
 			yield return null;
 		}
@@ -68,36 +68,36 @@ public class PlayerMove : MonoBehaviour
 	/// 巡航速度1000Km 最高速度2484Km (speed*60*60=時速とする)
 	/// </summary>
 	/// <value>The speed.</value>
-	public float fuelTank {
+	public float FuelTank {
 		set{
-		if (speedConfig.speed >= speedConfig.minSpeed && speedConfig.speed <= speedConfig.maxSpeed) {
-				CameraSystem.moveCamera = value;
-				speedConfig.speed += value;
-				afterBurner (value);
+		if (SpeedConfig.Speed >= SpeedConfig.MinSpeed && SpeedConfig.Speed <= SpeedConfig.MaxSpeed) {
+				CameraSystem.MoveCamera = value;
+				SpeedConfig.Speed += value;
+				AfterBurner (value);
 		}
-		if (speedConfig.speed < speedConfig.minSpeed) {
-			speedConfig.speed = speedConfig.minSpeed;
-		} else if (speedConfig.speed > speedConfig.maxSpeed) {
-			speedConfig.speed = speedConfig.maxSpeed;
+		if (SpeedConfig.Speed < SpeedConfig.MinSpeed) {
+			SpeedConfig.Speed = SpeedConfig.MinSpeed;
+		} else if (SpeedConfig.Speed > SpeedConfig.MaxSpeed) {
+			SpeedConfig.Speed = SpeedConfig.MaxSpeed;
 		}
-		engineS.Pitch = speedConfig.speed;
+		EngineS.Pitch = SpeedConfig.Speed;
 		}
 	}
 
-	public void afterBurner (float fuel)
+	public void AfterBurner (float fuel)
 	{
 		ParticleSystem burner = GameObject.Find ("Afterburner").GetComponent<ParticleSystem> ();
 		ParticleSystem glow = GameObject.Find ("Glow").GetComponent<ParticleSystem> ();
 		var em = glow.emission;
 		var rate = glow.emission.rate;
 
-		if (fuel > keep) {
+		if (fuel > Keep) {
 			burner.startSpeed = 25;
 			glow.startSpeed = 25;
 			rate.constantMax = 450f;
 			em.rate = rate;
 
-		} else if (fuel == keep) {
+		} else if (fuel == Keep) {
 			burner.startSpeed = 4;
 			glow.startSpeed = 4;
 			rate.constantMax = 100f;

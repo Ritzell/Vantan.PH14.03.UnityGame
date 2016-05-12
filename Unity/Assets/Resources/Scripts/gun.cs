@@ -15,7 +15,7 @@ public class gun : MonoBehaviour {
 
 	public IEnumerator shoot(){
 		foreach (GameObject ob in muzzles) {
-			muzzle script = ob.GetComponent<muzzle>();
+			Muzzle script = ob.GetComponent<Muzzle>();
 			StartCoroutine (script.Ignition());
 			StartCoroutine(factory.newBullet(ob.transform,ob.transform.position,ob.transform.rotation));
 			yield return null;

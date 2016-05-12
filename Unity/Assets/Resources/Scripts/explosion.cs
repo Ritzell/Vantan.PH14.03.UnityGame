@@ -2,14 +2,14 @@
 using System.Collections;
 
 public class explosion : MonoBehaviour {
-	AudioSource audioBox;
+	AudioSource AudioBox;
 	void Start () {
-		audioBox = GetComponent<AudioSource> ();
-		audioBox.Play ();
-		StartCoroutine (deth ());
+		AudioBox = GetComponent<AudioSource> ();
+		AudioBox.Play ();
+		StartCoroutine (Deth ());
 	}
-	private IEnumerator deth(){
-		while (audioBox.isPlaying) {
+	private IEnumerator Deth(){
+		while (AudioBox.isPlaying) {
 			yield return null;
 		}
 		Destroy (gameObject);

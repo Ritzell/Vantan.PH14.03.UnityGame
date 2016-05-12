@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class engineSound : MonoBehaviour {
-	AudioSource audioBox;
+	AudioSource AudioBox;
 	// Use this for initialization
 
 	public struct engineConfig
@@ -12,29 +12,29 @@ public class engineSound : MonoBehaviour {
 	}
 
 	void Start () {
-		audioBox = GetComponent<AudioSource> ();
-		audioBox.pitch = audioBox.pitch;
+		AudioBox = GetComponent<AudioSource> ();
+		AudioBox.pitch = AudioBox.pitch;
 	}
 
 	public float Pitch{
 		set{
 			float v = (value - engineConfig.normalSpeed)*engineConfig.pitchUpSpeed;
 			try{
-				changePitch(v);
+				ChangePitch(v);
 			}catch{
 			}
 		}get{
-			return audioBox.pitch;
+			return AudioBox.pitch;
 		}
 	}
 
-	public void changePitch(float v){
-		if (audioBox.pitch <= 3 && audioBox.pitch >= 0.5f) {
-			audioBox.pitch = v + 1;
-			if (audioBox.pitch > 3) {
-				audioBox.pitch = 3;
-			} else if (audioBox.pitch < 0.5f) {
-				audioBox.pitch = 0.5f;
+	public void ChangePitch(float v){
+		if (AudioBox.pitch <= 3 && AudioBox.pitch >= 0.5f) {
+			AudioBox.pitch = v + 1;
+			if (AudioBox.pitch > 3) {
+				AudioBox.pitch = 3;
+			} else if (AudioBox.pitch < 0.5f) {
+				AudioBox.pitch = 0.5f;
 			}
 		}
 	}

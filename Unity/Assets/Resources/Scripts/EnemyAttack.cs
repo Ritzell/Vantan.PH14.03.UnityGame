@@ -2,45 +2,47 @@
 using System.Collections;
 
 public class EnemyAttack : MonoBehaviour {
-	public missileFactory script;
+	public MissileFactory Factory;
+	private Transform Player; //= GameObject.Find ("eurofighter").transform;
 	// Use this for initialization
 	void Start () {
-		script = GameObject.Find ("GameManager").GetComponent<missileFactory> ();
-		StartCoroutine (shoot());
+		StartCoroutine (Shoot());
+		Player = GameObject.Find ("eurofighter").transform;
+		Factory = GameObject.Find ("GameManager").GetComponent<MissileFactory> ();
 	}
-	public IEnumerator shoot(){
+	public IEnumerator Shoot(){
 		float timer = 0f;
 		while (!GameManager.GameOver) {
 			timer += Time.deltaTime;
 			if (timer >= 1) {
-				choseAction ();
+				ChooseAction ();
 				timer = 0;
 			}
 			yield return null;
 		}
 	}
 
-	public void choseAction(){
+	public void ChooseAction(){
 		if (Random.value > 0.5f) {
-			shootMissile_T ();
+			TrackingMissile ();
 		} else {
-			shootMissile_T ();
+			TrackingMissile ();
 		}
 	}
 
-	public void shootMissile_S(){
-		missileConfig ();
-		StartCoroutine (script.newMissileE.GetComponent<missile> ().straight (GameObject.Find("eurofighter").transform));
+	public void StraightMissile(){
+		MissileConfig ();
+		StartCoroutine (Factory.newMissileE.GetComponent<Missile> ().Straight (Player));
 	}
 
-	public void shootMissile_T(){
-		missileConfig ();
-		StartCoroutine (script.newMissileE.GetComponent<missile> ().Tracking_E (GameObject.Find("eurofighter").transform));
+	public void TrackingMissile(){
+		MissileConfig ();
+		StartCoroutine (Factory.newMissileE.GetComponent<Missile> ().Tracking_E (Player));
 	}
 
-	public void missileConfig(){
-		script.NewMissileE.transform.position = transform.position;
-		script.newMissileE.layer = 12;
-		script.newMissileE.transform.localScale = new Vector3 (100, 100, 100);
+	public void MissileConfig(){
+		Factory.NewMissileE.transform.position = transform.position;
+		Factory.newMissileE.layer = 12;
+		Factory.newMissileE.transform.localScale = new Vector3 (100, 100, 100);
 	}
 }

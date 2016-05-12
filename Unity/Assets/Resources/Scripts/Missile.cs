@@ -46,9 +46,17 @@ public class Missile : MonoBehaviour {
 		}
 	}
 
+	public float Atan (float p2a,float p1a,float p2b,float p1b){
+		float d1 = p2a - p1a;
+		float d2 = p2b - p1b;
+		return (Mathf.Atan2(d1, d2)*Mathf.Rad2Deg);
+
+	}
+
 	public IEnumerator GetAiming(Transform tgt,bool player){
-		Vector3 TgtPos = new Vector3 (tgt.transform.position.x + Random.Range(-3,3),tgt.transform.position.y + Random.Range(-3,3),tgt.transform.position.z + Random.Range(-3,3));
-		transform.LookAt (TgtPos);
+		float Xrad = Atan(tgt.transform.position.y,transform.position.y,tgt.transform.position.z,transform.position.z);
+		float Yrad = Atan(tgt.transform.position.x , transform.position.x,tgt.transform.position.z , transform.position.z);
+		transform.Rotate(Yrad,Xrad,0,Space.Self);
 		yield return null;
 	}
 
@@ -90,10 +98,10 @@ public class Missile : MonoBehaviour {
 			delay += Time.deltaTime;
 			try
 			{
-				if(delay >= 0.5f){
+				//if(delay >= 0.5f){
 				StartCoroutine(GetAiming(tgt,false));
 					delay = 0f;
-				}
+				//}
 				StartCoroutine(MoveForward());
 			}catch{}
 			yield return null;

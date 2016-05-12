@@ -5,14 +5,14 @@ public class Enemy : MonoBehaviour {
 	/// <summary>
 	/// フレアによる回避はミサイルのスクリプトで行う
 	/// </summary>
-	public static GameObject tgt;
+	public static GameObject Tgt;
 
 	void Start () {
-		EnemyBase.restChildren++;
-		tgt = GameObject.Find ("eurofighter");
+		EnemyBase.RestChildren++;
+		Tgt = GameObject.Find ("eurofighter");
 	}
 	void OnTriggerStay(Collider col){
-		EnemyBase.restChildren--;
+		EnemyBase.RestChildren--;
 		Destroy (gameObject);
 	}
 }

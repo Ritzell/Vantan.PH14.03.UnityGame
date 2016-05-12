@@ -1,38 +1,38 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class bullet : MonoBehaviour {
+public class Bullet : MonoBehaviour {
 	private float speed = 800f;
 
-	public IEnumerator shot(){
+	public IEnumerator Shot(){
 		transform.parent = null;
-		StartCoroutine (timeLimit ());
+		StartCoroutine (TimeLimit ());
 		while (!GameManager.GameOver) {
 		try{
-			moveForward();
+			MoveForward();
 		}catch{
 		}
 			yield return null;
 		}
 	}
-	public void moveForward(){
+	public void MoveForward(){
 		transform.Translate(Vector3.forward * Time.deltaTime * speed);
 	}
 
-	public IEnumerator  timeLimit(){
+	public IEnumerator  TimeLimit(){
 		float time = 0f;
 		while (time < 5.5f && !GameManager.GameOver) {
 			time += Time.deltaTime;
 			yield return null;
 		}
-		StartCoroutine (breakBullet());
+		StartCoroutine (BreakBullet());
 		yield return null;
 	}
 
 	void OnTriggerEnter(Collider col){
-		StartCoroutine (breakBullet());
+		StartCoroutine (BreakBullet());
 	}
-	private IEnumerator breakBullet(){
+	private IEnumerator BreakBullet(){
 		Destroy (gameObject);
 		yield return null;
 	}

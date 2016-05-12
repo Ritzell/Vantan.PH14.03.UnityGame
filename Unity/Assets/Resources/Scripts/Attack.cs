@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Attack : MonoBehaviour {
 
-	struct delay{
+	struct Delay{
 		public const float missileDelay = 0.15f;
 		public const float gunDelay = 0.1f;
 	}
@@ -16,37 +16,37 @@ public class Attack : MonoBehaviour {
 		missiles.Enqueue (GameObject.Find ("missileB"));
 		missiles.Enqueue (GameObject.Find ("missileC"));
 		missiles.Enqueue (GameObject.Find ("missileD"));
-        StartCoroutine(missileShoot());
-		StartCoroutine(gunShoot());
+        StartCoroutine(MissileShoot());
+		StartCoroutine(GunShoot());
 	}
 
-    public IEnumerator missileShoot()
+    public IEnumerator MissileShoot()
     {
        float reloading = 0.0f;
         while (!GameManager.GameOver)
         {
             reloading += Time.deltaTime;
-			if(reloading >= delay.missileDelay)
+			if(reloading >= Delay.missileDelay)
             {
                 if ((Input.GetAxis("RTrigger") == 1 || Input.GetKeyDown(KeyCode.C)) && missiles.Count >= 1)
                 {
-                    StartCoroutine(missiles.Dequeue().GetComponent<missile>().straight());
+                    StartCoroutine(missiles.Dequeue().GetComponent<Missile>().Straight());
                     reloading = 0f;
-				}else if ((Input.GetAxis("LTrigger") == 1 || Input.GetKeyDown(KeyCode.V)) && missiles.Count >= 1 && ReticleSystem.lockOnTgt != null)
+				}else if ((Input.GetAxis("LTrigger") == 1 || Input.GetKeyDown(KeyCode.V)) && missiles.Count >= 1 && ReticleSystem.LockOnTgt != null)
 				{
-					StartCoroutine(missiles.Dequeue().GetComponent<missile>().Tracking(ReticleSystem.lockOnTgt.transform));
+					StartCoroutine(missiles.Dequeue().GetComponent<Missile>().Tracking(ReticleSystem.LockOnTgt.transform));
 					reloading = 0f;
 				}
             }
             yield return null;
         }
     }
-	public IEnumerator gunShoot(){
+	public IEnumerator GunShoot(){
 		float reloading = 0.0f;
 		while (!GameManager.GameOver)
 		{
 			reloading += Time.deltaTime;
-			if(reloading >= delay.gunDelay)
+			if(reloading >= Delay.gunDelay)
 			{
 				if ((Input.GetKey(KeyCode.JoystickButton12) || Input.GetKey(KeyCode.F)))
 				{
