@@ -4,7 +4,16 @@ using System.Collections;
 public class CameraSystem : MonoBehaviour {
 	[SerializeField]
 	private static GameObject MyCamera;
-	public static bool StopReset = false;
+
+	private static bool stopReset = false;
+	public static bool StopReset{
+		set{
+			stopReset = value;
+		}
+		get{
+			return stopReset;
+		}
+	}
 
 	struct CameraLimitter{
 		public const float NormalZ = -26f;
@@ -33,7 +42,7 @@ public class CameraSystem : MonoBehaviour {
 
 	public static IEnumerator CameraPosReset(){
 		float dis = MyCamera.transform.localPosition.z - (CameraLimitter.NormalZ);
-		while ((MyCamera.transform.localPosition.z >= CameraLimitter.MaxNormalZ_Error || MyCamera.transform.localPosition.z <= CameraLimitter.MinNormalZ_Error)&& !StopReset) 
+		while ((MyCamera.transform.localPosition.z >= CameraLimitter.MaxNormalZ_Error || MyCamera.transform.localPosition.z <= CameraLimitter.MinNormalZ_Error)&& !stopReset) 
 		{
 			MyCamera.transform.Translate (0, 0, -0.05f * System.Math.Sign (dis));
 			yield return null;

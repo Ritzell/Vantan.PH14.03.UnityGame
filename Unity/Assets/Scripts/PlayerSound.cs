@@ -5,7 +5,7 @@ public class PlayerSound : MonoBehaviour {
 	private static AudioSource AudioBox;
 
 	[SerializeField]
-	public AudioClip AudioClip;
+	private AudioClip AudioClip;
 
 	void Start () {
 		AudioBox = GetComponent<AudioSource>();

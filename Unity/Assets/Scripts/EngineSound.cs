@@ -28,7 +28,7 @@ public class EngineSound : MonoBehaviour {
 		}
 	}
 
-	public void ChangePitch(float v){
+	private void ChangePitch(float v){
 		if (AudioBox.pitch <= 3 && AudioBox.pitch >= 0.5f) {
 			AudioBox.pitch = v + 1;
 			if (AudioBox.pitch > 3) {

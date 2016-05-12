@@ -4,24 +4,28 @@ using System.Collections.Generic;
 
 public class Missile : MonoBehaviour {
 	[SerializeField]
-	public AudioClip audioClip1;
+	private AudioClip AudioClip1;
 	[SerializeField]
-	public AudioClip audioClip2;
+	private AudioClip AudioClip2;
+
 	private AudioSource AudioS;
-	public float speed = 850f;//時速3000km
+
+	[SerializeField]
+	private float Speed = 850f;//時速3000km
 	private static Airframe AirFrame;
-	public Vector3 StartPos;
-	public Quaternion StartRot;
+
+	private Vector3 StartPos;
+	private Quaternion StartRot;
 
 	void Start () {
 		AirFrame = GameObject.Find ("eurofighter").GetComponent<Airframe> ();
 		AudioS = gameObject.GetComponent<AudioSource>();
-		AudioS.clip = audioClip1;
+		AudioS.clip = AudioClip1;
 		StartPos = transform.localPosition;
 		StartRot = transform.localRotation;
 	}
 
-	public IEnumerator ShootReady(){
+	private IEnumerator ShootReady(){
 		AirFrame.Reload (StartPos,StartRot); //StartCoroutine (GameObject.Find("GameManager").GetComponent<GameManager>().reloadMissile(startPos,startRot));
 		transform.parent = null;
 		AudioS.Play();
@@ -29,7 +33,7 @@ public class Missile : MonoBehaviour {
 		yield return null;
 	}
 
-	public IEnumerator shootReady_E(){
+	private IEnumerator shootReady_E(){
 		//audioS.Play();
 		StartCoroutine (SelfBreak ());
 		yield return null;
@@ -48,7 +52,7 @@ public class Missile : MonoBehaviour {
 		}
 	}
 
-	public IEnumerator GetAiming(Transform tgt,bool player){
+	private IEnumerator GetAiming(Transform tgt,bool player){
 		Vector3 TgtPos = new Vector3 (tgt.transform.position.x + Random.Range(-3,3),tgt.transform.position.y + Random.Range(-3,3),tgt.transform.position.z + Random.Range(-3,3));
 		transform.LookAt (TgtPos);
 		yield return null;
@@ -103,8 +107,8 @@ public class Missile : MonoBehaviour {
 		yield return null;
 	}
 
-	public IEnumerator MoveForward(){
-		transform.Translate(Vector3.forward * Time.deltaTime * speed);
+	private IEnumerator MoveForward(){
+		transform.Translate(Vector3.forward * Time.deltaTime * Speed);
 		yield return null;
 	}
 

@@ -9,7 +9,13 @@ public class Attack : MonoBehaviour {
 		public const float gunDelay = 0.1f;
 	}
 
-	public static Queue<GameObject> missiles = new Queue<GameObject> ();
+	private static Queue<GameObject> missiles = new Queue<GameObject> ();
+
+	public static Queue<GameObject> Missiles{
+		get{
+			return missiles;
+		}
+	}
 
 	void Start () {
 		missiles.Enqueue (GameObject.Find ("missileA"));
@@ -22,36 +28,36 @@ public class Attack : MonoBehaviour {
 
     public IEnumerator MissileShoot()
     {
-       float reloading = 0.0f;
+		float Reloading = 0.0f;
         while (!GameManager.GameOver)
         {
-            reloading += Time.deltaTime;
-			if(reloading >= Delay.missileDelay)
+            Reloading += Time.deltaTime;
+			if(Reloading >= Delay.missileDelay)
             {
                 if ((Input.GetAxis("RTrigger") == 1 || Input.GetKeyDown(KeyCode.C)) && missiles.Count >= 1)
                 {
                     StartCoroutine(missiles.Dequeue().GetComponent<Missile>().Straight());
-                    reloading = 0f;
+                    Reloading = 0f;
 				}else if ((Input.GetAxis("LTrigger") == 1 || Input.GetKeyDown(KeyCode.V)) && missiles.Count >= 1 && ReticleSystem.LockOnTgt != null)
 				{
 					StartCoroutine(missiles.Dequeue().GetComponent<Missile>().Tracking(ReticleSystem.LockOnTgt.transform));
-					reloading = 0f;
+					Reloading = 0f;
 				}
             }
             yield return null;
         }
     }
 	public IEnumerator GunShoot(){
-		float reloading = 0.0f;
+		float Reloading = 0.0f;
 		while (!GameManager.GameOver)
 		{
-			reloading += Time.deltaTime;
-			if(reloading >= Delay.gunDelay)
+			Reloading += Time.deltaTime;
+			if(Reloading >= Delay.gunDelay)
 			{
 				if ((Input.GetKey(KeyCode.JoystickButton12) || Input.GetKey(KeyCode.F)))
 				{
 					StartCoroutine (GameObject.Find ("guns").GetComponent<Gun> ().shoot ());
-					reloading = 0f;
+					Reloading = 0f;
 				}
 			}
 			yield return null;

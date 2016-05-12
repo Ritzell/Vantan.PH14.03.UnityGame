@@ -13,26 +13,26 @@ public class ReticleSystem : MonoBehaviour {
 	public static GameObject LockOnTgt;
 
 	[SerializeField]
-	public Camera MainCamera;
+	private Camera MainCamera;
 
 	private float lockNow;
 
 	[SerializeField]
-	public GameObject ReticleUI;
+	private GameObject ReticleUI;
 
 	[SerializeField]
-	public GameObject MuzzleA;
+	private GameObject MuzzleA;
 
 	[SerializeField]
-	public GameObject MuzzleB;
+	private GameObject MuzzleB;
 
 	void Start () {
 		StartCoroutine (SerchEnemy ());
 		StartCoroutine (ReleaseLock ());
-		StartCoroutine (InputRstick());
+		StartCoroutine (InputStick_R());
 	}
 
-	public IEnumerator InputRstick(){
+	private IEnumerator InputStick_R(){
 		while (!GameManager.GameOver) {
 			ReticleMove = new Vector3 (Input.GetAxis ("3thAxis"), Input.GetAxis ("4thAxis"), 0);
 			//transform.Translate(Input.GetAxisRaw ("5thAxis"),Input.GetAxisRaw ("4thAxis"),0);
@@ -40,7 +40,7 @@ public class ReticleSystem : MonoBehaviour {
 		}
 	}
 
-	public IEnumerator SerchEnemy(){
+	private IEnumerator SerchEnemy(){
 		RaycastHit Hit;
 		int LayerMask = 1 << 11 | 1 << 12;
 		while (!GameManager.GameOver) {
@@ -52,7 +52,7 @@ public class ReticleSystem : MonoBehaviour {
 		}
 	}
 
-	public GameObject LockNow{
+	private GameObject LockNow{
 		set{
 			if (Time.deltaTime >= 0.4f) {
 				Debug.Log (LockNow);
@@ -65,7 +65,7 @@ public class ReticleSystem : MonoBehaviour {
 			return null;
 		}
 	}
-	public void LockOn(GameObject Tgt){
+	private void LockOn(GameObject Tgt){
 		if (lockNow >= 1.5f) {
 			LockOnTgt = Tgt;
 			Debug.Log (LockOnTgt + " をロックオン!");
@@ -73,7 +73,7 @@ public class ReticleSystem : MonoBehaviour {
 		}
 	}
 
-	public IEnumerator ReleaseLock(){
+	private IEnumerator ReleaseLock(){
 		while (!GameManager.GameOver) {
 			if (Input.GetKeyDown (KeyCode.Alpha1) && LockOnTgt != null) {
 				LockOnTgt = null;
@@ -81,7 +81,7 @@ public class ReticleSystem : MonoBehaviour {
 			yield return null;
 		}
 	}
-	public Vector3 ReticleMove {
+	private Vector3 ReticleMove {
 		set {
 			// 350 20 340 20
 			transform.Translate (value.x, -value.y, 0);

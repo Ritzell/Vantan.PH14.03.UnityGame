@@ -2,10 +2,14 @@
 using System.Collections;
 
 public class EnemyBase : MonoBehaviour {
-	public static byte RestChildren = 0;
+	private static byte RestChildren = 0;
 
-	void Start () {
-	
+	public static byte Rest{
+		set{
+			RestChildren = value;
+		}get{
+			return RestChildren;
+		}
 	}
 
 	void OnTriggerEnter(Collider Col){
@@ -13,7 +17,6 @@ public class EnemyBase : MonoBehaviour {
 	}
 
 	void OnDestroy(){
-		Debug.Log ("win");
 		GameManager.loadScene ();
 	}
 }

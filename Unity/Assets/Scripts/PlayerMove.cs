@@ -17,7 +17,7 @@ public class PlayerMove : MonoBehaviour
 
 	private const float Keep = 0;
 	[SerializeField]
-	public	GameObject MyCamera;
+	private	GameObject MyCamera;
 	private static EngineSound EngineS;
 
 	void Start ()
@@ -27,7 +27,7 @@ public class PlayerMove : MonoBehaviour
 		StartCoroutine (ChangeSpeed ());
 	}
 
-	public IEnumerator Move ()
+	private IEnumerator Move ()
 	{
 		while (!GameManager.GameOver) {
 			Rotation = new Vector3 (Input.GetAxis ("Vertical") * 3, 0, Input.GetAxis ("Horizontal") * 2);
@@ -36,7 +36,7 @@ public class PlayerMove : MonoBehaviour
 		}
 	}
 
-	public void MoveForward ()
+	private void MoveForward ()
 	{
 		transform.Translate (Vector3.forward * Time.deltaTime * SpeedConfig.Speed);
 	}
@@ -45,7 +45,7 @@ public class PlayerMove : MonoBehaviour
 	/// 機体の速度を加減する。
 	/// </summary>
 	/// <returns>The speed.</returns>
-	public IEnumerator ChangeSpeed ()
+	private IEnumerator ChangeSpeed ()
 	{
 		while (!GameManager.GameOver) {
 			if (Input.GetKey (KeyCode.JoystickButton13) || Input.GetKey (KeyCode.JoystickButton14) || Input.GetKey (KeyCode.Alpha1) || Input.GetKey (KeyCode.Alpha2)) {
@@ -69,7 +69,7 @@ public class PlayerMove : MonoBehaviour
 	/// 巡航速度1000Km 最高速度2484Km (speed*60*60=時速とする)
 	/// </summary>
 	/// <value>The speed.</value>
-	public float FuelTank {
+	private float FuelTank {
 		set{
 		if (SpeedConfig.Speed >= SpeedConfig.MinSpeed && SpeedConfig.Speed <= SpeedConfig.MaxSpeed) {
 				CameraSystem.MoveCamera = value;
@@ -85,7 +85,7 @@ public class PlayerMove : MonoBehaviour
 		}
 	}
 
-	public void AfterBurner (float Fuel)
+	private void AfterBurner (float Fuel)
 	{
 		ParticleSystem Burner = GameObject.Find ("Afterburner").GetComponent<ParticleSystem> ();
 		ParticleSystem Glow = GameObject.Find ("Glow").GetComponent<ParticleSystem> ();

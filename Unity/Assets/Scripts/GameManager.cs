@@ -5,7 +5,13 @@ using System;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
-    public static bool GameOver = false;
+	
+	private static bool gameOver = false;
+	public static bool GameOver{
+		get{
+			return gameOver;
+		}
+	}
 	private static DateTime StartTime = DateTime.Now;
     // Use this for initialization
 
@@ -15,23 +21,19 @@ public class GameManager : MonoBehaviour {
 
 	public IEnumerator ReloadMissile(Vector3 StartPos, Quaternion StartRot){
 		MissileFactory Factory = GameObject.Find ("GameManager").GetComponent<MissileFactory> ();
-		yield return new WaitForSeconds (3);
-		Factory.NewMissile.transform.transform.parent = GameObject.Find ("missiles").transform;
-		Factory.newMissile.transform.localPosition = StartPos;
-		Factory.newMissile.transform.localRotation = StartRot;
-		yield return new WaitForSeconds(0.1f);
-		Attack.missiles.Enqueue(Factory.newMissile);
+		yield return new WaitForSeconds (3.1f);
+		Attack.Missiles.Enqueue(Factory.NewMissile (StartPos,StartRot));
 		yield return null;
 	}
 
 	/// <summary>
 	/// 制限時間の設定と残り時間を計算するメソッドの実行
 	/// </summary>
-	public IEnumerator Timer()
+	private IEnumerator Timer()
     {
 		GUIText Timetext = GameObject.Find("Timer").GetComponent<GUIText>();
 		TimeSpan LimitTime = new TimeSpan(00, 10, 00);
-        while (!GameOver)
+        while (!gameOver)
         {
 			StartCoroutine(displayTime (Timetext, LimitTime));
             yield return null;
@@ -41,14 +43,14 @@ public class GameManager : MonoBehaviour {
 	/// <summary>
 	/// 残り時間をString型に変換
 	/// </summary>
-	public string timeCastToString(){
+	private string TimeCastToString(){
 		return Time.Minutes.ToString ("D2") + ":" + Time.Seconds.ToString ("D2");//timeString;
 	}
 
 	/// <summary>
 	/// 残り時間を計算
 	/// </summary>
-	public void timeCalculation(TimeSpan limitTime){
+	private void TimeCalculation(TimeSpan limitTime){
 		TimeSpan elapsedTime = (TimeSpan)(DateTime.Now - StartTime);
 		Time = limitTime - elapsedTime;
 	}
@@ -58,9 +60,9 @@ public class GameManager : MonoBehaviour {
 	/// </summary>
 	/// <param name="Timetext">Timetext.</param>
 	/// <param name="limitTime">Limit time.</param>
-	public IEnumerator displayTime(GUIText Timetext, TimeSpan limitTime){
-		timeCalculation (limitTime);
-		Timetext.text = timeCastToString();
+	private IEnumerator displayTime(GUIText Timetext, TimeSpan limitTime){
+		TimeCalculation (limitTime);
+		Timetext.text = TimeCastToString();
 		yield return null;
 	}
 
@@ -70,7 +72,7 @@ public class GameManager : MonoBehaviour {
 	/// <summary>
 	/// 時間が0を下回るとscene移行するプロパティ
 	/// </summary>
-	public TimeSpan Time{
+	private TimeSpan Time{
 		set{
 			RestTime = value;
 			if (RestTime.Minutes + RestTime.Seconds <= 0) {

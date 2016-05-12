@@ -3,21 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Gun : MonoBehaviour {
-	private  static List<GameObject> muzzles = new List<GameObject>();
-	private static bulletFactory factory;
+	private  static List<GameObject> Muzzules = new List<GameObject>();
+	private static BulletFactory Factory;
 	// Use this for initialization
 
 	void Start(){
-		factory = GameObject.Find ("GameManager").GetComponent<bulletFactory>();
-		muzzles.Add (GameObject.Find ("muzzleA"));
-		muzzles.Add (GameObject.Find ("muzzleB"));
+		Factory = GameObject.Find ("GameManager").GetComponent<BulletFactory>();
+		Muzzules.Add (GameObject.Find ("muzzleA"));
+		Muzzules.Add (GameObject.Find ("muzzleB"));
 	}
 
 	public IEnumerator shoot(){
-		foreach (GameObject ob in muzzles) {
+		foreach (GameObject ob in Muzzules) {
 			Muzzle script = ob.GetComponent<Muzzle>();
 			StartCoroutine (script.Ignition());
-			StartCoroutine(factory.MakeBullet(ob.transform,ob.transform.position,ob.transform.rotation));
+			StartCoroutine(Factory.MakeBullet(ob.transform,ob.transform.position,ob.transform.rotation));
 			yield return null;
 		}
 		yield return null;
