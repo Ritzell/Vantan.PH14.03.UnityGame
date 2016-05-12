@@ -3,8 +3,10 @@ using System.Collections;
 
 public class PlayerSound : MonoBehaviour {
 	private static AudioSource AudioBox;
+
+	[SerializeField]
 	public AudioClip AudioClip;
-	// Use this for initialization
+
 	void Start () {
 		AudioBox = GetComponent<AudioSource>();
 		AudioBox.clip = AudioClip;

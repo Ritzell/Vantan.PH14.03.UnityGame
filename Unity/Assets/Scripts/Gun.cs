@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class gun : MonoBehaviour {
+public class Gun : MonoBehaviour {
 	private  static List<GameObject> muzzles = new List<GameObject>();
 	private static bulletFactory factory;
 	// Use this for initialization
@@ -17,7 +17,7 @@ public class gun : MonoBehaviour {
 		foreach (GameObject ob in muzzles) {
 			Muzzle script = ob.GetComponent<Muzzle>();
 			StartCoroutine (script.Ignition());
-			StartCoroutine(factory.newBullet(ob.transform,ob.transform.position,ob.transform.rotation));
+			StartCoroutine(factory.MakeBullet(ob.transform,ob.transform.position,ob.transform.rotation));
 			yield return null;
 		}
 		yield return null;

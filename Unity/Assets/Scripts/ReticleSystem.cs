@@ -11,12 +11,21 @@ public class ReticleSystem : MonoBehaviour {
 	////Corgi(8)レイヤーとだけ衝突しない
 	//int layerMask = ~(1 << 8);
 	public static GameObject LockOnTgt;
+
+	[SerializeField]
 	public Camera MainCamera;
+
 	private float lockNow;
+
+	[SerializeField]
 	public GameObject ReticleUI;
+
+	[SerializeField]
 	public GameObject MuzzleA;
+
+	[SerializeField]
 	public GameObject MuzzleB;
-	// Use this for initialization
+
 	void Start () {
 		StartCoroutine (SerchEnemy ());
 		StartCoroutine (ReleaseLock ());
@@ -32,12 +41,12 @@ public class ReticleSystem : MonoBehaviour {
 	}
 
 	public IEnumerator SerchEnemy(){
-		RaycastHit hit;
-		int layerMask = 1 << 11 | 1 << 12;
+		RaycastHit Hit;
+		int LayerMask = 1 << 11 | 1 << 12;
 		while (!GameManager.GameOver) {
 			var ray = RectTransformUtility.ScreenPointToRay (Camera.main,new Vector3(294.0f, 157.5f, 0.0f));
-			if(Physics.Raycast(ray,out hit,30000,layerMask) && LockOnTgt == null){
-				LockNow = hit.transform.gameObject;
+			if(Physics.Raycast(ray,out Hit,30000,LayerMask) && LockOnTgt == null){
+				LockNow = Hit.transform.gameObject;
 			}
 			yield return null;
 		}
@@ -56,9 +65,9 @@ public class ReticleSystem : MonoBehaviour {
 			return null;
 		}
 	}
-	public void LockOn(GameObject tgt){
+	public void LockOn(GameObject Tgt){
 		if (lockNow >= 1.5f) {
-			LockOnTgt = tgt;
+			LockOnTgt = Tgt;
 			Debug.Log (LockOnTgt + " をロックオン!");
 			lockNow = 0;
 		}

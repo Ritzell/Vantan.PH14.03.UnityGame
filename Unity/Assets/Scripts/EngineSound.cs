@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class engineSound : MonoBehaviour {
+public class EngineSound : MonoBehaviour {
 	AudioSource AudioBox;
 	// Use this for initialization
 

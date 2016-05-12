@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class explosion : MonoBehaviour {
+public class Explosion : MonoBehaviour {
 	AudioSource AudioBox;
 	void Start () {
 		AudioBox = GetComponent<AudioSource> ();

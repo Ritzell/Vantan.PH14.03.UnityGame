@@ -10,18 +10,19 @@ public class PlayerMove : MonoBehaviour
 	{
 		public static float Speed = 300f;
 		public const short Accele = +1;
-		public const short decele = -1;
+		public const short Decele = -1;
 		public const float MinSpeed = 200f;
 		public const float MaxSpeed = 690f;
 	}
 
 	private const float Keep = 0;
+	[SerializeField]
 	public	GameObject MyCamera;
-	private static engineSound EngineS;
+	private static EngineSound EngineS;
 
 	void Start ()
 	{
-		EngineS = GameObject.Find ("engine").GetComponent<engineSound> ();
+		EngineS = GameObject.Find ("engine").GetComponent<EngineSound> ();
 		StartCoroutine (Move ());
 		StartCoroutine (ChangeSpeed ());
 	}
@@ -50,7 +51,7 @@ public class PlayerMove : MonoBehaviour
 			if (Input.GetKey (KeyCode.JoystickButton13) || Input.GetKey (KeyCode.JoystickButton14) || Input.GetKey (KeyCode.Alpha1) || Input.GetKey (KeyCode.Alpha2)) {
 				CameraSystem.StopReset = true;
 				if (Input.GetKey (KeyCode.JoystickButton13) || Input.GetKey (KeyCode.Alpha1)) {
-					FuelTank = SpeedConfig.decele;
+					FuelTank = SpeedConfig.Decele;
 				} else if (Input.GetKey (KeyCode.JoystickButton14) || Input.GetKey (KeyCode.Alpha2)) {//Joystick1Button5 or Joystick8Button12 or JoystickButton14
 					FuelTank = SpeedConfig.Accele;
 				}
@@ -84,27 +85,26 @@ public class PlayerMove : MonoBehaviour
 		}
 	}
 
-	public void AfterBurner (float fuel)
+	public void AfterBurner (float Fuel)
 	{
-		ParticleSystem burner = GameObject.Find ("Afterburner").GetComponent<ParticleSystem> ();
-		ParticleSystem glow = GameObject.Find ("Glow").GetComponent<ParticleSystem> ();
-		var em = glow.emission;
-		var rate = glow.emission.rate;
+		ParticleSystem Burner = GameObject.Find ("Afterburner").GetComponent<ParticleSystem> ();
+		ParticleSystem Glow = GameObject.Find ("Glow").GetComponent<ParticleSystem> ();
+		var em = Glow.emission;
+		var rate = Glow.emission.rate;
 
-		if (fuel > Keep) {
-			burner.startSpeed = 25;
-			glow.startSpeed = 25;
+		if (Fuel > Keep) {
+			Burner.startSpeed = 25;
+			Glow.startSpeed = 25;
 			rate.constantMax = 450f;
 			em.rate = rate;
 
-		} else if (fuel == Keep) {
-			burner.startSpeed = 4;
-			glow.startSpeed = 4;
+		} else if (Fuel == Keep) {
+			Burner.startSpeed = 4;
+			Glow.startSpeed = 4;
 			rate.constantMax = 100f;
 			em.rate = rate;
 
 		} else {
-			Debug.Log ("減速時のアフターバーナーの火力は如何致しましょうか？");
 		}
 	}
 

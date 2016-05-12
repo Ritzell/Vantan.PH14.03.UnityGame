@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Missile : MonoBehaviour {
+	[SerializeField]
 	public AudioClip audioClip1;
+	[SerializeField]
 	public AudioClip audioClip2;
 	private AudioSource AudioS;
 	public float speed = 850f;//時速3000km
@@ -20,7 +22,7 @@ public class Missile : MonoBehaviour {
 	}
 
 	public IEnumerator ShootReady(){
-		AirFrame.reload (StartPos,StartRot); //StartCoroutine (GameObject.Find("GameManager").GetComponent<GameManager>().reloadMissile(startPos,startRot));
+		AirFrame.Reload (StartPos,StartRot); //StartCoroutine (GameObject.Find("GameManager").GetComponent<GameManager>().reloadMissile(startPos,startRot));
 		transform.parent = null;
 		AudioS.Play();
 		StartCoroutine (SelfBreak ());

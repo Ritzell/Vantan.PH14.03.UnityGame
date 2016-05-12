@@ -8,12 +8,12 @@ public class EnemyBase : MonoBehaviour {
 	
 	}
 
-	void OnTriggerEnter(Collider col){
-		Debug.Log ("win");
+	void OnTriggerEnter(Collider Col){
 		Destroy(RestChildren <= 0 ? gameObject : null);
 	}
 
 	void OnDestroy(){
+		Debug.Log ("win");
 		GameManager.loadScene ();
 	}
 }

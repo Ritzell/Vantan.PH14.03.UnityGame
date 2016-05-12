@@ -6,21 +6,21 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
     public static bool GameOver = false;
-    private static DateTime startTime = DateTime.Now;
+	private static DateTime StartTime = DateTime.Now;
     // Use this for initialization
 
     void Start () {
 		StartCoroutine (Timer ());
 	}
 
-	public IEnumerator reloadMissile(Vector3 startPos, Quaternion startRot){
-		MissileFactory script = GameObject.Find ("GameManager").GetComponent<MissileFactory> ();
+	public IEnumerator ReloadMissile(Vector3 StartPos, Quaternion StartRot){
+		MissileFactory Factory = GameObject.Find ("GameManager").GetComponent<MissileFactory> ();
 		yield return new WaitForSeconds (3);
-		script.NewMissile.transform.transform.parent = GameObject.Find ("missiles").transform;
-		script.newMissile.transform.localPosition = startPos;
-		script.newMissile.transform.localRotation = startRot;
+		Factory.NewMissile.transform.transform.parent = GameObject.Find ("missiles").transform;
+		Factory.newMissile.transform.localPosition = StartPos;
+		Factory.newMissile.transform.localRotation = StartRot;
 		yield return new WaitForSeconds(0.1f);
-		Attack.missiles.Enqueue(script.newMissile);
+		Attack.missiles.Enqueue(Factory.newMissile);
 		yield return null;
 	}
 
@@ -30,10 +30,10 @@ public class GameManager : MonoBehaviour {
 	public IEnumerator Timer()
     {
 		GUIText Timetext = GameObject.Find("Timer").GetComponent<GUIText>();
-        TimeSpan limitTime = new TimeSpan(00, 10, 00);
+		TimeSpan LimitTime = new TimeSpan(00, 10, 00);
         while (!GameOver)
         {
-			StartCoroutine(displayTime (Timetext, limitTime));
+			StartCoroutine(displayTime (Timetext, LimitTime));
             yield return null;
         }
     }
@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour {
 	/// 残り時間を計算
 	/// </summary>
 	public void timeCalculation(TimeSpan limitTime){
-		TimeSpan elapsedTime = (TimeSpan)(DateTime.Now - startTime);
+		TimeSpan elapsedTime = (TimeSpan)(DateTime.Now - StartTime);
 		Time = limitTime - elapsedTime;
 	}
 
@@ -65,19 +65,19 @@ public class GameManager : MonoBehaviour {
 	}
 
 
-	private TimeSpan time;
+	private TimeSpan RestTime;
 
 	/// <summary>
 	/// 時間が0を下回るとscene移行するプロパティ
 	/// </summary>
 	public TimeSpan Time{
 		set{
-			time = value;
-			if (time.Minutes + time.Seconds <= 0) {
+			RestTime = value;
+			if (RestTime.Minutes + RestTime.Seconds <= 0) {
 				GameManager.loadScene ();
 			}
 		}get{
-			return time;
+			return RestTime;
 		}
 	}
 

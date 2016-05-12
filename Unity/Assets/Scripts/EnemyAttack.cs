@@ -2,9 +2,10 @@
 using System.Collections;
 
 public class EnemyAttack : MonoBehaviour {
+	[SerializeField]
 	public MissileFactory Factory;
-	private Transform Player; //= GameObject.Find ("eurofighter").transform;
-	// Use this for initialization
+	private Transform Player;
+
 	void Start () {
 		StartCoroutine (Shoot());
 		Player = GameObject.Find ("eurofighter").transform;

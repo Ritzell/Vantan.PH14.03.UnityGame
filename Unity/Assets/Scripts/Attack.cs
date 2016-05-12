@@ -50,7 +50,7 @@ public class Attack : MonoBehaviour {
 			{
 				if ((Input.GetKey(KeyCode.JoystickButton12) || Input.GetKey(KeyCode.F)))
 				{
-					StartCoroutine (GameObject.Find ("guns").GetComponent<gun> ().shoot ());
+					StartCoroutine (GameObject.Find ("guns").GetComponent<Gun> ().shoot ());
 					reloading = 0f;
 				}
 			}
