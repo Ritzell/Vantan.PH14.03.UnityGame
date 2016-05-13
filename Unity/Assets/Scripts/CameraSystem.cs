@@ -8,6 +8,21 @@ public class CameraSystem : MonoBehaviour
 	private static Vector3 LookBehindPos;
 	private static Vector3 LookFrontPos;
 	private static bool stopReset = false;
+	private static GameObject AirPlain;
+	private static bool freemove = false;
+
+	public static bool FreeMove{
+		set{
+			if (value == false) {
+				MyCamera.transform.localPosition = ChangePos (MyCamera.transform.localPosition);
+				//MyCamera.transform.Rotate (0, 180, 0);
+				MyCamera.transform.localRotation = new Quaternion(0,0,0,MyCamera.transform.localRotation.w);
+			}
+			freemove = value;
+		}get{
+			return freemove;
+		}
+	}
 
 	public static bool StopReset {
 		set {
@@ -31,13 +46,37 @@ public class CameraSystem : MonoBehaviour
 	void Start ()
 	{
 		MyCamera = GameObject.Find ("Main Camera");
-		StartCoroutine (CameraWork ());
-		LookBehindPos = GameObject.Find ("CameraPos1").transform.localPosition;
+		AirPlain = GameObject.Find ("eurofighter");
+		StartCoroutine (CameraSwitching ());
+		StartCoroutine (CameraModeChange ());
+		LookBehindPos = new Vector3 (0, 5.8f, 30.5f);//GameObject.Find ("CameraPos1").transform.localPosition;
 		LookFrontPos = MyCamera.transform.localPosition;
 	}
 
+	private IEnumerator CameraModeChange ()
+	{
+		while (!GameManager.GameOver) {
+			if (Input.GetKeyDown (KeyCode.JoystickButton6)) {
+				FreeMove = !FreeMove;
+				StartCoroutine (CameraFreeMove());
+			}
+			yield return null;
+		}
+	}
 
-	private static IEnumerator CameraWork ()
+	private IEnumerator CameraFreeMove(){
+		while (!GameManager.GameOver && freemove) {
+			CameraMove (Input.GetAxis("3thAxis"),Input.GetAxis("4thAxis"));
+			yield return null;
+		}
+	}
+
+	private void CameraMove(float MoveX,float MoveY){
+		transform.RotateAround (AirPlain.transform.position, Vector3.up, MoveX*2);
+		transform.RotateAround (AirPlain.transform.position, Vector3.left, MoveY*2);
+	}
+
+	private static IEnumerator CameraSwitching ()
 	{
 		while (!GameManager.GameOver) {
 			if (Input.GetKeyDown (KeyCode.JoystickButton11)) {
@@ -70,17 +109,19 @@ public class CameraSystem : MonoBehaviour
 		yield return null;
 	}
 
-	public static float MoveCamera {
-		set {
-			if (PlayerMove.SpeedConfig.Speed < PlayerMove.SpeedConfig.MaxSpeed && PlayerMove.SpeedConfig.Speed > PlayerMove.SpeedConfig.MinSpeed) {
-				MyCamera.transform.Translate (0, 0, -0.025f * (value / (value / value)));
-			}
+	public static void MoveCamera (float value)
+	{
+		if (freemove) {
+			return;
+		}
+		if (PlayerMove.SpeedConfig.Speed < PlayerMove.SpeedConfig.MaxSpeed && PlayerMove.SpeedConfig.Speed > PlayerMove.SpeedConfig.MinSpeed) {
+			MyCamera.transform.Translate (0, 0, -0.025f * (value / (value / value)));
+		}
 
-			if (MyCamera.transform.localPosition.z < CameraLimitter.MinNormalZ) {
-				MyCamera.transform.localPosition = new Vector3 (0, CameraLimitter.NormalY, CameraLimitter.MinNormalZ);
-			} else if (MyCamera.transform.localPosition.z > CameraLimitter.MaxNormalZ) {
-				MyCamera.transform.localPosition = new Vector3 (0, CameraLimitter.NormalY, CameraLimitter.MaxNormalZ);
-			}
+		if (MyCamera.transform.localPosition.z < CameraLimitter.MinNormalZ) {
+			MyCamera.transform.localPosition = new Vector3 (0, CameraLimitter.NormalY, CameraLimitter.MinNormalZ);
+		} else if (MyCamera.transform.localPosition.z > CameraLimitter.MaxNormalZ) {
+			MyCamera.transform.localPosition = new Vector3 (0, CameraLimitter.NormalY, CameraLimitter.MaxNormalZ);
 		}
 	}
 

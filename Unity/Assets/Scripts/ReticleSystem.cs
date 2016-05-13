@@ -71,6 +71,10 @@ public class ReticleSystem : MonoBehaviour
 		int LayerMask = 1 << 11 | 1 << 12;
 
 		while (!GameManager.GameOver) {
+			if (CameraSystem.FreeMove) {
+				yield return null;
+				continue;
+			}
 			var ray = Camera.main.ScreenPointToRay (new Vector3 (((transform.position.x + (transform.localScale.x * 0.01f)) / 2) * Screen.width, ((transform.position.y + (transform.localScale.y * 0.05f)) / 2) * Screen.height, 0.0f));
 			Debug.DrawRay (ray.origin, ray.direction * 30000, Color.red);
 			if (Physics.Raycast (ray, out Hit, 30000, LayerMask)) {
@@ -166,6 +170,9 @@ public class ReticleSystem : MonoBehaviour
 
 	private void ReticleMove (Vector3 Dis)
 	{
+		if (CameraSystem.FreeMove) {
+			return;
+		}
 		transform.Translate (Dis.x / Screen.width, -Dis.y / Screen.height, 0);
 	}
 }

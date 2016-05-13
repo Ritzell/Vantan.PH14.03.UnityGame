@@ -70,7 +70,7 @@ public class PlayerMove : MonoBehaviour
 	private float FuelTank {
 		set {
 			if (SpeedConfig.Speed >= SpeedConfig.MinSpeed && SpeedConfig.Speed <= SpeedConfig.MaxSpeed) {
-				CameraSystem.MoveCamera = value;
+				CameraSystem.MoveCamera(value);
 				SpeedConfig.Speed += value;
 				if (SpeedConfig.Speed > SpeedConfig.MinSpeed && SpeedConfig.Speed < SpeedConfig.MaxSpeed) {
 					AfterBurner (value);
