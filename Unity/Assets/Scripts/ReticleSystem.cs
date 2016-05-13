@@ -76,7 +76,7 @@ public class ReticleSystem : MonoBehaviour
 			if (Physics.Raycast (ray, out Hit, 30000, LayerMask)) {
 				if (lockOnTgt == null) {
 					SelectTgt (Hit.transform.gameObject);
-					StartCoroutine (Gun.MuzzuleLookTgt (Hit.point));
+					StartCoroutine (Gun.MuzzuleLookTgt (Hit.transform.position));
 				}
 			} else {
 				StartCoroutine (Gun.MuzzuleLookTgt (ray.GetPoint (1000)));
@@ -116,16 +116,19 @@ public class ReticleSystem : MonoBehaviour
 	{
 		if (UI.color.r >= 1) {
 			LockOnTgt = Tgt;
+			AudioBox.pitch = 1;
 			AudioBox.PlayOneShot (LockOnSE);
-			Debug.Log (LockOnTgt + " をロックオン!");
+			Debug.Log (LockOnTgt.name + " をロックオン!");
 		}
 	}
 
 	private IEnumerator ReleaseLock ()
 	{
 		while (!GameManager.GameOver) {
-			if (Input.GetKeyDown (KeyCode.Alpha3) && LockOnTgt != null) {
-				Debug.Log (lockOnTgt + " のロックを解除！");
+			if ((Input.GetKeyDown (KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.JoystickButton18)) && LockOnTgt != null) {
+				AudioBox.pitch = 0.75f;
+				AudioBox.PlayOneShot (LockOnSE);
+				Debug.Log (lockOnTgt.name + " のロックを解除！");
 				LockOnTgt = null;
 			}
 			yield return null;
