@@ -1,18 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Explosion : MonoBehaviour {
+public class Explosion : MonoBehaviour
+{
 	AudioSource AudioBox;
-	void Start () 
+
+	void Start ()
 	{
 		AudioBox = GetComponent<AudioSource> ();
 		AudioBox.Play ();
 		StartCoroutine (Deth ());
 	}
-	private IEnumerator Deth()
+
+	private IEnumerator Deth ()
 	{
-		while (AudioBox.isPlaying) 
-		{
+		while (AudioBox.isPlaying) {
 			yield return null;
 		}
 		Destroy (gameObject);

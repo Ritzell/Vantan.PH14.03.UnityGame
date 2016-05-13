@@ -1,51 +1,54 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+
 //using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour {
+public class GameManager : MonoBehaviour
+{
 	
 	private static bool gameOver = false;
-	public static bool GameOver{
-		get{
+
+	public static bool GameOver {
+		get {
 			return gameOver;
 		}
 	}
-	private static DateTime StartTime = DateTime.Now;
-    // Use this for initialization
 
-    void Start () 
+	private static DateTime StartTime = DateTime.Now;
+	// Use this for initialization
+
+	void Start ()
 	{
 		StartCoroutine (Timer ());
 	}
 
-	public IEnumerator ReloadMissile(Vector3 StartPos, Quaternion StartRot)
+	public IEnumerator ReloadMissile (Vector3 StartPos, Quaternion StartRot)
 	{
 		MissileFactory Factory = GameObject.Find ("GameManager").GetComponent<MissileFactory> ();
 		yield return new WaitForSeconds (3.1f);
-		Attack.Missiles.Enqueue(Factory.NewMissile (StartPos,StartRot));
+		Attack.Missiles.Enqueue (Factory.NewMissile (StartPos, StartRot));
 		yield return null;
 	}
 
 	/// <summary>
 	/// 制限時間の設定と残り時間を計算するメソッドの実行
 	/// </summary>
-	private IEnumerator Timer()
-    {
-		GUIText Timetext = GameObject.Find("Timer").GetComponent<GUIText>();
-		TimeSpan LimitTime = new TimeSpan(00, 10, 00);
-        while (!gameOver)
-        {
-			StartCoroutine(displayTime (Timetext, LimitTime));
-            yield return null;
-        }
-    }
+	private IEnumerator Timer ()
+	{
+		GUIText Timetext = GameObject.Find ("Timer").GetComponent<GUIText> ();
+		TimeSpan LimitTime = new TimeSpan (00, 10, 00);
+		while (!gameOver) {
+			StartCoroutine (displayTime (Timetext, LimitTime));
+			yield return null;
+		}
+	}
 
 	/// <summary>
 	/// 残り時間をString型に変換
 	/// </summary>
-	private string TimeCastToString()
+	private string TimeCastToString ()
 	{
 		return Time.Minutes.ToString ("D2") + ":" + Time.Seconds.ToString ("D2");//timeString;
 	}
@@ -53,7 +56,7 @@ public class GameManager : MonoBehaviour {
 	/// <summary>
 	/// 残り時間を計算
 	/// </summary>
-	private void TimeCalculation(TimeSpan limitTime)
+	private void TimeCalculation (TimeSpan limitTime)
 	{
 		TimeSpan elapsedTime = (TimeSpan)(DateTime.Now - StartTime);
 		Time = limitTime - elapsedTime;
@@ -64,10 +67,10 @@ public class GameManager : MonoBehaviour {
 	/// </summary>
 	/// <param name="Timetext">Timetext.</param>
 	/// <param name="limitTime">Limit time.</param>
-	private IEnumerator displayTime(GUIText Timetext, TimeSpan limitTime)
+	private IEnumerator displayTime (GUIText Timetext, TimeSpan limitTime)
 	{
 		TimeCalculation (limitTime);
-		Timetext.text = TimeCastToString();
+		Timetext.text = TimeCastToString ();
 		yield return null;
 	}
 
@@ -77,22 +80,19 @@ public class GameManager : MonoBehaviour {
 	/// <summary>
 	/// 時間が0を下回るとscene移行するプロパティ
 	/// </summary>
-	private TimeSpan Time
-	{
-		set{
+	private TimeSpan Time {
+		set {
 			RestTime = value;
-			if (RestTime.Minutes + RestTime.Seconds <= 0) 
-			{
+			if (RestTime.Minutes + RestTime.Seconds <= 0) {
 				GameManager.loadScene ();
 			}
 		}
-		get
-		{
+		get {
 			return RestTime;
 		}
 	}
 
-	public static void loadScene()
+	public static void loadScene ()
 	{
 		SceneManager.LoadScene ("Result");
 	}

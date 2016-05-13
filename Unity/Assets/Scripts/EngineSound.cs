@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EngineSound : MonoBehaviour {
+public class EngineSound : MonoBehaviour
+{
 	AudioSource AudioBox;
 	// Use this for initialization
 
@@ -11,26 +12,25 @@ public class EngineSound : MonoBehaviour {
 		public const float pitchUpSpeed = 0.005f;
 	}
 
-	void Start () 
+	void Start ()
 	{
 		AudioBox = GetComponent<AudioSource> ();
 		AudioBox.pitch = AudioBox.pitch;
 	}
 
-	public float Pitch
-	{
-		set{
-			float v = (value - engineConfig.normalSpeed)*engineConfig.pitchUpSpeed;
-			try{
-				ChangePitch(v);
-			}catch{
+	public float Pitch {
+		set {
+			float v = (value - engineConfig.normalSpeed) * engineConfig.pitchUpSpeed;
+			try {
+				ChangePitch (v);
+			} catch {
 			}
-		}get{
+		}get {
 			return AudioBox.pitch;
 		}
 	}
 
-	private void ChangePitch(float v)
+	private void ChangePitch (float v)
 	{
 		if (AudioBox.pitch <= 3 && AudioBox.pitch >= 0.5f) {
 			AudioBox.pitch = v + 1;

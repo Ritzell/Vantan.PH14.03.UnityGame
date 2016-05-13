@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Missile : MonoBehaviour {
+public class Missile : MonoBehaviour
+{
 	[SerializeField]
 	private AudioClip AudioClip1;
 	[SerializeField]
@@ -11,7 +12,8 @@ public class Missile : MonoBehaviour {
 	private AudioSource AudioS;
 
 	[SerializeField]
-	private float Speed = 850f;//時速3000km
+	private float Speed = 850f;
+//時速3000km
 	private static Airframe AirFrame;
 
 	private Vector3 StartPos;
@@ -20,128 +22,118 @@ public class Missile : MonoBehaviour {
 	void Start ()
 	{
 		AirFrame = GameObject.Find ("eurofighter").GetComponent<Airframe> ();
-		AudioS = gameObject.GetComponent<AudioSource>();
+		AudioS = gameObject.GetComponent<AudioSource> ();
 		AudioS.clip = AudioClip1;
 		StartPos = transform.localPosition;
 		StartRot = transform.localRotation;
 	}
 
-	private IEnumerator ShootReady()
+	private IEnumerator ShootReady ()
 	{
-		AirFrame.Reload (StartPos,StartRot); //StartCoroutine (GameObject.Find("GameManager").GetComponent<GameManager>().reloadMissile(startPos,startRot));
+		AirFrame.Reload (StartPos, StartRot); //StartCoroutine (GameObject.Find("GameManager").GetComponent<GameManager>().reloadMissile(startPos,startRot));
 		transform.parent = null;
-		AudioS.Play();
+		AudioS.Play ();
 		StartCoroutine (SelfBreak ());
 		yield return null;
 	}
 
-	private IEnumerator shootReady_E()
+	private IEnumerator shootReady_E ()
 	{
 		//audioS.Play();
 		StartCoroutine (SelfBreak ());
 		yield return null;
 	}
 
-	public IEnumerator Straight()
+	public IEnumerator Straight ()
 	{
 		StartCoroutine (ShootReady ());
-		while (!GameManager.GameOver)
-		{
-            try
-            {
-				StartCoroutine(MoveForward());
-			}
-			catch
-			{
+		while (!GameManager.GameOver) {
+			try {
+				StartCoroutine (MoveForward ());
+			} catch {
 				break;
 			}
 			yield return null;
 		}
 	}
 
-	private IEnumerator GetAiming(Transform tgt,bool player)
+	private IEnumerator GetAiming (Transform tgt, bool player)
 	{
-		Vector3 TgtPos = new Vector3 (tgt.transform.position.x + Random.Range(-3,3),tgt.transform.position.y + Random.Range(-3,3),tgt.transform.position.z + Random.Range(-3,3));
+		Vector3 TgtPos = new Vector3 (tgt.transform.position.x + Random.Range (-3, 3), tgt.transform.position.y + Random.Range (-3, 3), tgt.transform.position.z + Random.Range (-3, 3));
 		transform.LookAt (TgtPos);
 		yield return null;
 	}
 
-	public IEnumerator Straight(Transform tgt)
+	public IEnumerator Straight (Transform tgt)
 	{
 		StartCoroutine (shootReady_E ());
 		transform.LookAt (tgt);
-		while (!GameManager.GameOver)
-		{
-			try
-			{
-				StartCoroutine(MoveForward());
+		while (!GameManager.GameOver) {
+			try {
+				StartCoroutine (MoveForward ());
+			} catch {
 			}
-			catch{}
 			yield return null;
 		}
 	}
 
-	public IEnumerator Tracking(Transform tgt)
+	public IEnumerator Tracking (Transform tgt)
 	{
 		StartCoroutine (ShootReady ());
 		float delay = 0f;
-		while (!GameManager.GameOver)
-		{
+		while (!GameManager.GameOver) {
 			delay += Time.deltaTime;
-			try
-			{
+			try {
 				//if(delay >= 0.5f){
-				StartCoroutine(GetAiming(tgt,true));
-					delay = 0f;
+				StartCoroutine (GetAiming (tgt, true));
+				delay = 0f;
 				//}
-				StartCoroutine(MoveForward());
-			}catch{}
+				StartCoroutine (MoveForward ());
+			} catch {
+			}
 			yield return null;
 		}
 		yield return null;
 	}
 
-	public IEnumerator Tracking_E(Transform tgt)
+	public IEnumerator Tracking_E (Transform tgt)
 	{
 		StartCoroutine (shootReady_E ());
 		transform.LookAt (tgt);
 		float delay = 0f;
-		while (!GameManager.GameOver)
-		{
+		while (!GameManager.GameOver) {
 			delay += Time.deltaTime;
-			try
-			{
-				if(delay >= 0.5f){
-				StartCoroutine(GetAiming(tgt,false));
+			try {
+				if (delay >= 0.5f) {
+					StartCoroutine (GetAiming (tgt, false));
 					delay = 0f;
 				}
-				StartCoroutine(MoveForward());
-			}catch{}
+				StartCoroutine (MoveForward ());
+			} catch {
+			}
 			yield return null;
 		}
 		yield return null;
 	}
 
-	private IEnumerator MoveForward()
+	private IEnumerator MoveForward ()
 	{
-		transform.Translate(Vector3.forward * Time.deltaTime * Speed);
+		transform.Translate (Vector3.forward * Time.deltaTime * Speed);
 		yield return null;
 	}
 
-	void OnTriggerEnter(Collider col)
+	void OnTriggerEnter (Collider col)
 	{
-		if (transform.parent != null) 
-		{
+		if (transform.parent != null) {
 			return;
 		}
-		StartCoroutine (BreakMissile());
+		StartCoroutine (BreakMissile ());
 	}
 
-	private IEnumerator SelfBreak()
+	private IEnumerator SelfBreak ()
 	{
 		float time = 0f;
-		while (!GameManager.GameOver && time < 20f) 
-		{
+		while (!GameManager.GameOver && time < 20f) {
 			time += Time.deltaTime;
 			yield return null;
 		}
@@ -149,9 +141,9 @@ public class Missile : MonoBehaviour {
 		yield return null;
 	}
 
-	private IEnumerator BreakMissile()
+	private IEnumerator BreakMissile ()
 	{
-		Instantiate(Resources.Load("prefabs/Explosion"),transform.position,Quaternion.identity);
+		Instantiate (Resources.Load ("prefabs/Explosion"), transform.position, Quaternion.identity);
 		Destroy (gameObject);
 		yield return null;
 	}

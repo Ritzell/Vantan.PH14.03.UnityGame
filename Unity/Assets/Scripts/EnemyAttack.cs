@@ -20,8 +20,7 @@ public class EnemyAttack : MonoBehaviour
 		float timer = 0f;
 		while (!GameManager.GameOver) {
 			timer += Time.deltaTime;
-			if (timer >= 1) 
-			{
+			if (timer >= 1) {
 				//ChooseAction ();
 				timer = 0;
 			}
@@ -31,12 +30,9 @@ public class EnemyAttack : MonoBehaviour
 
 	public void ChooseAction ()
 	{
-		if (Random.value > 0.5f) 
-		{
+		if (Random.value > 0.5f) {
 			TrackingMissile ();
-		} 
-		else 
-		{
+		} else {
 			TrackingMissile ();
 		}
 	}

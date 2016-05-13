@@ -1,18 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerSound : MonoBehaviour {
+public class PlayerSound : MonoBehaviour
+{
 	private static AudioSource AudioBox;
 
 	[SerializeField]
 	private AudioClip AudioClip;
 
-	void Start () 
+	void Start ()
 	{
-		AudioBox = GetComponent<AudioSource>();
+		AudioBox = GetComponent<AudioSource> ();
 		AudioBox.clip = AudioClip;
 	}
-	public static void AudioPlay()
+
+	public static void AudioPlay ()
 	{
 		AudioBox.volume = 0.3f;
 		AudioBox.pitch = 2;

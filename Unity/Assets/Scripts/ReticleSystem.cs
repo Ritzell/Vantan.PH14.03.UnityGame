@@ -17,8 +17,7 @@ public class ReticleSystem : MonoBehaviour
 	private AudioClip LockOnSE;
 	private static GUITexture UI;
 
-	public static GameObject LockOnTgt 
-	{
+	public static GameObject LockOnTgt {
 		set {
 			lockOnTgt = value;
 			if (value == null) {
@@ -55,7 +54,6 @@ public class ReticleSystem : MonoBehaviour
 		StartCoroutine (ReleaseLock ());
 		StartCoroutine (InputStick_R ());
 		AudioBox = GetComponent<AudioSource> ();
-		//AudioBox.clip = LockOnSE;
 	}
 
 	private IEnumerator InputStick_R ()
@@ -74,20 +72,15 @@ public class ReticleSystem : MonoBehaviour
 
 		while (!GameManager.GameOver) {
 			var ray = Camera.main.ScreenPointToRay (new Vector3 (((transform.position.x + (transform.localScale.x * 0.01f)) / 2) * Screen.width, ((transform.position.y + (transform.localScale.y * 0.05f)) / 2) * Screen.height, 0.0f));
-			Debug.DrawRay (ray.origin, ray.direction*30000,Color.red);
-			if (Physics.Raycast (ray, out Hit, 30000, LayerMask)) 
-			{
-				if (lockOnTgt == null) 
-				{
+			Debug.DrawRay (ray.origin, ray.direction * 30000, Color.red);
+			if (Physics.Raycast (ray, out Hit, 30000, LayerMask)) {
+				if (lockOnTgt == null) {
 					SelectTgt (Hit.transform.gameObject);
 					StartCoroutine (Gun.MuzzuleLookTgt (Hit.point));
 				}
-			} 
-			else 
-			{
+			} else {
 				StartCoroutine (Gun.MuzzuleLookTgt (ray.GetPoint (1000)));
-				if (lockOnTgt == null && UI.color.g < 1) 
-				{
+				if (lockOnTgt == null && UI.color.g < 1) {
 					SelectCancel ();
 				}
 			}
@@ -123,17 +116,15 @@ public class ReticleSystem : MonoBehaviour
 	{
 		if (UI.color.r >= 1) {
 			LockOnTgt = Tgt;
-			AudioBox.PlayOneShot(LockOnSE);
+			AudioBox.PlayOneShot (LockOnSE);
 			Debug.Log (LockOnTgt + " をロックオン!");
 		}
 	}
 
 	private IEnumerator ReleaseLock ()
 	{
-		while (!GameManager.GameOver) 
-		{
-			if (Input.GetKeyDown (KeyCode.Alpha3) && LockOnTgt != null) 
-			{
+		while (!GameManager.GameOver) {
+			if (Input.GetKeyDown (KeyCode.Alpha3) && LockOnTgt != null) {
 				Debug.Log (lockOnTgt + " のロックを解除！");
 				LockOnTgt = null;
 			}
@@ -143,8 +134,7 @@ public class ReticleSystem : MonoBehaviour
 
 	private void ReticleController (Vector3 Dis)
 	{
-		if(ReticleErrorScan(Dis))
-		{
+		if (ReticleErrorScan (Dis)) {
 			ReticleMove (Dis);
 		}
 	}
@@ -157,21 +147,18 @@ public class ReticleSystem : MonoBehaviour
 	{
 		const float LimitDistance = 30;
 		//if (transform.position.x + (Dis.x / Screen.width) >= 0.75f && transform.position.x + (Dis.x / Screen.width) <= 1.25f
-		 //   && transform.position.y + (-Dis.y / Screen.height) >= 0.75f && transform.position.y + (-Dis.y / Screen.height) <= 1.25f) 
-		if(Mathf.Abs(ReticleDistance(Dis))<= LimitDistance)
-		{
+		//   && transform.position.y + (-Dis.y / Screen.height) >= 0.75f && transform.position.y + (-Dis.y / Screen.height) <= 1.25f) 
+		if (Mathf.Abs (ReticleDistance (Dis)) <= LimitDistance) {
 			return true;
-		} 
-		else 
-		{
+		} else {
 			return false;
 		}
 	}
 
-	private float ReticleDistance(Vector3 Dis)
+	private float ReticleDistance (Vector3 Dis)
 	{
-		return Vector2.Distance(new Vector2((((transform.position.x/2) + (Dis.x / Screen.width))*Screen.width),((transform.position.y/2) + (-Dis.y / Screen.height))*Screen.height),
-			new Vector2(Screen.width/2,Screen.height/2));
+		return Vector2.Distance (new Vector2 ((((transform.position.x / 2) + (Dis.x / Screen.width)) * Screen.width), ((transform.position.y / 2) + (-Dis.y / Screen.height)) * Screen.height),
+			new Vector2 (Screen.width / 2, Screen.height / 2));
 	}
 
 	private void ReticleMove (Vector3 Dis)

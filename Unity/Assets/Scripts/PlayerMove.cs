@@ -68,23 +68,17 @@ public class PlayerMove : MonoBehaviour
 	/// </summary>
 	/// <value>The speed.</value>
 	private float FuelTank {
-		set 
-		{
-			if (SpeedConfig.Speed >= SpeedConfig.MinSpeed && SpeedConfig.Speed <= SpeedConfig.MaxSpeed) 
-			{
+		set {
+			if (SpeedConfig.Speed >= SpeedConfig.MinSpeed && SpeedConfig.Speed <= SpeedConfig.MaxSpeed) {
 				CameraSystem.MoveCamera = value;
 				SpeedConfig.Speed += value;
-				if (SpeedConfig.Speed > SpeedConfig.MinSpeed && SpeedConfig.Speed < SpeedConfig.MaxSpeed) 
-				{
+				if (SpeedConfig.Speed > SpeedConfig.MinSpeed && SpeedConfig.Speed < SpeedConfig.MaxSpeed) {
 					AfterBurner (value);
 				}
 			}
-			if (SpeedConfig.Speed < SpeedConfig.MinSpeed) 
-			{
+			if (SpeedConfig.Speed < SpeedConfig.MinSpeed) {
 				SpeedConfig.Speed = SpeedConfig.MinSpeed;
-			}
-			else if (SpeedConfig.Speed > SpeedConfig.MaxSpeed) 
-			{
+			} else if (SpeedConfig.Speed > SpeedConfig.MaxSpeed) {
 				SpeedConfig.Speed = SpeedConfig.MaxSpeed;
 			}
 			EngineS.Pitch = SpeedConfig.Speed;
@@ -98,15 +92,12 @@ public class PlayerMove : MonoBehaviour
 		var em = Glow.emission;
 		var rate = Glow.emission.rate;
 
-		if (Fuel > Keep) 
-		{
+		if (Fuel > Keep) {
 			HighPower (Burner, Glow, em, rate);
-		} else if (Fuel == Keep) 
-		{
+		} else if (Fuel == Keep) {
 			LowPower (Burner, Glow, em, rate);
-		} 
-		else 
-		{}
+		} else {
+		}
 	}
 
 	private void HighPower (ParticleSystem Burner, ParticleSystem Glow, ParticleSystem.EmissionModule em, ParticleSystem.MinMaxCurve rate)
@@ -126,8 +117,7 @@ public class PlayerMove : MonoBehaviour
 	}
 
 	private Vector3 Rotation {
-		set 
-		{
+		set {
 			transform.Rotate (value.x / 1.5f, 0f, value.z * 2f);
 			//myCamera.transform.Rotate (0, 0, -value.z * 2.5f);//カメラ回転無効  
 			//myCamera.transform.localRotation = new Quaternion(myCamera.transform.rotation.x,myCamera.transform.rotation.y,0,myCamera.transform.rotation.w);

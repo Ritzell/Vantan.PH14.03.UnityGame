@@ -9,13 +9,11 @@ public class Bullet : MonoBehaviour
 	{
 		transform.parent = null;
 		StartCoroutine (TimeLimit ());
-		while (!GameManager.GameOver) 
-		{
-			try
-			{
+		while (!GameManager.GameOver) {
+			try {
 				MoveForward ();
-			} 
-			catch {}
+			} catch {
+			}
 			yield return null;
 		}
 	}
@@ -28,8 +26,7 @@ public class Bullet : MonoBehaviour
 	private IEnumerator  TimeLimit ()
 	{
 		float time = 0f;
-		while (time < 7f && !GameManager.GameOver) 
-		{
+		while (time < 7f && !GameManager.GameOver) {
 			time += Time.deltaTime;
 			yield return null;
 		}

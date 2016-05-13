@@ -1,24 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EnemyBase : MonoBehaviour {
+public class EnemyBase : MonoBehaviour
+{
 	private static int RestChildren = 0;
 
-	public static int Rest
-	{
-		set{
+	public static int Rest {
+		set {
 			RestChildren = value;
-		}get{
+		}get {
 			return RestChildren;
 		}
 	}
 
-	void OnTriggerEnter(Collider Col)
+	void OnTriggerEnter (Collider Col)
 	{
-		Destroy(RestChildren <= 0 ? gameObject : null);
+		Destroy (RestChildren <= 0 ? gameObject : null);
 	}
 
-	void OnDestroy()
+	void OnDestroy ()
 	{
 		GameManager.loadScene ();
 	}
