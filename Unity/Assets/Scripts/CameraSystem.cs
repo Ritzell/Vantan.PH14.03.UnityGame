@@ -6,16 +6,20 @@ public class CameraSystem : MonoBehaviour {
 	private static GameObject MyCamera;
 
 	private static bool stopReset = false;
-	public static bool StopReset{
-		set{
+	public static bool StopReset
+	{
+		set
+		{
 			stopReset = value;
 		}
-		get{
+		get
+		{
 			return stopReset;
 		}
 	}
 
-	struct CameraLimitter{
+	struct CameraLimitter
+	{
 		public const float NormalZ = -26f;
 		public const float NormalY = 7.5f;
 		public const float MaxNormalZ = NormalZ+4;
@@ -24,7 +28,8 @@ public class CameraSystem : MonoBehaviour {
 		public const float MinNormalZ_Error = NormalZ-0.1f;
 	}
 
-	void Start () {
+	void Start () 
+	{
 		MyCamera = GameObject.Find ("Main Camera");
 		StartCoroutine (CameraWork());
 	}
@@ -32,22 +37,24 @@ public class CameraSystem : MonoBehaviour {
 	private static IEnumerator CameraWork()
 	{
 		while(!GameManager.GameOver){
-			//myCamera.transform.rotation = new Quaternion(myCamera.transform.rotation.x,myCamera.transform.rotation.y,0,myCamera.transform.rotation.w);
-			if(Input.GetKeyDown(KeyCode.JoystickButton11)||Input.GetKeyUp(KeyCode.JoystickButton11)){
+			if(Input.GetKeyDown(KeyCode.JoystickButton11)||Input.GetKeyUp(KeyCode.JoystickButton11))
+			{
 				MyCamera.transform.Rotate (0,180,0);
 			}
 			yield return null;
 		}
 	}
 
-	public static IEnumerator CameraPosReset(){
+	public static IEnumerator CameraPosReset()
+	{
 		float dis = MyCamera.transform.localPosition.z - (CameraLimitter.NormalZ);
 		while ((MyCamera.transform.localPosition.z >= CameraLimitter.MaxNormalZ_Error || MyCamera.transform.localPosition.z <= CameraLimitter.MinNormalZ_Error)&& !stopReset) 
 		{
 			MyCamera.transform.Translate (0, 0, -0.05f * System.Math.Sign (dis));
 			yield return null;
 		}
-		if (MyCamera.transform.localPosition.z <= CameraLimitter.MaxNormalZ_Error && MyCamera.transform.localPosition.z >= CameraLimitter.MinNormalZ_Error) {
+		if (MyCamera.transform.localPosition.z <= CameraLimitter.MaxNormalZ_Error && MyCamera.transform.localPosition.z >= CameraLimitter.MinNormalZ_Error) 
+		{
 			MyCamera.transform.localPosition = new Vector3 (0, CameraLimitter.NormalY, CameraLimitter.NormalZ);
 		}
 		yield return null;

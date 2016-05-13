@@ -7,20 +7,26 @@ public class Enemy : MonoBehaviour {
 	/// </summary>
 	private static GameObject tgt;
 
-	public static GameObject Tgt{
-		set{
+	public static GameObject Tgt
+	{
+		set
+		{
 			tgt = value;
-		}get{
+		}
+		get
+		{
 			return tgt;
 		}
 	}
 
-	void Start () {
-		EnemyBase.Rest++;
+	void Start () 
+	{
+		EnemyBase.Rest = EnemyBase.Rest + 1;
 		Tgt = GameObject.Find ("eurofighter");
 	}
-	void OnTriggerStay(Collider Col){
-		EnemyBase.Rest--;
+	void OnTriggerStay(Collider Col)
+	{
+		EnemyBase.Rest = EnemyBase.Rest - 1;
 		Destroy (gameObject);
 	}
 }

@@ -1,10 +1,15 @@
 fileFormatVersion: 2
 guid: 62df15952a03b4e619a19594829f8498
-timeCreated: 1461914236
+timeCreated: 1463143411
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - LockOnSE: {fileID: 8300000, guid: a84a99d35884d4a11b8b55e744ab90eb, type: 3}
+  - MainCamera: {instanceID: 0}
+  - ReticleUI: {instanceID: 0}
+  - MuzzleA: {instanceID: 0}
+  - MuzzleB: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

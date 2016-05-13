@@ -11,12 +11,14 @@ public class EngineSound : MonoBehaviour {
 		public const float pitchUpSpeed = 0.005f;
 	}
 
-	void Start () {
+	void Start () 
+	{
 		AudioBox = GetComponent<AudioSource> ();
 		AudioBox.pitch = AudioBox.pitch;
 	}
 
-	public float Pitch{
+	public float Pitch
+	{
 		set{
 			float v = (value - engineConfig.normalSpeed)*engineConfig.pitchUpSpeed;
 			try{
@@ -28,7 +30,8 @@ public class EngineSound : MonoBehaviour {
 		}
 	}
 
-	private void ChangePitch(float v){
+	private void ChangePitch(float v)
+	{
 		if (AudioBox.pitch <= 3 && AudioBox.pitch >= 0.5f) {
 			AudioBox.pitch = v + 1;
 			if (AudioBox.pitch > 3) {

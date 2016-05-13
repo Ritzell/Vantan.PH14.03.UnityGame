@@ -49,14 +49,12 @@ public class PlayerMove : MonoBehaviour
 	{
 		while (!GameManager.GameOver) {
 			if (Input.GetKey (KeyCode.JoystickButton13) || Input.GetKey (KeyCode.JoystickButton14) || Input.GetKey (KeyCode.Alpha1) || Input.GetKey (KeyCode.Alpha2)) {
-				CameraSystem.StopReset = true;
 				if (Input.GetKey (KeyCode.JoystickButton13) || Input.GetKey (KeyCode.Alpha1)) {
 					FuelTank = SpeedConfig.Decele;
 				} else if (Input.GetKey (KeyCode.JoystickButton14) || Input.GetKey (KeyCode.Alpha2)) {//Joystick1Button5 or Joystick8Button12 or JoystickButton14
 					FuelTank = SpeedConfig.Accele;
 				}
-			} else if (CameraSystem.StopReset) {
-				CameraSystem.StopReset = false;
+			} else if (Input.GetKeyUp (KeyCode.JoystickButton13) || Input.GetKeyUp (KeyCode.JoystickButton14) || Input.GetKeyUp (KeyCode.Alpha1) || Input.GetKeyUp (KeyCode.Alpha2)) {
 				AfterBurner (Keep);
 				StartCoroutine (CameraSystem.CameraPosReset ());
 			}
@@ -70,18 +68,26 @@ public class PlayerMove : MonoBehaviour
 	/// </summary>
 	/// <value>The speed.</value>
 	private float FuelTank {
-		set{
-		if (SpeedConfig.Speed >= SpeedConfig.MinSpeed && SpeedConfig.Speed <= SpeedConfig.MaxSpeed) {
+		set 
+		{
+			if (SpeedConfig.Speed >= SpeedConfig.MinSpeed && SpeedConfig.Speed <= SpeedConfig.MaxSpeed) 
+			{
 				CameraSystem.MoveCamera = value;
 				SpeedConfig.Speed += value;
-				AfterBurner (value);
-		}
-		if (SpeedConfig.Speed < SpeedConfig.MinSpeed) {
-			SpeedConfig.Speed = SpeedConfig.MinSpeed;
-		} else if (SpeedConfig.Speed > SpeedConfig.MaxSpeed) {
-			SpeedConfig.Speed = SpeedConfig.MaxSpeed;
-		}
-		EngineS.Pitch = SpeedConfig.Speed;
+				if (SpeedConfig.Speed > SpeedConfig.MinSpeed && SpeedConfig.Speed < SpeedConfig.MaxSpeed) 
+				{
+					AfterBurner (value);
+				}
+			}
+			if (SpeedConfig.Speed < SpeedConfig.MinSpeed) 
+			{
+				SpeedConfig.Speed = SpeedConfig.MinSpeed;
+			}
+			else if (SpeedConfig.Speed > SpeedConfig.MaxSpeed) 
+			{
+				SpeedConfig.Speed = SpeedConfig.MaxSpeed;
+			}
+			EngineS.Pitch = SpeedConfig.Speed;
 		}
 	}
 
@@ -92,25 +98,37 @@ public class PlayerMove : MonoBehaviour
 		var em = Glow.emission;
 		var rate = Glow.emission.rate;
 
-		if (Fuel > Keep) {
-			Burner.startSpeed = 25;
-			Glow.startSpeed = 25;
-			rate.constantMax = 450f;
-			em.rate = rate;
+		if (Fuel > Keep) 
+		{
+			HighPower (Burner, Glow, em, rate);
+		} else if (Fuel == Keep) 
+		{
+			LowPower (Burner, Glow, em, rate);
+		} 
+		else 
+		{}
+	}
 
-		} else if (Fuel == Keep) {
-			Burner.startSpeed = 4;
-			Glow.startSpeed = 4;
-			rate.constantMax = 100f;
-			em.rate = rate;
+	private void HighPower (ParticleSystem Burner, ParticleSystem Glow, ParticleSystem.EmissionModule em, ParticleSystem.MinMaxCurve rate)
+	{
+		Burner.startSpeed = 25;
+		Glow.startSpeed = 25;
+		rate.constantMax = 450f;
+		em.rate = rate;
+	}
 
-		} else {
-		}
+	private void LowPower (ParticleSystem Burner, ParticleSystem Glow, ParticleSystem.EmissionModule em, ParticleSystem.MinMaxCurve rate)
+	{
+		Burner.startSpeed = 4;
+		Glow.startSpeed = 4;
+		rate.constantMax = 100f;
+		em.rate = rate;
 	}
 
 	private Vector3 Rotation {
-		set {
-			transform.Rotate (value.x / 1.5f, 0f, value.z * 2.5f);
+		set 
+		{
+			transform.Rotate (value.x / 1.5f, 0f, value.z * 2f);
 			//myCamera.transform.Rotate (0, 0, -value.z * 2.5f);//カメラ回転無効  
 			//myCamera.transform.localRotation = new Quaternion(myCamera.transform.rotation.x,myCamera.transform.rotation.y,0,myCamera.transform.rotation.w);
 		}

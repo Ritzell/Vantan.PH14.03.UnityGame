@@ -13,8 +13,10 @@ public class Gun : MonoBehaviour {
 		Muzzules [1] = GameObject.Find ("muzzleB");
 	}
 
-	public IEnumerator Shoot(){
-		foreach (GameObject ob in Muzzules) {
+	public IEnumerator Shoot()
+	{
+		foreach (GameObject ob in Muzzules) 
+		{
 			Muzzle MuzzleScript = ob.GetComponent<Muzzle>();
 			StartCoroutine (MuzzleScript.Ignition());
 			StartCoroutine(Factory.MakeBullet(ob.transform,ob.transform.position,ob.transform.rotation));
@@ -23,8 +25,10 @@ public class Gun : MonoBehaviour {
 		yield return null;
 	}
 
-	public static IEnumerator MuzzuleLookTgt(Vector3 Tgt){
-		foreach(GameObject Muzzule in Muzzules){
+	public static IEnumerator MuzzuleLookTgt(Vector3 Tgt)
+	{
+		foreach(GameObject Muzzule in Muzzules)
+		{
 			Muzzule.transform.LookAt (Tgt);
 		}
 		yield return null;

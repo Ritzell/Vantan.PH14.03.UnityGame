@@ -7,11 +7,13 @@ public class PlayerSound : MonoBehaviour {
 	[SerializeField]
 	private AudioClip AudioClip;
 
-	void Start () {
+	void Start () 
+	{
 		AudioBox = GetComponent<AudioSource>();
 		AudioBox.clip = AudioClip;
 	}
-	public static void AudioPlay(){
+	public static void AudioPlay()
+	{
 		AudioBox.volume = 0.3f;
 		AudioBox.pitch = 2;
 		AudioBox.Play ();

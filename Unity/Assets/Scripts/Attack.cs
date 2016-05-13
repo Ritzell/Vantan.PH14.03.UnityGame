@@ -11,13 +11,15 @@ public class Attack : MonoBehaviour {
 
 	private static Queue<GameObject> missiles = new Queue<GameObject> ();
 
-	public static Queue<GameObject> Missiles{
+	public static Queue<GameObject> Missiles
+	{
 		get{
 			return missiles;
 		}
 	}
 
-	void Start () {
+	void Start () 
+	{
 		missiles.Enqueue (GameObject.Find ("missileA"));
 		missiles.Enqueue (GameObject.Find ("missileB"));
 		missiles.Enqueue (GameObject.Find ("missileC"));
@@ -47,7 +49,8 @@ public class Attack : MonoBehaviour {
             yield return null;
         }
     }
-	public IEnumerator GunShoot(){
+	public IEnumerator GunShoot()
+	{
 		float Reloading = 0.0f;
 		while (!GameManager.GameOver)
 		{
