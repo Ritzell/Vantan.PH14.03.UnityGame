@@ -28,8 +28,12 @@ public class Gun : MonoBehaviour
 
 	public static IEnumerator MuzzuleLookTgt (Vector3 Tgt)
 	{
+		try{
 		foreach (GameObject Muzzule in Muzzules) {
 			Muzzule.transform.LookAt (Tgt);
+		}
+		}catch{
+			Debug.Log ("マズルの方向転換でエラーが出てます。");
 		}
 		yield return null;
 	}

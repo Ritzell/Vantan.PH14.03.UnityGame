@@ -12,7 +12,7 @@ public class Missile : MonoBehaviour
 	private AudioSource AudioS;
 
 	[SerializeField]
-	private float Speed = 850f;
+	private float Speed = 710;
 //時速3000km
 	private static Airframe AirFrame;
 
@@ -66,8 +66,11 @@ public class Missile : MonoBehaviour
 
 	private IEnumerator GetAiming (Transform tgt, bool player)
 	{
+		try{
 		Vector3 TgtPos = new Vector3 (tgt.transform.position.x + Random.Range (-3, 3), tgt.transform.position.y + Random.Range (-3, 3), tgt.transform.position.z + Random.Range (-3, 3));
 		transform.LookAt (TgtPos);
+		}catch{
+		}
 		yield return null;
 	}
 
@@ -151,7 +154,6 @@ public class Missile : MonoBehaviour
 	private IEnumerator BreakMissile ()
 	{
 		Instantiate (Resources.Load ("prefabs/Explosion"), transform.position, Quaternion.identity);
-		Debug.Log ("a");
 		Destroy (gameObject);
 		yield return null;
 	}

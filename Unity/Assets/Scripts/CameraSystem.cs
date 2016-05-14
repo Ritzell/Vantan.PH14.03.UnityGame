@@ -10,6 +10,7 @@ public class CameraSystem : MonoBehaviour
 	private static bool stopReset = false;
 	private static GameObject AirPlain;
 	private static bool freemove = false;
+	private static bool LookBehind = false;
 
 	public static bool FreeMove{
 		set{
@@ -94,15 +95,20 @@ public class CameraSystem : MonoBehaviour
 
 	private static Vector3 ChangePos (Vector3 NowPos)
 	{
-		if (NowPos == LookFrontPos) {
+		if (NowPos.z <= -22f && NowPos.x >= -30f) {
+			LookBehind = true;
 			return LookBehindPos;
 		} else {
+			LookBehind = false;
 			return LookFrontPos;
 		}
 	}
 
 	public static IEnumerator CameraPosReset ()
 	{
+		if(LookBehind){
+			yield break;
+		}
 		float dis = MyCamera.transform.localPosition.z - (CameraLimitter.NormalZ);
 		while ((MyCamera.transform.localPosition.z >= CameraLimitter.MaxNormalZ_Error || MyCamera.transform.localPosition.z <= CameraLimitter.MinNormalZ_Error) && !stopReset) {
 			MyCamera.transform.Translate (0, 0, -0.05f * System.Math.Sign (dis));
@@ -116,18 +122,19 @@ public class CameraSystem : MonoBehaviour
 
 	public static void MoveCamera (float value)
 	{
-		if (freemove) {
+		if (freemove || LookBehind) {
 			return;
 		}
-		if (PlayerMove.SpeedConfig.Speed < PlayerMove.SpeedConfig.MaxSpeed && PlayerMove.SpeedConfig.Speed > PlayerMove.SpeedConfig.MinSpeed) {
-			MyCamera.transform.Translate (0, 0, -0.025f * (value / (value / value)));
-		}
+		Vector3 CameraPos = MyCamera.transform.localPosition;
+		Vector3 BehindPos = GameObject.Find ("CameraPos1").transform.localPosition;
 
-		if (MyCamera.transform.localPosition.z < CameraLimitter.MinNormalZ) {
-			MyCamera.transform.localPosition = new Vector3 (0, CameraLimitter.NormalY, CameraLimitter.MinNormalZ);
-		} else if (MyCamera.transform.localPosition.z > CameraLimitter.MaxNormalZ) {
-			MyCamera.transform.localPosition = new Vector3 (0, CameraLimitter.NormalY, CameraLimitter.MaxNormalZ);
-		}
+//		if (LookBehind) {
+//			MyCamera.transform.localPosition = new Vector3(CameraPos.x,CameraPos.y,Mathf.Clamp(CameraPos.z + 0.025f * (value / (value / value)),34.5f,26f));
+//			return;
+//		}
+
+		MyCamera.transform.localPosition = new Vector3(CameraPos.x,CameraPos.y,Mathf.Clamp(CameraPos.z + -0.025f * (value / (value / value)),-30f,-22f));
+			//GameObject.Find ("CameraPos1").transform.localPosition = new Vector3(BehindPos.x,BehindPos.y,Mathf.Clamp(BehindPos.z + 0.025f * (value / (value / value)),-30f,-22f));
 	}
 
 }

@@ -19,7 +19,9 @@ public class MissileFactory : MonoBehaviour
 		newMissileE.name = newMissileE.name.Substring (0, 7);
 		newMissileE.transform.position = Pos;
 		newMissileE.layer = 12;
-		newMissileE.transform.localScale = new Vector3 (100, 100, 100);
+		newMissileE.transform.FindChild ("Steam").gameObject.SetActive(true);
+		newMissileE.transform.FindChild ("Afterburner").gameObject.SetActive(true);
+		//newMissileE.transform.localScale = new Vector3 (100, 100, 100);
 		return newMissileE;
 	}
 }

@@ -3,6 +3,10 @@ using System.Collections;
 
 public class PlayerSound : MonoBehaviour
 {
+
+	//使ってない
+
+
 	private static AudioSource AudioBox;
 
 	[SerializeField]

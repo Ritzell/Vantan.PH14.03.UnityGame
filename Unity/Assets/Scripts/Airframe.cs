@@ -17,7 +17,7 @@ public class Airframe : MonoBehaviour
 	private void Deth ()
 	{
 		GameManager.loadScene ();
-		PlayerSound.AudioPlay ();
+		//PlayerSound.AudioPlay ();
 		Destroy (gameObject);
 	}
 }
