@@ -14,7 +14,7 @@ public class CameraSystem : MonoBehaviour
 	public static bool FreeMove{
 		set{
 			if (value == false) {
-				MyCamera.transform.localPosition = ChangePos (MyCamera.transform.localPosition);
+				MyCamera.transform.localPosition = LookFrontPos;//ChangePos (MyCamera.transform.localPosition);
 				//MyCamera.transform.Rotate (0, 180, 0);
 				MyCamera.transform.localRotation = new Quaternion(0,0,0,MyCamera.transform.localRotation.w);
 			}
@@ -80,6 +80,11 @@ public class CameraSystem : MonoBehaviour
 	{
 		while (!GameManager.GameOver) {
 			if (Input.GetKeyDown (KeyCode.JoystickButton11)) {
+				if(FreeMove){
+					FreeMove = false;
+					yield return null;
+					continue;
+				}
 				MyCamera.transform.localPosition = ChangePos (MyCamera.transform.localPosition);
 				MyCamera.transform.Rotate (MyCamera.transform.rotation.x - 5, 180, 0);
 			}
