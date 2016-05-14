@@ -19,6 +19,11 @@ public class Missile : MonoBehaviour
 	private Vector3 StartPos;
 	private Quaternion StartRot;
 
+	void Awake(){
+		QualitySettings.vSyncCount = 0; // VSyncをOFFにする
+		Application.targetFrameRate = 60; // ターゲットフレームレートを60に設定
+	}
+
 	void Start ()
 	{
 		AirFrame = GameObject.Find ("eurofighter").GetComponent<Airframe> ();
@@ -34,6 +39,8 @@ public class Missile : MonoBehaviour
 		transform.parent = null;
 		AudioS.Play ();
 		StartCoroutine (SelfBreak ());
+		transform.FindChild ("Steam").gameObject.SetActive(true);
+		transform.FindChild ("Afterburner").gameObject.SetActive(true);
 		yield return null;
 	}
 
@@ -144,6 +151,7 @@ public class Missile : MonoBehaviour
 	private IEnumerator BreakMissile ()
 	{
 		Instantiate (Resources.Load ("prefabs/Explosion"), transform.position, Quaternion.identity);
+		Debug.Log ("a");
 		Destroy (gameObject);
 		yield return null;
 	}
