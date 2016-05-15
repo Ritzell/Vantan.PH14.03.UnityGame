@@ -6,7 +6,6 @@ public class Gun : MonoBehaviour
 {
 	private static GameObject[] Muzzules = new GameObject[2];
 	private static BulletFactory Factory;
-	// Use this for initialization
 
 	void Start ()
 	{

@@ -14,16 +14,18 @@ public class ReticleSystem : MonoBehaviour
 	//int layerMask = ~(1 << 8);
 	private static AudioSource AudioBox;
 	private static Image UI;
-
+	private static RectTransform UITransform;
 	private static GameObject lockOnTgt = null;
 	public static GameObject LockOnTgt {
 		set {
 			lockOnTgt = value;
 			if (value == null) {
+				UITransform.localPosition = new Vector3 (0,0,0);
 				UI.color = Color.green;
 			} else {
 				UI.color = Color.red;
 			}
+			UI.GetComponent<ReticleSystem> ().ChangeCoroutine(value);
 		}get {
 			return lockOnTgt;
 		}
@@ -53,52 +55,67 @@ public class ReticleSystem : MonoBehaviour
 	void Start ()
 	{
 		StartCoroutine (SerchEnemy ());
-		StartCoroutine (ReleaseLock ());
-		StartCoroutine (InputStick_R ());
+		StartCoroutine (ReticleMoveInput ());
 		AudioBox = GetComponent<AudioSource> ();
+		UITransform = GetComponent<RectTransform> ();
 	}
 
-	private IEnumerator InputStick_R ()
+	private IEnumerator ReticleMoveInput ()
 	{
 		while (!GameManager.GameOver) {
 			ReticleController (new Vector3 (Input.GetAxis ("3thAxis"), Input.GetAxis ("4thAxis"), 0));
 			yield return null;
 		}
+		yield return null;
 	}
+
 
 	private IEnumerator SerchEnemy ()
 	{
 		
 		RaycastHit Hit;
-		int LayerMask = 1 << 11 | 1 << 12;
-
+		const int LayerMask = 1 << 11 | 1 << 12;
+		 
 		while (!GameManager.GameOver) {
 			if (CameraSystem.FreeMove) {
 				yield return null;
 				continue;
 			}
 			var ray = Camera.main.ScreenPointToRay (new Vector3 (transform.position.x, transform.position.y, 0.0f));
-			Debug.DrawRay (ray.origin, ray.direction * 30000, Color.red);
+
 			if (Physics.Raycast (ray, out Hit, 30000, LayerMask)) {
 				StartCoroutine (Gun.MuzzuleLookTgt (Hit.transform.position));
-				if (lockOnTgt == null) {
-					SelectTgt (Hit.transform.gameObject);
-				}
+				SelectTgt (Hit.transform.gameObject);
 			} else {
-				StartCoroutine (Gun.MuzzuleLookTgt (ray.GetPoint (4000)));
-				if (lockOnTgt == null && UI.color.g < 1) {
-					SelectCancel ();
+				StartCoroutine (Gun.MuzzuleLookTgt (ray.GetPoint (4000)));/////////////////
+				if (UI.color.g < 1) {
+					FadeCancel ();
 				}
 			}
 			yield return null;
 		}
 	}
 
-	private void FadeToColor (Color Color)
+	private IEnumerator ReleaseLock ()
 	{
-		UI.color = new Vector4 (UI.color.r + (Color == Color.red ? (1 * (Time.deltaTime / 2)) : (-1 * (Time.deltaTime / 2))),
-			UI.color.g + (Color == Color.red ? (-1 * (Time.deltaTime / 2)) : (1 * (Time.deltaTime / 2))), 0, 1);
+		while (!GameManager.GameOver) {
+			if ((Input.GetKeyDown (KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.JoystickButton18))) {
+				AudioBox.pitch = 0.75f;
+				AudioBox.PlayOneShot (LockOnSE);
+				Debug.Log (lockOnTgt.name + " のロックを解除！");
+				LockOnTgt = null;
+			}
+			yield return null;
+		}
+	}
 
+	private IEnumerator ReticleMoveToTgt(){
+		while (!GameManager.GameOver) {
+			var ray = Camera.main.ScreenPointToRay (new Vector3 (transform.position.x, transform.position.y, 0.0f));
+			StartCoroutine (Gun.MuzzuleLookTgt (ray.GetPoint (4000)));
+			UITransform.position = RectTransformUtility.WorldToScreenPoint (Camera.main,lockOnTgt.transform.position);
+			yield return null;
+		}
 	}
 
 
@@ -108,7 +125,7 @@ public class ReticleSystem : MonoBehaviour
 		LockNow (TgtOb);
 	}
 
-	private void SelectCancel ()
+	private void FadeCancel ()
 	{
 		FadeToColor (Color.green);
 		if (UI.color.g >= 1) {
@@ -125,19 +142,6 @@ public class ReticleSystem : MonoBehaviour
 			AudioBox.pitch = 1;
 			AudioBox.PlayOneShot (LockOnSE);
 			Debug.Log (LockOnTgt.name + " をロックオン!");
-		}
-	}
-
-	private IEnumerator ReleaseLock ()
-	{
-		while (!GameManager.GameOver) {
-			if ((Input.GetKeyDown (KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.JoystickButton18)) && LockOnTgt != null) {
-				AudioBox.pitch = 0.75f;
-				AudioBox.PlayOneShot (LockOnSE);
-				Debug.Log (lockOnTgt.name + " のロックを解除！");
-				LockOnTgt = null;
-			}
-			yield return null;
 		}
 	}
 
@@ -174,6 +178,26 @@ public class ReticleSystem : MonoBehaviour
 			return;
 		}
 		transform.Translate (Dis.x, -Dis.y, 0);
+
+	}
+
+	private void ChangeCoroutine(bool LockOn){
+		if (LockOn) {
+			StopAllCoroutines ();
+			StartCoroutine (ReleaseLock());
+			StartCoroutine (ReticleMoveToTgt());
+		} else {
+			StopAllCoroutines ();
+			StartCoroutine (SerchEnemy ());
+			StartCoroutine (ReticleMoveInput ());
+		}
+	}
+
+
+	private void FadeToColor (Color Color)
+	{
+		UI.color = new Vector4 (UI.color.r + (Color == Color.red ? (1 * (Time.deltaTime / 2)) : (-1 * (Time.deltaTime / 2))),
+			UI.color.g + (Color == Color.red ? (-1 * (Time.deltaTime / 2)) : (1 * (Time.deltaTime / 2))), 0, 1);
 
 	}
 }

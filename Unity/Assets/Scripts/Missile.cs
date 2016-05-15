@@ -12,17 +12,13 @@ public class Missile : MonoBehaviour
 	private AudioSource AudioS;
 
 	[SerializeField]
-	private float Speed = 710;
+	private float Speed = 680;
 //時速3000km
 	private static Airframe AirFrame;
 
 	private Vector3 StartPos;
 	private Quaternion StartRot;
 
-	void Awake(){
-		QualitySettings.vSyncCount = 0; // VSyncをOFFにする
-		Application.targetFrameRate = 60; // ターゲットフレームレートを60に設定
-	}
 
 	void Start ()
 	{

@@ -21,7 +21,7 @@ public class EnemyAttack : MonoBehaviour
 		while (!GameManager.GameOver) {
 			timer += Time.deltaTime;
 			if (timer >= 1) {
-//				ChooseAction ();
+				ChooseAction ();
 				timer = 0;
 			}
 			yield return null;

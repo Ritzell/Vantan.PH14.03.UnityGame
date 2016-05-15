@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
 
 	void Start ()
 	{
+		QualitySettings.vSyncCount = 0; // VSyncをOFFにする
+		Application.targetFrameRate = 60; // ターゲットフレームレートを60に設定
 		StartCoroutine (Timer ());
 	}
 
