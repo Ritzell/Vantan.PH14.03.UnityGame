@@ -5,7 +5,7 @@ public class Muzzle : MonoBehaviour
 {
 	AudioSource AudioBox;
 	// Use this for initialization
-	void Start ()
+	void Awake ()
 	{
 		AudioBox = GetComponent<AudioSource> ();
 	}

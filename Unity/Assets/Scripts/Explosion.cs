@@ -5,9 +5,12 @@ public class Explosion : MonoBehaviour
 {
 	AudioSource AudioBox;
 
+	void Awake(){
+		AudioBox = GetComponent<AudioSource> ();
+	}
+
 	void Start ()
 	{
-		AudioBox = GetComponent<AudioSource> ();
 		AudioBox.Play ();
 		StartCoroutine (Deth ());
 	}

@@ -12,9 +12,12 @@ public class PlayerSound : MonoBehaviour
 	[SerializeField]
 	private AudioClip AudioClip;
 
+	void Awake(){
+		AudioBox = GetComponent<AudioSource> ();
+	}
+
 	void Start ()
 	{
-		AudioBox = GetComponent<AudioSource> ();
 		AudioBox.clip = AudioClip;
 	}
 

@@ -5,26 +5,35 @@ public class CameraSystem : MonoBehaviour
 {
 	private static GameObject MyCamera;
 
+	public const float NormalZ = -26f;
+	public const float NormalY = 7.5f;
+	public const float MaxNormalZ = NormalZ + 4;
+	public const float MinNormalZ = NormalZ - 4;
+	public const float MaxNormalZ_Error = NormalZ + 0.1f;
+	public const float MinNormalZ_Error = NormalZ - 0.1f;
 	private static Vector3 LookBehindPos;
 	private static Vector3 LookFrontPos;
-	private static bool stopReset = false;
 	private static GameObject AirPlain;
-	private static bool freemove = false;
 	private static bool LookBehind = false;
 
+
+	private static bool freemove = false;
 	public static bool FreeMove{
 		set{
 			if (value == false) {
-				MyCamera.transform.localPosition = LookFrontPos;//ChangePos (MyCamera.transform.localPosition);
-				//MyCamera.transform.Rotate (0, 180, 0);
+				MyCamera.transform.localPosition = LookFrontPos;
 				MyCamera.transform.localRotation = new Quaternion(0,0,0,MyCamera.transform.localRotation.w);
 			}
+			Color color = ReticleSystem.UIImage.color;
+			ReticleSystem.UIImage.color = new Vector4(color.r,color.g,color.b,value ? 0 : 1);
+			//GameObject.Find ("ReticleImage").SetActive (!value);
 			freemove = value;
 		}get{
 			return freemove;
 		}
 	}
 
+	private static bool stopReset = false;
 	public static bool StopReset {
 		set {
 			stopReset = value;
@@ -34,20 +43,13 @@ public class CameraSystem : MonoBehaviour
 		}
 	}
 
-	struct CameraLimitter
-	{
-		public const float NormalZ = -26f;
-		public const float NormalY = 7.5f;
-		public const float MaxNormalZ = NormalZ + 4;
-		public const float MinNormalZ = NormalZ - 4;
-		public const float MaxNormalZ_Error = NormalZ + 0.1f;
-		public const float MinNormalZ_Error = NormalZ - 0.1f;
+	void Awake(){
+		MyCamera = GameObject.Find ("Main Camera");
+		AirPlain = GameObject.Find ("eurofighter");
 	}
 
 	void Start ()
 	{
-		MyCamera = GameObject.Find ("Main Camera");
-		AirPlain = GameObject.Find ("eurofighter");
 		StartCoroutine (CameraSwitching ());
 		StartCoroutine (CameraModeChange ());
 		LookBehindPos = new Vector3 (0, 5.8f, 30.5f);//GameObject.Find ("CameraPos1").transform.localPosition;
@@ -95,6 +97,8 @@ public class CameraSystem : MonoBehaviour
 
 	private static Vector3 ChangePos (Vector3 NowPos)
 	{
+		Color color = ReticleSystem.UIImage.color;
+		ReticleSystem.UIImage.color = new Vector4(color.r,color.g,color.b,!LookBehind ? 0 : 1);
 		if (NowPos.z <= -22f && NowPos.x >= -30f) {
 			LookBehind = true;
 			return LookBehindPos;
@@ -109,13 +113,13 @@ public class CameraSystem : MonoBehaviour
 		if(LookBehind){
 			yield break;
 		}
-		float dis = MyCamera.transform.localPosition.z - (CameraLimitter.NormalZ);
-		while ((MyCamera.transform.localPosition.z >= CameraLimitter.MaxNormalZ_Error || MyCamera.transform.localPosition.z <= CameraLimitter.MinNormalZ_Error) && !stopReset) {
+		float dis = MyCamera.transform.localPosition.z - (NormalZ);
+		while ((MyCamera.transform.localPosition.z >= MaxNormalZ_Error || MyCamera.transform.localPosition.z <= MinNormalZ_Error) && !stopReset) {
 			MyCamera.transform.Translate (0, 0, -0.05f * System.Math.Sign (dis));
 			yield return null;
 		}
-		if (MyCamera.transform.localPosition.z <= CameraLimitter.MaxNormalZ_Error && MyCamera.transform.localPosition.z >= CameraLimitter.MinNormalZ_Error) {
-			MyCamera.transform.localPosition = new Vector3 (0, CameraLimitter.NormalY, CameraLimitter.NormalZ);
+		if (MyCamera.transform.localPosition.z <= MaxNormalZ_Error && MyCamera.transform.localPosition.z >= MinNormalZ_Error) {
+			MyCamera.transform.localPosition = new Vector3 (0, NormalY, NormalZ);
 		}
 		yield return null;
 	}

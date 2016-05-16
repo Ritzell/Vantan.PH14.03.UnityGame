@@ -13,7 +13,6 @@ public class ReticleSystem : MonoBehaviour
 	//Corgi(8)レイヤーとだけ衝突しない
 	//int layerMask = ~(1 << 8);
 	private static AudioSource AudioBox;
-	private static Image UI;
 	private static RectTransform UITransform;
 	private static GameObject lockOnTgt = null;
 	public static GameObject LockOnTgt {
@@ -28,6 +27,12 @@ public class ReticleSystem : MonoBehaviour
 			UI.GetComponent<ReticleSystem> ().ChangeCoroutine(value);
 		}get {
 			return lockOnTgt;
+		}
+	}
+	private static Image UI;
+	public static Image UIImage{
+		get{
+			return UI;
 		}
 	}
 
@@ -49,15 +54,15 @@ public class ReticleSystem : MonoBehaviour
 	void Awake ()
 	{
 		UI = gameObject.GetComponent<Image> ();
-		UI.color = Color.green;
+		AudioBox = GetComponent<AudioSource> ();
+		UITransform = GetComponent<RectTransform> ();
 	}
 
 	void Start ()
 	{
 		StartCoroutine (SerchEnemy ());
 		StartCoroutine (ReticleMoveInput ());
-		AudioBox = GetComponent<AudioSource> ();
-		UITransform = GetComponent<RectTransform> ();
+		UI.color = Color.green;
 	}
 
 	private IEnumerator ReticleMoveInput ()
@@ -88,15 +93,24 @@ public class ReticleSystem : MonoBehaviour
 				SelectTgt (Hit.transform.gameObject);
 			} else {
 				StartCoroutine (Gun.MuzzuleLookTgt (ray.GetPoint (4000)));/////////////////
-				if (UI.color.g < 1) {
-					FadeCancel ();
-				}
+				FadeCancel ();
 			}
 			yield return null;
 		}
 	}
 
-	private IEnumerator ReleaseLock ()
+	public void ReleaseLock(GameObject Enemy){
+		if (LockOnTgt == Enemy) {
+			AudioBox.pitch = 1.75f;
+			AudioBox.PlayOneShot (LockOnSE);
+			LockOnTgt = null;
+		}
+		return;
+	}
+
+
+
+	private IEnumerator ReleaseLockInput ()
 	{
 		while (!GameManager.GameOver) {
 			if ((Input.GetKeyDown (KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.JoystickButton18))) {
@@ -127,13 +141,10 @@ public class ReticleSystem : MonoBehaviour
 
 	private void FadeCancel ()
 	{
-		FadeToColor (Color.green);
-		if (UI.color.g >= 1) {
-			LockOnTgt = null;
+		if (UI.color.g < 1) {
+			FadeToColor (Color.green);
 		}
 	}
-
-	//private float LockNow;
 
 	private void LockNow (GameObject Tgt)
 	{
@@ -184,7 +195,7 @@ public class ReticleSystem : MonoBehaviour
 	private void ChangeCoroutine(bool LockOn){
 		if (LockOn) {
 			StopAllCoroutines ();
-			StartCoroutine (ReleaseLock());
+			StartCoroutine (ReleaseLockInput());
 			StartCoroutine (ReticleMoveToTgt());
 		} else {
 			StopAllCoroutines ();

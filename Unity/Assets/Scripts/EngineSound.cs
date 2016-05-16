@@ -12,9 +12,12 @@ public class EngineSound : MonoBehaviour
 		public const float pitchUpSpeed = 0.005f;
 	}
 
+	void Awake(){
+		AudioBox = GetComponent<AudioSource> ();
+	}
+
 	void Start ()
 	{
-		AudioBox = GetComponent<AudioSource> ();
 		AudioBox.pitch = AudioBox.pitch;
 	}
 

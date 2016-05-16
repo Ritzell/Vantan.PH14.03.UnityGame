@@ -3,25 +3,21 @@ using System.Collections;
 
 public class PlayerMove : MonoBehaviour
 {
-
-
-
-	public struct SpeedConfig
-	{
-		public static float Speed = 300f;
-		public const short Accele = +1;
-		public const short Decele = -1;
-		public const float MinSpeed = 200f;
-		public const float MaxSpeed = 690f;
-	}
-
+	public static float Speed = 300f;
+	public const short Accele = +1;
+	public const short Decele = -1;
+	public const float MinSpeed = 200f;
+	public const float MaxSpeed = 690f;
 	private const float Keep = 0;
 
 	private static EngineSound EngineS;
 
+	void Awake(){
+		EngineS = GameObject.Find ("engine").GetComponent<EngineSound> ();
+	}
+
 	void Start ()
 	{
-		EngineS = GameObject.Find ("engine").GetComponent<EngineSound> ();
 		StartCoroutine (Move ());
 		StartCoroutine (ChangeSpeed ());
 	}
@@ -37,7 +33,7 @@ public class PlayerMove : MonoBehaviour
 
 	private void MoveForward ()
 	{
-		transform.Translate (Vector3.forward * Time.deltaTime * SpeedConfig.Speed);
+		transform.Translate (Vector3.forward * Time.deltaTime * Speed);
 	}
 
 	/// <summary>
@@ -49,9 +45,9 @@ public class PlayerMove : MonoBehaviour
 		while (!GameManager.GameOver) {
 			if (Input.GetKey (KeyCode.JoystickButton13) || Input.GetKey (KeyCode.JoystickButton14) || Input.GetKey (KeyCode.Alpha1) || Input.GetKey (KeyCode.Alpha2)) {
 				if (Input.GetKey (KeyCode.JoystickButton13) || Input.GetKey (KeyCode.Alpha1)) {
-					FuelInjector(SpeedConfig.Decele);
+					FuelInjector(Decele);
 				} else if (Input.GetKey (KeyCode.JoystickButton14) || Input.GetKey (KeyCode.Alpha2)) {//Joystick1Button5 or Joystick8Button12 or JoystickButton14
-					FuelInjector(SpeedConfig.Accele);
+					FuelInjector(Accele);
 				}
 			} else if (Input.GetKeyUp (KeyCode.JoystickButton13) || Input.GetKeyUp (KeyCode.JoystickButton14) || Input.GetKeyUp (KeyCode.Alpha1) || Input.GetKeyUp (KeyCode.Alpha2)) {
 				AfterBurner (Keep);
@@ -67,12 +63,12 @@ public class PlayerMove : MonoBehaviour
 	/// </summary>
 	/// <value>The speed.</value>
 	private void FuelInjector (float Signal){
-			SpeedConfig.Speed = Mathf.Clamp(SpeedConfig.Speed + Signal,SpeedConfig.MinSpeed,SpeedConfig.MaxSpeed);
-			if (SpeedConfig.Speed > SpeedConfig.MinSpeed && SpeedConfig.Speed < SpeedConfig.MaxSpeed) {
+			Speed = Mathf.Clamp(Speed + Signal,MinSpeed,MaxSpeed);
+			if (Speed > MinSpeed && Speed < MaxSpeed) {
 				AfterBurner (Signal);
 				CameraSystem.MoveCamera (Signal);
 			}
-			EngineS.Pitch = SpeedConfig.Speed;
+			EngineS.Pitch = Speed;
 	}
 
 	private void AfterBurner (float Fuel)

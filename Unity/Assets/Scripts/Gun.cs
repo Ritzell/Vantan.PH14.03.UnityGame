@@ -7,7 +7,7 @@ public class Gun : MonoBehaviour
 	private static GameObject[] Muzzules = new GameObject[2];
 	private static BulletFactory Factory;
 
-	void Start ()
+	void Awake ()
 	{
 		Factory = GameObject.Find ("GameManager").GetComponent<BulletFactory> ();
 		Muzzules [0] = GameObject.Find ("muzzleA");

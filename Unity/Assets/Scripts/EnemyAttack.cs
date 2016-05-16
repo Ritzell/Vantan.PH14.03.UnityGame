@@ -8,11 +8,14 @@ public class EnemyAttack : MonoBehaviour
 
 	private Transform Player;
 
-	void Start ()
+	void Awake ()
 	{
-		StartCoroutine (Shoot ());
 		Player = GameObject.Find ("eurofighter").transform;
 		Factory = GameObject.Find ("GameManager").GetComponent<MissileFactory> ();
+	}
+
+	void Start(){
+		StartCoroutine (Shoot ());
 	}
 
 	public IEnumerator Shoot ()

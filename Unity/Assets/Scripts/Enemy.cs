@@ -7,7 +7,6 @@ public class Enemy : MonoBehaviour
 	/// フレアによる回避はミサイルのスクリプトで行う
 	/// </summary>
 	private static GameObject tgt;
-
 	public static GameObject Tgt {
 		set {
 			tgt = value;
@@ -17,15 +16,22 @@ public class Enemy : MonoBehaviour
 		}
 	}
 
+	private static ReticleSystem PlayerReticle;
+
+	void Awake(){
+		PlayerReticle = GameObject.Find("ReticleImage").GetComponent<ReticleSystem>();
+		Tgt = GameObject.Find ("eurofighter");
+	}
+
 	void Start ()
 	{
 		EnemyBase.Rest = EnemyBase.Rest + 1;
-		Tgt = GameObject.Find ("eurofighter");
 	}
 
 	void OnTriggerStay (Collider Col)
 	{
 		EnemyBase.Rest = EnemyBase.Rest - 1;
+		PlayerReticle.ReleaseLock (gameObject);
 		Destroy (gameObject);
 	}
 }

@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Airframe : MonoBehaviour
 {
+	private static int HP = 3;
 
 	public void Reload (Vector3 StartPos, Quaternion StartRot)
 	{
@@ -11,7 +12,10 @@ public class Airframe : MonoBehaviour
 
 	private void OnTriggerEnter (Collider Col)
 	{
-		Deth ();
+		HP--;
+		if (HP <= 0) {
+			Deth ();
+		}
 	}
 
 	private void Deth ()
