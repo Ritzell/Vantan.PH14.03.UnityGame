@@ -11,8 +11,8 @@ public class Missile : MonoBehaviour
 
 	private AudioSource AudioS;
 
-	private float Speed;
-//時速3000km
+	private float Speed;//700
+	private float LifeTime = 40;
 
 	private static Airframe AirFrame;
 
@@ -27,33 +27,34 @@ public class Missile : MonoBehaviour
 
 	void Start ()
 	{
-		
+		if(gameObject.layer == 12){
+		EstimationSystem.Missiles = gameObject;
+		}
 		AudioS.clip = AudioClip1;
 		StartPos = transform.localPosition;
 		StartRot = transform.localRotation;
-		Speed = Random.Range (600, 690);
+		Speed = 700;//700
 	}
 
 	public IEnumerator Straight ()
 	{
 		ShootReady ();
 		while (!GameManager.GameOver) {
-			try{
-			StartCoroutine (MoveForward ());
-			}catch{
-			}
+			StartCoroutine(MoveForward ());
 			yield return null;
 		}
 	}
 
 
 
-	public IEnumerator Straight (Transform tgt)
+	public IEnumerator StraightEnemy (Transform tgt,bool CutOutReady)
 	{
-		shootReady_E ();
-		transform.LookAt (tgt);
+		if (!CutOutReady) {
+			shootReady_E ();
+			transform.LookAt (tgt);
+		}
 		while (!GameManager.GameOver) {
-			StartCoroutine (MoveForward ());
+			StartCoroutine(MoveForward ());
 			yield return null;
 		}
 	}
@@ -62,29 +63,39 @@ public class Missile : MonoBehaviour
 	{
 		ShootReady ();
 		while (!GameManager.GameOver) {
-			try{
-			StartCoroutine (GetAiming (tgt, true));
-			StartCoroutine (MoveForward ());
-			}catch{
-			}
+			StartCoroutine (GetAimingPlayer (tgt));
+			StartCoroutine(MoveForward ());
 			yield return null;
 		}
 		yield return null;
 	}
 
-	public IEnumerator Tracking_E (Transform tgt)
+	public IEnumerator TrackingEnemy (Transform tgt)
 	{
 		shootReady_E ();
-		float delay = 0f;
 		while (!GameManager.GameOver) {
-			delay += Time.deltaTime;
-			try{
-			if (delay >= 0.4f) {
-				StartCoroutine (GetAiming (tgt, false));
-				delay = 0f;
+			Vector3 Random3 = new Vector3 (Random.Range(-10,10),Random.Range(-10,10),Random.Range(-10,10));
+			//Vector3 TgtPos = GetAimingEnemy (tgt);
+//			while (Mathf.Abs(Vector3.Distance(transform.position,TgtPos)) > 200){
+//				StartCoroutine(MoveForward ());
+//				yield return null;
+//			}
+			//method
+			while(Mathf.Abs(Vector3.Distance(tgt.position,transform.position)) >= 40){
+				transform.LookAt (tgt.transform.position + Random3);
+				StartCoroutine(MoveForward ());
+				yield return null;
+			}
+			if(Mathf.Abs(Vector3.Distance(tgt.position,transform.position)) < 40){
+				Debug.Log ("Swich");
+				StopCoroutine (SelfBreak());
+				LifeTime = 4;
+				StartCoroutine (SelfBreak());
+				while (!GameManager.GameOver) {
+					StartCoroutine (MoveForward ());
+					//StartCoroutine (StraightEnemy(tgt,true));
+					yield return null;
 				}
-			StartCoroutine (MoveForward ());
-			}catch{
 			}
 			yield return null;
 		}
@@ -107,21 +118,27 @@ public class Missile : MonoBehaviour
 		StartCoroutine (SelfBreak ());
 	}
 
-	private IEnumerator GetAiming (Transform tgt, bool player)
-	{
-		if(player){
-			Vector3 TgtPos = new Vector3 (tgt.transform.position.x, tgt.transform.position.y, tgt.transform.position.z);
-			transform.LookAt (TgtPos);
-			yield return null;
-		}
-		try{
-		Vector3 TgtPos = new Vector3 (tgt.transform.position.x + Random.Range (-15, 15), tgt.transform.position.y + Random.Range (-15, 15), tgt.transform.position.z + Random.Range (-15, 15));
+	private IEnumerator GetAimingPlayer(Transform tgt){
+		Vector3 TgtPos = new Vector3 (tgt.transform.position.x, tgt.transform.position.y, tgt.transform.position.z);
 		transform.LookAt (TgtPos);
-		}catch{
-		}
 		yield return null;
 	}
 
+//	private Vector3 GetAimingEnemy (Transform tgt)
+//	{
+//		
+////		try{
+////			Vector3 Distance = new Vector3 ((tgt.transform.position.x+ Random.Range (-40, 40)) - transform.position.x,(tgt.transform.position.y+ Random.Range (-40, 40)) - transform.position.y, (tgt.transform.position.z+ Random.Range (-40, 40)) - transform.position.z);
+////			Vector3 TgtPos = new Vector3 (tgt.position.x - Distance.x/2,tgt.position.y - Distance.y/2,tgt.position.z - Distance.z/2);
+////		transform.LookAt (TgtPos);
+////			return TgtPos;
+////		}catch{
+////			return Vector3.zero;
+////		}
+//		Vector3 a;
+//		return Vector3;
+//	}
+//
 	private IEnumerator MoveForward ()
 	{
 		transform.Translate (Vector3.forward * Time.deltaTime * Speed);
@@ -139,7 +156,11 @@ public class Missile : MonoBehaviour
 	private IEnumerator SelfBreak ()
 	{
 		float time = 0f;
-		while (!GameManager.GameOver && time < 20f) {
+		while (!GameManager.GameOver && time < LifeTime) {
+//			if(transform.localPosition.y <= 0){
+//				StartCoroutine (BreakMissile ());
+//				yield break;
+//			}
 			time += Time.deltaTime;
 			yield return null;
 		}
@@ -150,7 +171,9 @@ public class Missile : MonoBehaviour
 	private IEnumerator BreakMissile ()
 	{
 		StopAllCoroutines ();
+		EstimationSystem.RemoveList (gameObject);
 		Instantiate (Resources.Load ("prefabs/Explosion"), transform.position, Quaternion.identity);
+		yield return new WaitForSeconds(0.2f);
 		Destroy (gameObject);
 		yield return null;
 	}

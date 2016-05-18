@@ -5,12 +5,12 @@ public class CameraSystem : MonoBehaviour
 {
 	private static GameObject MyCamera;
 
-	public const float NormalZ = -26f;
-	public const float NormalY = 7.5f;
-	public const float MaxNormalZ = NormalZ + 4;
-	public const float MinNormalZ = NormalZ - 4;
-	public const float MaxNormalZ_Error = NormalZ + 0.1f;
-	public const float MinNormalZ_Error = NormalZ - 0.1f;
+	private static float NormalZ;//-26
+	private  static float NormalY;//7.5
+	//private static float MaxNormalZ = NormalZ + 4;
+	//private static float MinNormalZ = NormalZ - 4;
+	private static float MaxNormalZ_Error;
+	private static float MinNormalZ_Error;
 	private static Vector3 LookBehindPos;
 	private static Vector3 LookFrontPos;
 	private static GameObject AirPlain;
@@ -46,6 +46,10 @@ public class CameraSystem : MonoBehaviour
 	void Awake(){
 		MyCamera = GameObject.Find ("Main Camera");
 		AirPlain = GameObject.Find ("eurofighter");
+		NormalZ = GameObject.Find ("Main Camera").transform.localPosition.z;
+		NormalY = GameObject.Find ("Main Camera").transform.localPosition.y;
+		MaxNormalZ_Error = NormalZ + 0.1f;
+		MinNormalZ_Error = NormalZ - 0.1f;
 	}
 
 	void Start ()
@@ -54,6 +58,15 @@ public class CameraSystem : MonoBehaviour
 		StartCoroutine (CameraModeChange ());
 		LookBehindPos = new Vector3 (0, 5.8f, 30.5f);//GameObject.Find ("CameraPos1").transform.localPosition;
 		LookFrontPos = MyCamera.transform.localPosition;
+	}
+
+	public IEnumerator LookTgt(GameObject Tgt){
+		Vector3 TgtPos = Tgt.transform.position;
+		while(!GameManager.GameOver){
+			transform.LookAt (TgtPos);
+			yield return null;
+		}
+		yield return null;
 	}
 
 	private IEnumerator CameraModeChange ()
@@ -82,7 +95,7 @@ public class CameraSystem : MonoBehaviour
 	private static IEnumerator CameraSwitching ()
 	{
 		while (!GameManager.GameOver) {
-			if (Input.GetKeyDown (KeyCode.JoystickButton11)) {
+			if (Input.GetKeyDown (KeyCode.JoystickButton11) || Input.GetKeyDown(KeyCode.M)) {
 				if(FreeMove){
 					FreeMove = false;
 					yield return null;
@@ -97,9 +110,7 @@ public class CameraSystem : MonoBehaviour
 
 	private static Vector3 ChangePos (Vector3 NowPos)
 	{
-		Color color = ReticleSystem.UIImage.color;
-		ReticleSystem.UIImage.color = new Vector4(color.r,color.g,color.b,!LookBehind ? 0 : 1);
-		if (NowPos.z <= -22f && NowPos.x >= -30f) {
+		if (NowPos.z <= NormalZ+4 && NowPos.x >= NormalZ-4) {
 			LookBehind = true;
 			return LookBehindPos;
 		} else {
@@ -131,14 +142,7 @@ public class CameraSystem : MonoBehaviour
 		}
 		Vector3 CameraPos = MyCamera.transform.localPosition;
 		Vector3 BehindPos = GameObject.Find ("CameraPos1").transform.localPosition;
-
-//		if (LookBehind) {
-//			MyCamera.transform.localPosition = new Vector3(CameraPos.x,CameraPos.y,Mathf.Clamp(CameraPos.z + 0.025f * (value / (value / value)),34.5f,26f));
-//			return;
-//		}
-
-		MyCamera.transform.localPosition = new Vector3(CameraPos.x,CameraPos.y,Mathf.Clamp(CameraPos.z + -0.025f * (value / (value / value)),-30f,-22f));
-			//GameObject.Find ("CameraPos1").transform.localPosition = new Vector3(BehindPos.x,BehindPos.y,Mathf.Clamp(BehindPos.z + 0.025f * (value / (value / value)),-30f,-22f));
+		MyCamera.transform.localPosition = new Vector3(CameraPos.x,CameraPos.y,Mathf.Clamp(CameraPos.z + -0.025f * (value / (value / value)),NormalZ-4,NormalZ+4));
 	}
 
 }

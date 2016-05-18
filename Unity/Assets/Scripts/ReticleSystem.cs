@@ -14,14 +14,17 @@ public class ReticleSystem : MonoBehaviour
 	//int layerMask = ~(1 << 8);
 	private static AudioSource AudioBox;
 	private static RectTransform UITransform;
+	private static CameraSystem CameraScript;
 	private static GameObject lockOnTgt = null;
 	public static GameObject LockOnTgt {
 		set {
 			lockOnTgt = value;
 			if (value == null) {
+//				CameraScript.StopCoroutine(CameraScript.LookTgt(null));
 				UITransform.localPosition = new Vector3 (0,0,0);
 				UI.color = Color.green;
 			} else {
+//				CameraScript.StartCoroutine(CameraScript.LookTgt(value));
 				UI.color = Color.red;
 			}
 			UI.GetComponent<ReticleSystem> ().ChangeCoroutine(value);
@@ -56,6 +59,7 @@ public class ReticleSystem : MonoBehaviour
 		UI = gameObject.GetComponent<Image> ();
 		AudioBox = GetComponent<AudioSource> ();
 		UITransform = GetComponent<RectTransform> ();
+		CameraScript = GameObject.Find ("Main Camera").GetComponent<CameraSystem> ();
 	}
 
 	void Start ()
@@ -99,7 +103,7 @@ public class ReticleSystem : MonoBehaviour
 		}
 	}
 
-	public void ReleaseLock(GameObject Enemy){
+	public void DestoroyLockOnTgt(GameObject Enemy){
 		if (LockOnTgt == Enemy) {
 			AudioBox.pitch = 1.75f;
 			AudioBox.PlayOneShot (LockOnSE);
@@ -145,7 +149,6 @@ public class ReticleSystem : MonoBehaviour
 			FadeToColor (Color.green);
 		}
 	}
-
 	private void LockNow (GameObject Tgt)
 	{
 		if (UI.color.r >= 1) {

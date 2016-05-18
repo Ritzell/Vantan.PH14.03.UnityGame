@@ -21,9 +21,10 @@ public class EnemyAttack : MonoBehaviour
 	public IEnumerator Shoot ()
 	{
 		float timer = 0f;
+		const float delay = 2f;
 		while (!GameManager.GameOver) {
 			timer += Time.deltaTime;
-			if (timer >= 1) {
+			if (timer >= delay) {
 				ChooseAction ();
 				timer = 0;
 			}
@@ -42,7 +43,7 @@ public class EnemyAttack : MonoBehaviour
 
 	public void StraightMissile ()
 	{
-		StartCoroutine (Factory.NewMissileE (transform.position).GetComponent<Missile> ().Straight (Player));
+		StartCoroutine (Factory.NewMissileE (transform.position).GetComponent<Missile> ().StraightEnemy (Player,false));
 	}
 
 	public void TrackingMissile ()
