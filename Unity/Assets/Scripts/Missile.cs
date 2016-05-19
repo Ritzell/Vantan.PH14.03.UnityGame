@@ -75,11 +75,6 @@ public class Missile : MonoBehaviour
 		shootReady_E ();
 		while (!GameManager.GameOver) {
 			Vector3 Random3 = new Vector3 (Random.Range(-10,10),Random.Range(-10,10),Random.Range(-10,10));
-			//Vector3 TgtPos = GetAimingEnemy (tgt);
-//			while (Mathf.Abs(Vector3.Distance(transform.position,TgtPos)) > 200){
-//				StartCoroutine(MoveForward ());
-//				yield return null;
-//			}
 			//method
 			while(Mathf.Abs(Vector3.Distance(tgt.position,transform.position)) >= 40){
 				transform.LookAt (tgt.transform.position + Random3);

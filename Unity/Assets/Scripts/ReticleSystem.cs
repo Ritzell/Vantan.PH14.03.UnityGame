@@ -192,6 +192,10 @@ public class ReticleSystem : MonoBehaviour
 			return;
 		}
 		transform.Translate (Dis.x, -Dis.y, 0);
+		if (transform.position.x > Screen.width || transform.position.x < 0
+			|| transform.position.y > Screen.height || transform.position.y < 0) {
+
+		}
 
 	}
 
