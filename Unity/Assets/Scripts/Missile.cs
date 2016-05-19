@@ -15,7 +15,6 @@ public class Missile : MonoBehaviour
 	private float LifeTime = 40;
 
 	private static Airframe AirFrame;
-
 	private Vector3 StartPos;
 	private Quaternion StartRot;
 
@@ -28,7 +27,8 @@ public class Missile : MonoBehaviour
 	void Start ()
 	{
 		if(gameObject.layer == 12){
-		EstimationSystem.Missiles = gameObject;
+			EstimationSystem.Missiles = gameObject;
+			MissileRader.AddOutRangeMissile.Add(gameObject.transform);
 		}
 		AudioS.clip = AudioClip1;
 		StartPos = transform.localPosition;
@@ -87,13 +87,11 @@ public class Missile : MonoBehaviour
 				yield return null;
 			}
 			if(Mathf.Abs(Vector3.Distance(tgt.position,transform.position)) < 40){
-				Debug.Log ("Swich");
 				StopCoroutine (SelfBreak());
 				LifeTime = 4;
 				StartCoroutine (SelfBreak());
 				while (!GameManager.GameOver) {
 					StartCoroutine (MoveForward ());
-					//StartCoroutine (StraightEnemy(tgt,true));
 					yield return null;
 				}
 			}
@@ -170,9 +168,10 @@ public class Missile : MonoBehaviour
 
 	private IEnumerator BreakMissile ()
 	{
-		StopAllCoroutines ();
-		EstimationSystem.RemoveList (gameObject);
 		Instantiate (Resources.Load ("prefabs/Explosion"), transform.position, Quaternion.identity);
+		StopAllCoroutines ();
+		MissileRader.DestroyMissile (gameObject.transform);
+		EstimationSystem.RemoveList (gameObject);
 		yield return new WaitForSeconds(0.2f);
 		Destroy (gameObject);
 		yield return null;

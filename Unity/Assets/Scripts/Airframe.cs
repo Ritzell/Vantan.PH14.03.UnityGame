@@ -13,6 +13,7 @@ public class Airframe : MonoBehaviour
 	private void OnTriggerEnter (Collider Col)
 	{
 		HP--;
+		Debug.Log (HP);
 		if (HP <= 0) {
 			Deth ();
 		}

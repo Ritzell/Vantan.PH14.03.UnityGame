@@ -3,14 +3,20 @@ using System.Collections;
 
 public class PlayerMove : MonoBehaviour
 {
-	public static float Speed = 300f;
-	public const short Accele = +1;
-	public const short Decele = -1;
-	public const float MinSpeed = 200f;
-	public const float MaxSpeed = 690f;
+	private static float speed = 300f;
+	private const short Accele = +1;
+	private const short Decele = -1;
+	private const float MinSpeed = 200f;
+	private const float MaxSpeed = 690f;
 	private const float Keep = 0;
 
 	private static EngineSound EngineS;
+
+	public static float Speed{
+		get{
+			return speed;
+		}
+	}
 
 	void Awake(){
 		EngineS = GameObject.Find ("engine").GetComponent<EngineSound> ();
@@ -63,7 +69,7 @@ public class PlayerMove : MonoBehaviour
 	/// </summary>
 	/// <value>The speed.</value>
 	private void FuelInjector (float Signal){
-			Speed = Mathf.Clamp(Speed + Signal,MinSpeed,MaxSpeed);
+		speed = Mathf.Clamp(Speed + Signal,MinSpeed,MaxSpeed);
 			if (Speed > MinSpeed && Speed < MaxSpeed) {
 				AfterBurner (Signal);
 				CameraSystem.MoveCamera (Signal);

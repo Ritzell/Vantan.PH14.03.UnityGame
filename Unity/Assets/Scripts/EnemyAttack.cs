@@ -48,6 +48,6 @@ public class EnemyAttack : MonoBehaviour
 
 	public void TrackingMissile ()
 	{
-		StartCoroutine (Factory.NewMissileE (transform.position).GetComponent<Missile> ().Tracking_E (Player));
+		StartCoroutine (Factory.NewMissileE (transform.position).GetComponent<Missile> ().TrackingEnemy (Player));
 	}
 }

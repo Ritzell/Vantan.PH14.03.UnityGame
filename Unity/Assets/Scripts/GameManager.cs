@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
-
+using UnityEngine.UI;
 //using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -18,12 +18,14 @@ public class GameManager : MonoBehaviour
 
 	private static DateTime StartTime = DateTime.Now;
 	// Use this for initialization
-
+	//0.152
+	//0.085
 	void Start ()
 	{
 		QualitySettings.vSyncCount = 0; // VSyncをOFFにする
 		Application.targetFrameRate = 60; // ターゲットフレームレートを60に設定
 		StartCoroutine (Timer ());
+		Debug.Log (new Vector2(Screen.width,Screen.height));
 	}
 
 	public IEnumerator ReloadMissile (Vector3 StartPos, Quaternion StartRot)
@@ -39,10 +41,10 @@ public class GameManager : MonoBehaviour
 	/// </summary>
 	private IEnumerator Timer ()
 	{
-		GUIText Timetext = GameObject.Find ("Timer").GetComponent<GUIText> ();
+		Text Timetext = GameObject.Find ("Timer").GetComponent<Text> ();
 		TimeSpan LimitTime = new TimeSpan (00, 10, 00);
 		while (!gameOver) {
-			StartCoroutine (displayTime (Timetext, LimitTime));
+			StartCoroutine (DisplayTime (Timetext, LimitTime));
 			yield return null;
 		}
 	}
@@ -56,6 +58,18 @@ public class GameManager : MonoBehaviour
 	}
 
 	/// <summary>
+	/// GUITextに残り時間を表記する。
+	/// </summary>
+	/// <param name="Timetext">Timetext.</param>
+	/// <param name="limitTime">Limit time.</param>
+	private IEnumerator DisplayTime (Text Timetext, TimeSpan limitTime)
+	{
+		TimeCalculation (limitTime);
+		Timetext.text = TimeCastToString ();
+		yield return null;
+	}
+
+	/// <summary>
 	/// 残り時間を計算
 	/// </summary>
 	private void TimeCalculation (TimeSpan limitTime)
@@ -63,19 +77,6 @@ public class GameManager : MonoBehaviour
 		TimeSpan elapsedTime = (TimeSpan)(DateTime.Now - StartTime);
 		Time = limitTime - elapsedTime;
 	}
-
-	/// <summary>
-	/// GUITextに残り時間を表記する。
-	/// </summary>
-	/// <param name="Timetext">Timetext.</param>
-	/// <param name="limitTime">Limit time.</param>
-	private IEnumerator displayTime (GUIText Timetext, TimeSpan limitTime)
-	{
-		TimeCalculation (limitTime);
-		Timetext.text = TimeCastToString ();
-		yield return null;
-	}
-
 
 	private TimeSpan RestTime;
 
