@@ -59,7 +59,7 @@ public class Missile : MonoBehaviour
 		}
 	}
 
-	public IEnumerator Tracking (Transform tgt)
+	public IEnumerator TrackingPlayer (Transform tgt)
 	{
 		ShootReady ();
 		while (!GameManager.GameOver) {
@@ -74,17 +74,13 @@ public class Missile : MonoBehaviour
 	{
 		shootReady_E ();
 		while (!GameManager.GameOver) {
-			Vector3 Random3 = new Vector3 (Random.Range(-10,10),Random.Range(-10,10),Random.Range(-10,10));
-			//method
-			while(Mathf.Abs(Vector3.Distance(tgt.position,transform.position)) >= 40){
-				transform.LookAt (tgt.transform.position + Random3);
-				StartCoroutine(MoveForward ());
+			Vector3 RandomError = new Vector3 (Random.Range(-10,10),Random.Range(-10,10),Random.Range(-10,10));
+			while(Distance(tgt) >= 40){
+				ErrorTracking (tgt,RandomError);
 				yield return null;
 			}
-			if(Mathf.Abs(Vector3.Distance(tgt.position,transform.position)) < 40){
-				StopCoroutine (SelfBreak());
-				LifeTime = 4;
-				StartCoroutine (SelfBreak());
+			if(Distance(tgt) < 40){
+				RefreshSelfBreak ();
 				while (!GameManager.GameOver) {
 					StartCoroutine (MoveForward ());
 					yield return null;
@@ -93,6 +89,24 @@ public class Missile : MonoBehaviour
 			yield return null;
 		}
 		yield return null;
+	}
+
+	private void ErrorTracking(Transform tgt,Vector3 Random3){
+		transform.LookAt (tgt.transform.position + Random3);
+		StartCoroutine(MoveForward ());
+	}
+	private void RefreshSelfBreak(){
+		StopCoroutine (SelfBreak());
+		LifeTime = 4;
+		StartCoroutine (SelfBreak());
+	}
+
+	private float Distance(Transform tgt){
+		try{
+		return Mathf.Abs(Vector3.Distance(tgt.position,transform.position));
+		}catch{
+			return 0f;
+		}
 	}
 
 	private void ShootReady ()

@@ -38,7 +38,7 @@ public class Attack : MonoBehaviour
 					StartCoroutine (missiles.Dequeue ().GetComponent<Missile> ().Straight ());
 					Reloading = 0f;
 				} else if ((Input.GetAxis ("LTrigger") == 1 || Input.GetKeyDown (KeyCode.V)) && missiles.Count >= 1 && ReticleSystem.LockOnTgt != null) {
-					StartCoroutine (missiles.Dequeue ().GetComponent<Missile> ().Tracking (ReticleSystem.LockOnTgt.transform));
+					StartCoroutine (missiles.Dequeue ().GetComponent<Missile> ().TrackingPlayer (ReticleSystem.LockOnTgt.transform));
 					Reloading = 0f;
 				}
 			}

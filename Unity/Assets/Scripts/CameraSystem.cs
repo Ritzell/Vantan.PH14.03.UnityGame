@@ -110,7 +110,7 @@ public class CameraSystem : MonoBehaviour
 
 	private static Vector3 ChangePos (Vector3 NowPos)
 	{
-		if (NowPos.z <= NormalZ+4 && NowPos.x >= NormalZ-4) {
+		if (NowPos.z <= NormalZ+7 && NowPos.x >= NormalZ-7) {
 			LookBehind = true;
 			return LookBehindPos;
 		} else {
@@ -135,6 +135,26 @@ public class CameraSystem : MonoBehaviour
 		yield return null;
 	}
 
+	public static IEnumerator SwayCamera(){
+		float SwayTime = 0;
+		float AmplitudeTime = 0f;
+		Vector3 NormalPos = MyCamera.transform.localPosition;
+		while (SwayTime < 0.4f) {
+			SwayTime += Time.deltaTime;
+			AmplitudeTime += Time.deltaTime;
+			if (AmplitudeTime > 0.01f) {
+				Vector3 Amplitude = new Vector3 (Random.Range(-5,5),Random.Range(-5,5),0);
+				MyCamera.transform.localPosition = new Vector3 (NormalPos.x+Amplitude.x,NormalPos.y+Amplitude.y,NormalPos.z);
+				AmplitudeTime = 0f;
+				yield return null;
+			}
+
+			yield return null;
+		}
+		MyCamera.transform.localPosition = NormalPos;
+		yield return null;
+	}
+
 	public static void MoveCamera (float value)
 	{
 		if (freemove || LookBehind) {
@@ -142,7 +162,7 @@ public class CameraSystem : MonoBehaviour
 		}
 		Vector3 CameraPos = MyCamera.transform.localPosition;
 		Vector3 BehindPos = GameObject.Find ("CameraPos1").transform.localPosition;
-		MyCamera.transform.localPosition = new Vector3(CameraPos.x,CameraPos.y,Mathf.Clamp(CameraPos.z + -0.025f * (value / (value / value)),NormalZ-4,NormalZ+4));
+		MyCamera.transform.localPosition = new Vector3(CameraPos.x,CameraPos.y,Mathf.Clamp(CameraPos.z + -0.05f * (value / (value / value)),NormalZ-7,NormalZ+7));
 	}
 
 }
