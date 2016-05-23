@@ -22,7 +22,7 @@ public class EnemyAttack : MonoBehaviour
 
 	private IEnumerator SpecialAttack(){
 		yield return new WaitForSeconds (10);
-		while(GameManager.Time.Seconds > 30){
+		while(GameManager.RestTime.Seconds > 30){
 			yield return null;
 		}
 		StartCoroutine (OmniDirectionAttack());

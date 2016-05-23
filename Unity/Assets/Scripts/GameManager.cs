@@ -7,7 +7,9 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-	
+
+	private static GameObject Player;
+
 	private static bool gameOver = false;
 
 	public static bool GameOver {
@@ -17,9 +19,11 @@ public class GameManager : MonoBehaviour
 	}
 
 	private static DateTime StartTime = DateTime.Now;
-	// Use this for initialization
-	//0.152
-	//0.085
+
+	void Awake(){
+		Player = GameObject.Find ("AirPlain");
+	}
+
 	void Start ()
 	{
 		QualitySettings.vSyncCount = 0; // VSyncをOFFにする
@@ -53,7 +57,7 @@ public class GameManager : MonoBehaviour
 	/// </summary>
 	private static string TimeCastToString ()
 	{
-		return Time.Minutes.ToString ("D2") + ":" + Time.Seconds.ToString ("D2");//timeString;
+		return RestTime.Minutes.ToString ("D2") + ":" + RestTime.Seconds.ToString ("D2");//timeString;
 	}
 
 	/// <summary>
@@ -74,28 +78,86 @@ public class GameManager : MonoBehaviour
 	private static void TimeCalculation (TimeSpan limitTime)
 	{
 		TimeSpan elapsedTime = (TimeSpan)(DateTime.Now - StartTime);
-		Time = limitTime - elapsedTime;
+		RestTime = limitTime - elapsedTime;
 	}
 
-	private static TimeSpan RestTime;
+	private static TimeSpan restTime;
 
 	/// <summary>
 	/// 時間が0を下回るとscene移行するプロパティ
 	/// </summary>
-	public static TimeSpan Time {
+	public static TimeSpan RestTime {
 		set {
-			RestTime = value;
-			if (RestTime.Minutes + RestTime.Seconds <= 0) {
-				GameManager.loadScene ();
+			restTime = value;
+			if (restTime.Minutes + restTime.Seconds <= 0) {
+				GameObject.Find("GameManager").GetComponent<GameManager>().StartCoroutine(GameEnd (false));
 			}
 		}
 		get {
-			return RestTime;
+			return restTime;
 		}
 	}
 
-	public static void loadScene ()
+
+
+	public static IEnumerator GameEnd(bool Win){
+		GameManager Manager = GameObject.Find ("GameManager").GetComponent<GameManager> ();
+		AudioSource AudioBox =  GameObject.Find ("Main Camera").GetComponent<AudioSource> ();
+		if (Win) {
+			Manager.StartCoroutine (Victory ());
+		} else {
+			Manager.StartCoroutine(Defeat ());
+		}
+		Manager.StartCoroutine (ChangeMusic(AudioBox));
+		yield return null;
+
+	}
+
+	private static IEnumerator ChangeMusic(AudioSource AudioBox){
+		int TimeSpeed = (int)(1 / Time.timeScale);
+		while (AudioBox.volume > 0) {
+			AudioBox.volume -= 0.05f*(Time.deltaTime*TimeSpeed);
+			yield return null;
+		}
+		AudioBox.Stop ();
+		yield return null;
+		NewMusicSet (AudioBox);
+		yield return null;
+	}
+
+	private static void NewMusicSet(AudioSource AudioBox){
+		AudioBox.clip = (AudioClip)(Resources.Load("Sounds/Sarabande"));
+		AudioBox.volume = 0.5f;
+		AudioBox.loop = false;
+		AudioBox.Play ();
+	}
+
+	public static IEnumerator Victory(){
+		StopGame ();
+		while (true) {
+			if (Input.GetKeyDown (KeyCode.Space)) {
+				SceneManager.LoadScene ("Result");
+				yield return null;
+			}
+			yield return null;
+		}
+
+	}
+
+	public static IEnumerator Defeat ()
 	{
-		SceneManager.LoadScene ("Result");
+		StopGame ();
+		while (true) {
+			if (Input.GetKeyDown (KeyCode.Space)) {
+				SceneManager.LoadScene ("Result");
+				yield return null;
+			}
+			yield return null;
+		}
+	}
+
+	private static void StopGame(){
+		gameOver = true;
+		Time.timeScale = 0.015f;
 	}
 }

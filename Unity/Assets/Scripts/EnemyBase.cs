@@ -20,6 +20,9 @@ public class EnemyBase : MonoBehaviour
 
 	void OnDestroy ()
 	{
-		GameManager.loadScene ();
+		if(GameManager.GameOver){
+			return;
+		}
+		StartCoroutine( GameManager.GameEnd (true));
 	}
 }

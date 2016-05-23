@@ -23,19 +23,11 @@ public class Airframe : MonoBehaviour
 
 	private IEnumerator Deth ()
 	{
-		GameManager.loadScene ();
-		//PlayerSound.AudioPlay ();
+		if(GameManager.GameOver){
+			yield break;
+		}
+		StartCoroutine( GameManager.GameEnd (false));
 		Destroy (gameObject);
 		yield return null;
-//		Time.timeScale = 0;
-//		while(!GameManager.GameOver){
-//			if(Input.GetKey(KeyCode.Space)){
-//				GameManager.loadScene ();
-//				//PlayerSound.AudioPlay ();
-//				Destroy (gameObject);
-//				yield return null;
-//			}
-//			yield return null;
-//		}
 	}
 }

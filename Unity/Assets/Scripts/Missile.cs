@@ -59,7 +59,7 @@ public class Missile : MonoBehaviour
 		}
 		transform.LookAt (tgt);
 
-		while (!GameManager.GameOver) {
+		while (true) {
 			StartCoroutine(MoveForward ());
 			yield return null;
 		}
@@ -72,7 +72,7 @@ public class Missile : MonoBehaviour
 		} else {
 			ShootReady_E ();
 		}
-		while (!GameManager.GameOver) {
+		while (true) {
 			StartCoroutine(MoveForward ());
 			yield return null;
 		}
@@ -81,7 +81,7 @@ public class Missile : MonoBehaviour
 	public IEnumerator TrackingPlayer (Transform tgt)
 	{
 		ShootReady ();
-		while (!GameManager.GameOver) {
+		while (true) {
 			StartCoroutine (GetAimingPlayer (tgt));
 			StartCoroutine(MoveForward ());
 			yield return null;
@@ -92,7 +92,7 @@ public class Missile : MonoBehaviour
 	public IEnumerator TrackingEnemy (Transform tgt)
 	{
 		ShootReady_E ();
-		while (!GameManager.GameOver) {
+		while (true) {
 			Vector3 RandomError = new Vector3 (Random.Range(-10,10),Random.Range(-10,10),Random.Range(-10,10));
 			while(Distance(tgt) >= 40){
 				ErrorTracking (tgt,RandomError);
@@ -100,7 +100,7 @@ public class Missile : MonoBehaviour
 			}
 			if(Distance(tgt) < 40){
 				RefreshSelfBreak ();
-				while (!GameManager.GameOver) {
+				while (true) {
 					StartCoroutine (MoveForward ());
 					yield return null;
 				}
@@ -182,7 +182,7 @@ public class Missile : MonoBehaviour
 	private IEnumerator SelfBreak ()
 	{
 		float time = 0f;
-		while (!GameManager.GameOver && time < LifeTime) {
+		while (time < LifeTime) {
 //			if(transform.localPosition.y <= 0){
 //				StartCoroutine (BreakMissile ());
 //				yield break;
