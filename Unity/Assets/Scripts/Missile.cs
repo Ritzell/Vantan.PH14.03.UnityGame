@@ -36,22 +36,41 @@ public class Missile : MonoBehaviour
 		Speed = 700;//700
 	}
 
-	public IEnumerator Straight ()
+	/// <summary>
+	/// 要変更
+	/// </summary>
+//	public IEnumerator Straight ()
+//	{
+//		ShootReady ();
+//		while (!GameManager.GameOver) {
+//			StartCoroutine(MoveForward ());
+//			yield return null;
+//		}
+//	}
+
+
+
+	public IEnumerator StraightToTgt (Transform tgt,bool Player)
 	{
-		ShootReady ();
+		if (Player) {
+			ShootReady ();
+		} else {
+			ShootReady_E ();
+		}
+		transform.LookAt (tgt);
+
 		while (!GameManager.GameOver) {
 			StartCoroutine(MoveForward ());
 			yield return null;
 		}
 	}
 
-
-
-	public IEnumerator StraightEnemy (Transform tgt,bool CutOutReady)
+	public IEnumerator StraightToTgt (bool Player)
 	{
-		if (!CutOutReady) {
-			shootReady_E ();
-			transform.LookAt (tgt);
+		if (Player) {
+			ShootReady ();
+		} else {
+			ShootReady_E ();
 		}
 		while (!GameManager.GameOver) {
 			StartCoroutine(MoveForward ());
@@ -72,7 +91,7 @@ public class Missile : MonoBehaviour
 
 	public IEnumerator TrackingEnemy (Transform tgt)
 	{
-		shootReady_E ();
+		ShootReady_E ();
 		while (!GameManager.GameOver) {
 			Vector3 RandomError = new Vector3 (Random.Range(-10,10),Random.Range(-10,10),Random.Range(-10,10));
 			while(Distance(tgt) >= 40){
@@ -119,7 +138,7 @@ public class Missile : MonoBehaviour
 		transform.FindChild ("Afterburner").gameObject.SetActive (true);
 	}
 
-	private void shootReady_E ()
+	private void ShootReady_E ()
 	{
 		//audioS.Play();
 		StartCoroutine (SelfBreak ());

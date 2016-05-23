@@ -3,10 +3,6 @@ using System.Collections;
 
 public class PlayerSound : MonoBehaviour
 {
-
-	//使ってない
-
-
 	private static AudioSource AudioBox;
 
 	[SerializeField]
@@ -21,10 +17,10 @@ public class PlayerSound : MonoBehaviour
 		AudioBox.clip = AudioClip;
 	}
 
-	public static void AudioPlay ()
+	public static void HitSound ()
 	{
-		AudioBox.volume = 0.3f;
-		AudioBox.pitch = 2;
+//		AudioBox.volume = 0.3f;
+//		AudioBox.pitch = 2;
 		AudioBox.Play ();
 	}
 }

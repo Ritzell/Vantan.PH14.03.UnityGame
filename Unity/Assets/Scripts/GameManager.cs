@@ -25,7 +25,6 @@ public class GameManager : MonoBehaviour
 		QualitySettings.vSyncCount = 0; // VSyncをOFFにする
 		Application.targetFrameRate = 60; // ターゲットフレームレートを60に設定
 		StartCoroutine (Timer ());
-		Debug.Log (new Vector2(Screen.width,Screen.height));
 	}
 
 	public IEnumerator ReloadMissile (Vector3 StartPos, Quaternion StartRot)
@@ -52,7 +51,7 @@ public class GameManager : MonoBehaviour
 	/// <summary>
 	/// 残り時間をString型に変換
 	/// </summary>
-	private string TimeCastToString ()
+	private static string TimeCastToString ()
 	{
 		return Time.Minutes.ToString ("D2") + ":" + Time.Seconds.ToString ("D2");//timeString;
 	}
@@ -62,7 +61,7 @@ public class GameManager : MonoBehaviour
 	/// </summary>
 	/// <param name="Timetext">Timetext.</param>
 	/// <param name="limitTime">Limit time.</param>
-	private IEnumerator DisplayTime (Text Timetext, TimeSpan limitTime)
+	private static IEnumerator DisplayTime (Text Timetext, TimeSpan limitTime)
 	{
 		TimeCalculation (limitTime);
 		Timetext.text = TimeCastToString ();
@@ -72,18 +71,18 @@ public class GameManager : MonoBehaviour
 	/// <summary>
 	/// 残り時間を計算
 	/// </summary>
-	private void TimeCalculation (TimeSpan limitTime)
+	private static void TimeCalculation (TimeSpan limitTime)
 	{
 		TimeSpan elapsedTime = (TimeSpan)(DateTime.Now - StartTime);
 		Time = limitTime - elapsedTime;
 	}
 
-	private TimeSpan RestTime;
+	private static TimeSpan RestTime;
 
 	/// <summary>
 	/// 時間が0を下回るとscene移行するプロパティ
 	/// </summary>
-	private TimeSpan Time {
+	public static TimeSpan Time {
 		set {
 			RestTime = value;
 			if (RestTime.Minutes + RestTime.Seconds <= 0) {

@@ -15,14 +15,27 @@ public class Airframe : MonoBehaviour
 		HP--;
 		StartCoroutine( CameraSystem.SwayCamera ());
 		if (HP <= 0) {
-			Deth ();
+			StartCoroutine(Deth ());
+		} else {
+			PlayerSound.HitSound ();
 		}
 	}
 
-	private void Deth ()
+	private IEnumerator Deth ()
 	{
 		GameManager.loadScene ();
 		//PlayerSound.AudioPlay ();
 		Destroy (gameObject);
+		yield return null;
+//		Time.timeScale = 0;
+//		while(!GameManager.GameOver){
+//			if(Input.GetKey(KeyCode.Space)){
+//				GameManager.loadScene ();
+//				//PlayerSound.AudioPlay ();
+//				Destroy (gameObject);
+//				yield return null;
+//			}
+//			yield return null;
+//		}
 	}
 }

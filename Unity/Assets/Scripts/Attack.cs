@@ -7,6 +7,10 @@ public class Attack : MonoBehaviour
 	public const float missileDelay = 0.15f;
 	public const float gunDelay = 0.1f;
 
+	private IEnumerator GunShot;
+	private IEnumerator Tracking;
+	private IEnumerator Straight;
+
 	private static Queue<GameObject> missiles = new Queue<GameObject> ();
 	public static Queue<GameObject> Missiles {
 		get {
@@ -23,7 +27,7 @@ public class Attack : MonoBehaviour
 
 	void Start ()
 	{
-		
+		GunShot = GameObject.Find ("guns").GetComponent<Gun> ().Shoot ();
 		StartCoroutine (MissileShoot ());
 		StartCoroutine (GunShoot ());
 	}
@@ -35,7 +39,7 @@ public class Attack : MonoBehaviour
 			Reloading += Time.deltaTime;
 			if (Reloading >= missileDelay) {
 				if ((Input.GetAxis ("RTrigger") == 1 || Input.GetKeyDown (KeyCode.C)) && missiles.Count >= 1) {
-					StartCoroutine (missiles.Dequeue ().GetComponent<Missile> ().Straight ());
+					StartCoroutine (missiles.Dequeue ().GetComponent<Missile> ().StraightToTgt (true));
 					Reloading = 0f;
 				} else if ((Input.GetAxis ("LTrigger") == 1 || Input.GetKeyDown (KeyCode.V)) && missiles.Count >= 1 && ReticleSystem.LockOnTgt != null) {
 					StartCoroutine (missiles.Dequeue ().GetComponent<Missile> ().TrackingPlayer (ReticleSystem.LockOnTgt.transform));

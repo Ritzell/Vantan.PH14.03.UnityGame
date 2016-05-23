@@ -14,16 +14,31 @@ public class MissileFactory : MonoBehaviour
 		return newMissile;
 	}
 
+	/// <summary>
+	/// 適用のミサイルを生成、引数は初期位置
+	/// </summary>
+	/// <returns>The missile e.</returns>
+	/// <param name="Pos">Position.</param>
 	public GameObject NewMissileE (Vector3 Pos)
 	{
 		Numbering++;
-		GameObject newMissileE = (GameObject)Instantiate (Resources.Load ("prefabs/missile"), Vector3.zero, Quaternion.identity);
+		GameObject newMissileE = (GameObject)Instantiate (Resources.Load ("prefabs/missile"), Pos, Quaternion.identity);
 		newMissileE.name = newMissileE.name.Substring (0, 7)+Numbering;
-		newMissileE.transform.position = Pos;
 		newMissileE.layer = 12;
 		newMissileE.transform.FindChild ("Steam").gameObject.SetActive(true);
 		newMissileE.transform.FindChild ("Afterburner").gameObject.SetActive(true);
-		//newMissileE.transform.localScale = new Vector3 (100, 100, 100);
+		return newMissileE;
+	}
+
+	public GameObject NewMissileE (Vector3 Pos,Vector3 Rot)
+	{
+		Numbering++;
+		GameObject newMissileE = (GameObject)Instantiate (Resources.Load ("prefabs/missile"), Pos, Quaternion.identity);//Rot);
+		newMissileE.transform.Rotate(Rot);
+		newMissileE.name = newMissileE.name.Substring (0, 7)+Numbering;
+		newMissileE.layer = 12;
+		newMissileE.transform.FindChild ("Steam").gameObject.SetActive(true);
+		newMissileE.transform.FindChild ("Afterburner").gameObject.SetActive(true);
 		return newMissileE;
 	}
 }

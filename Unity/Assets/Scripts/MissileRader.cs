@@ -48,7 +48,6 @@ public class MissileRader : MonoBehaviour {
 			addOutRangeMissile.Clear ();
 			for(int i = 0; i < outRangeMissiles.Count; i++){
 				if (Mathf.Abs (Vector3.Distance (outRangeMissiles[i].position, Player.position)) <= 2000) {
-					Debug.Log (outRangeMissiles[i]);
 					GetInRange (outRangeMissiles [i]);
 					yield return null;
 				}
