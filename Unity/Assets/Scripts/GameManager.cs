@@ -8,10 +8,9 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
 
-	private static GameObject Player;
+	private static GameManager Manager;
 
 	private static bool gameOver = false;
-
 	public static bool GameOver {
 		get {
 			return gameOver;
@@ -21,7 +20,8 @@ public class GameManager : MonoBehaviour
 	private static DateTime StartTime = DateTime.Now;
 
 	void Awake(){
-		Player = GameObject.Find ("AirPlain");
+		DontDestroyOnLoad (GameObject.Find("GameManager"));
+		Manager = GameObject.Find ("GameManager").GetComponent<GameManager> ();
 	}
 
 	void Start ()
@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
 
 	public IEnumerator ReloadMissile (Vector3 StartPos, Quaternion StartRot)
 	{
-		MissileFactory Factory = GameObject.Find ("GameManager").GetComponent<MissileFactory> ();
+		MissileFactory Factory = Manager.GetComponent<MissileFactory> ();
 		yield return new WaitForSeconds (3.1f);
 		Attack.Missiles.Enqueue (Factory.NewMissile (StartPos, StartRot));
 		yield return null;
@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviour
 		set {
 			restTime = value;
 			if (restTime.Minutes + restTime.Seconds <= 0) {
-				GameObject.Find("GameManager").GetComponent<GameManager>().StartCoroutine(GameEnd (false));
+				Manager.GetComponent<GameManager>().StartCoroutine(GameEnd (false));
 			}
 		}
 		get {
@@ -105,8 +105,8 @@ public class GameManager : MonoBehaviour
 
 	public static IEnumerator GameEnd(bool Win){
 		StopGame ();
-		GameManager Manager = GameObject.Find ("GameManager").GetComponent<GameManager> ();
-		AudioSource AudioBox =  GameObject.Find ("Main Camera").GetComponent<AudioSource> ();
+
+		AudioSource AudioBox =  Manager.GetComponent<AudioSource> ();
 		//三項演算子
 //		if (Win) {
 			Manager.StartCoroutine (Win ? Victory () : Defeat());
