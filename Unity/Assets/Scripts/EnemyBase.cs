@@ -23,6 +23,7 @@ public class EnemyBase : MonoBehaviour
 		if(GameManager.GameOver){
 			return;
 		}
+		Debug.Log (GameManager.GameOver);
 		StartCoroutine( GameManager.GameEnd (true));
 	}
 }

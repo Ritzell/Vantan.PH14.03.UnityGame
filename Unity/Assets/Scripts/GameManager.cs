@@ -48,6 +48,9 @@ public class GameManager : MonoBehaviour
 		TimeSpan LimitTime = new TimeSpan (00, 10, 00);
 		while (!gameOver) {
 			StartCoroutine (DisplayTime (Timetext, LimitTime));
+			if(Input.GetKey(KeyCode.Space)){
+				StartCoroutine (GameEnd (false));
+			}
 			yield return null;
 		}
 	}
@@ -101,19 +104,21 @@ public class GameManager : MonoBehaviour
 
 
 	public static IEnumerator GameEnd(bool Win){
+		StopGame ();
 		GameManager Manager = GameObject.Find ("GameManager").GetComponent<GameManager> ();
 		AudioSource AudioBox =  GameObject.Find ("Main Camera").GetComponent<AudioSource> ();
-		if (Win) {
-			Manager.StartCoroutine (Victory ());
-		} else {
-			Manager.StartCoroutine(Defeat ());
-		}
-		Manager.StartCoroutine (ChangeMusic(AudioBox));
+		//三項演算子
+//		if (Win) {
+			Manager.StartCoroutine (Win ? Victory () : Defeat());
+//		} else {
+//			Manager.StartCoroutine(Defeat ());
+//		}
+		Manager.StartCoroutine (ChangeMusic(AudioBox,Win));
 		yield return null;
 
 	}
 
-	private static IEnumerator ChangeMusic(AudioSource AudioBox){
+	private static IEnumerator ChangeMusic(AudioSource AudioBox,bool Win){
 		int TimeSpeed = (int)(1 / Time.timeScale);
 		while (AudioBox.volume > 0) {
 			AudioBox.volume -= 0.05f*(Time.deltaTime*TimeSpeed);
@@ -121,19 +126,25 @@ public class GameManager : MonoBehaviour
 		}
 		AudioBox.Stop ();
 		yield return null;
-		NewMusicSet (AudioBox);
+		NewMusicSet (AudioBox,Win);
+		StageResultText.DisplayResult (Win);
 		yield return null;
 	}
 
-	private static void NewMusicSet(AudioSource AudioBox){
-		AudioBox.clip = (AudioClip)(Resources.Load("Sounds/Sarabande"));
-		AudioBox.volume = 0.5f;
+	//三項演算子
+	private static void NewMusicSet(AudioSource AudioBox,bool Win){
+//		if (Win) {
+		AudioBox.clip = (AudioClip)(Resources.Load (Win ? "Sounds/FromTheNewWorld" : "Sounds/Sarabande"));
+		AudioBox.volume = Win ? 0.65f : 0.5f;
+//		} else {
+//			AudioBox.clip = (AudioClip)(Resources.Load ("Sounds/Sarabande"));
+//			AudioBox.volume = 0.5f;
+//		}
 		AudioBox.loop = false;
 		AudioBox.Play ();
 	}
 
 	public static IEnumerator Victory(){
-		StopGame ();
 		while (true) {
 			if (Input.GetKeyDown (KeyCode.Space)) {
 				SceneManager.LoadScene ("Result");
@@ -146,7 +157,6 @@ public class GameManager : MonoBehaviour
 
 	public static IEnumerator Defeat ()
 	{
-		StopGame ();
 		while (true) {
 			if (Input.GetKeyDown (KeyCode.Space)) {
 				SceneManager.LoadScene ("Result");
