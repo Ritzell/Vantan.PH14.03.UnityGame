@@ -105,7 +105,6 @@ public class GameManager : MonoBehaviour
 
 	public static IEnumerator GameEnd(bool Win){
 		StopGame ();
-
 		AudioSource AudioBox =  Manager.GetComponent<AudioSource> ();
 		//三項演算子
 //		if (Win) {

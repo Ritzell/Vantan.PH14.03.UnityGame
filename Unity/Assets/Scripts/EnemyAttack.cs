@@ -32,7 +32,7 @@ public class EnemyAttack : MonoBehaviour
 	private IEnumerator Shoot ()
 	{
 		float timer = 0f;
-		const float delay = 1f;
+		const float delay = 1.5f;
 //		StartCoroutine (OmniDirectionAttack());
 		while (!GameManager.GameOver) {
 			timer += Time.deltaTime;

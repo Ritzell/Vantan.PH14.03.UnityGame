@@ -15,15 +15,10 @@ public class EnemyBase : MonoBehaviour
 
 	void OnTriggerEnter (Collider Col)
 	{
-		Destroy (RestChildren <= 0 ? gameObject : null);
-	}
-
-	void OnDestroy ()
-	{
-		if(GameManager.GameOver){
-			return;
-		}
-		Debug.Log (GameManager.GameOver);
-		StartCoroutine( GameManager.GameEnd (true));
+        if (RestChildren <= 0)
+        {
+            StartCoroutine(GameManager.GameEnd(true));
+            Destroy(gameObject);
+        }
 	}
 }

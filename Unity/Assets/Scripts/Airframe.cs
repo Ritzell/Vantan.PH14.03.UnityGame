@@ -14,10 +14,10 @@ public class Airframe : MonoBehaviour
 	{
 		HP--;
 		StartCoroutine( CameraSystem.SwayCamera ());
-		if (HP <= 0) {
-			StartCoroutine(Deth ());
-		} else {
+		if (HP <= 0 || Col.gameObject.layer == 10) {
+			Instantiate (Resources.Load ("prefabs/Explosion"), transform.position, Quaternion.identity);
 			PlayerSound.HitSound ();
+			StartCoroutine (Deth ());
 		}
 	}
 
