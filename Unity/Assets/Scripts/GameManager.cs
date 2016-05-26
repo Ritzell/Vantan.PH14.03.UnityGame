@@ -119,10 +119,9 @@ public class GameManager : MonoBehaviour
 
 
 
-
-
 	public static IEnumerator GameEnd(bool isWin){
 		StopGame ();
+//		isWin = true;
 		AudioSource AudioBox =  Manager.GetComponent<AudioSource> ();
 		Record.IsVictory = isWin;
 		Manager.StartCoroutine (isWin ? Victory () : Defeat());
