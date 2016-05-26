@@ -39,6 +39,7 @@ public class Attack : MonoBehaviour
 			Reloading += Time.deltaTime;
 			if (Reloading >= missileDelay) {
 				if ((Input.GetAxis ("RTrigger") == 1 || Input.GetKeyDown (KeyCode.C)) && missiles.Count >= 1) {
+					GameManager.MissileCounter = 1;
 					StartCoroutine (missiles.Dequeue ().GetComponent<Missile> ().StraightToTgt (true));
 					Reloading = 0f;
 				} else if ((Input.GetAxis ("LTrigger") == 1 || Input.GetKeyDown (KeyCode.V)) && missiles.Count >= 1 && ReticleSystem.LockOnTgt != null) {

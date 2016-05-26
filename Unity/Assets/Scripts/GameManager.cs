@@ -7,7 +7,8 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-
+	
+	private static DateTime StartTime = DateTime.Now;
 	private static GameManager Manager;
 
 	private static bool gameOver = false;
@@ -17,11 +18,37 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
-	private static DateTime StartTime = DateTime.Now;
+	private static int MissileCount;
+	public static int MissileCounter {
+		set {
+			MissileCount += value;
+		}get {
+			return MissileCount;
+		}
+	}
+
+	private static TimeSpan restTime;
+
+	/// <summary>
+	/// 時間が0を下回るとscene移行するプロパティ
+	/// </summary>
+	public static TimeSpan RestTime {
+		set {
+			restTime = value;
+			if (restTime.Minutes + restTime.Seconds <= 0) {
+				Manager.GetComponent<GameManager>().StartCoroutine(GameEnd (false));
+			}
+		}
+		get {
+			return restTime;
+		}
+	}
+
 
 	void Awake(){
 		DontDestroyOnLoad (GameObject.Find("GameManager"));
 		Manager = GameObject.Find ("GameManager").GetComponent<GameManager> ();
+
 	}
 
 	void Start ()
@@ -29,12 +56,18 @@ public class GameManager : MonoBehaviour
 		QualitySettings.vSyncCount = 0; // VSyncをOFFにする
 		Application.targetFrameRate = 60; // ターゲットフレームレートを60に設定
 		StartCoroutine (Timer ());
+		if (SystemInfo.supportsVibration) {
+			Debug.Log ("振動対応");
+			//Handheld.Vibrate ();
+		} else {
+			Debug.Log ("振動非対応");
+		}
 	}
 
 	public IEnumerator ReloadMissile (Vector3 StartPos, Quaternion StartRot)
 	{
 		MissileFactory Factory = Manager.GetComponent<MissileFactory> ();
-		yield return new WaitForSeconds (3.1f);
+		yield return new WaitForSeconds (3f);
 		Attack.Missiles.Enqueue (Factory.NewMissile (StartPos, StartRot));
 		yield return null;
 	}
@@ -58,9 +91,9 @@ public class GameManager : MonoBehaviour
 	/// <summary>
 	/// 残り時間をString型に変換
 	/// </summary>
-	private static string TimeCastToString ()
+	public static string TimeCastToString (TimeSpan Time)
 	{
-		return RestTime.Minutes.ToString ("D2") + ":" + RestTime.Seconds.ToString ("D2");//timeString;
+		return Time.Minutes.ToString ("D2") + ":" + Time.Seconds.ToString ("D2");//timeString;
 	}
 
 	/// <summary>
@@ -71,7 +104,7 @@ public class GameManager : MonoBehaviour
 	private static IEnumerator DisplayTime (Text Timetext, TimeSpan limitTime)
 	{
 		TimeCalculation (limitTime);
-		Timetext.text = TimeCastToString ();
+		Timetext.text = TimeCastToString (RestTime);
 		yield return null;
 	}
 
@@ -84,40 +117,21 @@ public class GameManager : MonoBehaviour
 		RestTime = limitTime - elapsedTime;
 	}
 
-	private static TimeSpan restTime;
-
-	/// <summary>
-	/// 時間が0を下回るとscene移行するプロパティ
-	/// </summary>
-	public static TimeSpan RestTime {
-		set {
-			restTime = value;
-			if (restTime.Minutes + restTime.Seconds <= 0) {
-				Manager.GetComponent<GameManager>().StartCoroutine(GameEnd (false));
-			}
-		}
-		get {
-			return restTime;
-		}
-	}
 
 
 
-	public static IEnumerator GameEnd(bool Win){
+
+	public static IEnumerator GameEnd(bool isWin){
 		StopGame ();
 		AudioSource AudioBox =  Manager.GetComponent<AudioSource> ();
-		//三項演算子
-//		if (Win) {
-			Manager.StartCoroutine (Win ? Victory () : Defeat());
-//		} else {
-//			Manager.StartCoroutine(Defeat ());
-//		}
-		Manager.StartCoroutine (ChangeMusic(AudioBox,Win));
+		Record.IsVictory = isWin;
+		Manager.StartCoroutine (isWin ? Victory () : Defeat());
+		Manager.StartCoroutine (ChangeMusic(AudioBox,isWin));
 		yield return null;
 
 	}
 
-	private static IEnumerator ChangeMusic(AudioSource AudioBox,bool Win){
+	private static IEnumerator ChangeMusic(AudioSource AudioBox,bool isWin){
 		int TimeSpeed = (int)(1 / Time.timeScale);
 		while (AudioBox.volume > 0) {
 			AudioBox.volume -= 0.05f*(Time.deltaTime*TimeSpeed);
@@ -125,16 +139,16 @@ public class GameManager : MonoBehaviour
 		}
 		AudioBox.Stop ();
 		yield return null;
-		NewMusicSet (AudioBox,Win);
-		StageResultText.DisplayResult (Win);
+		NewMusicSet (AudioBox,isWin);
+		StageResultText.DisplayResult (isWin);
 		yield return null;
 	}
 
 	//三項演算子
-	private static void NewMusicSet(AudioSource AudioBox,bool Win){
+	private static void NewMusicSet(AudioSource AudioBox,bool isWin){
 //		if (Win) {
-		AudioBox.clip = (AudioClip)(Resources.Load (Win ? "Sounds/FromTheNewWorld" : "Sounds/Sarabande"));
-		AudioBox.volume = Win ? 0.65f : 0.5f;
+		AudioBox.clip = (AudioClip)(Resources.Load (isWin ? "Sounds/FromTheNewWorld" : "Sounds/Sarabande"));
+		AudioBox.volume = isWin ? 0.65f : 0.5f;
 //		} else {
 //			AudioBox.clip = (AudioClip)(Resources.Load ("Sounds/Sarabande"));
 //			AudioBox.volume = 0.5f;
