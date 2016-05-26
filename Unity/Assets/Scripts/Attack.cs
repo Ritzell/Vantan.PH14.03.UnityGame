@@ -4,12 +4,11 @@ using System.Collections.Generic;
 
 public class Attack : MonoBehaviour
 {
-	public const float missileDelay = 0.15f;
-	public const float gunDelay = 0.1f;
+	private const float missileDelay = 0.15f;
+	private const float gunDelay = 0.1f;
+	private const float MMIDelay = 1f;//MultipleMissileInterceptの省略
+	ReticleSystem Reticle;
 
-	private IEnumerator GunShot;
-	private IEnumerator Tracking;
-	private IEnumerator Straight;
 
 	private static Queue<GameObject> missiles = new Queue<GameObject> ();
 	public static Queue<GameObject> Missiles {
@@ -18,18 +17,78 @@ public class Attack : MonoBehaviour
 		}
 	}
 
+	private static bool _mmiReady;
+	public static bool MMIReady {
+		set {
+			_mmiReady = value;
+		}get {
+			return _mmiReady;
+		}
+	}
+
 	void Awake(){
 		missiles.Enqueue (GameObject.Find ("missileA"));
 		missiles.Enqueue (GameObject.Find ("missileB"));
 		missiles.Enqueue (GameObject.Find ("missileC"));
 		missiles.Enqueue (GameObject.Find ("missileD"));
+		Reticle = GameObject.Find ("ReticleImage").GetComponent<ReticleSystem> ();
 	}
 
 	void Start ()
 	{
-		GunShot = GameObject.Find ("guns").GetComponent<Gun> ().Shoot ();
+		StartCoroutine (MultipleMissileInterceptSystem ());
 		StartCoroutine (MissileShoot ());
 		StartCoroutine (GunShoot ());
+	}
+
+	//略名 : MMIS
+	public IEnumerator MultipleMissileInterceptSystem(){
+		float Reloading = 30.0f;
+
+		while(!GameManager.GameOver){
+			Reloading += Time.deltaTime;
+			if (Reloading >= MMIDelay) {
+				if (!_mmiReady && MMISystemBoot (Reloading)) {
+					Reticle.ChangeMode (true);
+					yield return null;
+				} else if (MMISystemTermination (Reloading)) {
+					LockOrEnd (Reloading);
+					yield return null;
+				}
+			}
+			yield return null;
+		}
+		yield return null;
+	}
+
+	private bool MMISystemBoot(float Reloading){
+		if((Input.GetKeyDown(KeyCode.JoystickButton18) || Input.GetKeyDown(KeyCode.Space))){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	private bool MMISystemTermination(float Reloading){
+		if ((Input.GetKeyUp (KeyCode.JoystickButton18) || Input.GetKeyUp (KeyCode.Space))) {
+				return true;
+			} else {
+				return false;
+			}
+	}
+
+	private float LockOrEnd(float Reloading){
+		if (ReticleSystem.MultiMissileLockOn.Count <= 0) {
+			Reticle.ChangeMode (false);
+			return 0;
+		} else {
+			Reticle.MMIReady ();
+			return Reloading;
+		}
+	}
+
+	private void MMISEnd(){
+
 	}
 
 	public IEnumerator MissileShoot ()

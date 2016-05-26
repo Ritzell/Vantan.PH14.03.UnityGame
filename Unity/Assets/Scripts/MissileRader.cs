@@ -27,10 +27,8 @@ public class MissileRader : MonoBehaviour {
 	private Transform Player;
 	[SerializeField]
 	private GameObject PointOb;
-	private static MissileRader Rader;
 
 	void Start () {
-		Rader = gameObject.GetComponent<MissileRader>();
 		StartCoroutine (OutRaderMissileDistance());
 		StartCoroutine (RotateRader());
 	}

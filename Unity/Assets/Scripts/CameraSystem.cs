@@ -7,8 +7,6 @@ public class CameraSystem : MonoBehaviour
 
 	private static float NormalZ;//-26
 	private  static float NormalY;//7.5
-	//private static float MaxNormalZ = NormalZ + 4;
-	//private static float MinNormalZ = NormalZ - 4;
 	private static float MaxNormalZ_Error;
 	private static float MinNormalZ_Error;
 	private static Vector3 LookBehindPos;

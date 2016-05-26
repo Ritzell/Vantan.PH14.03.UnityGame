@@ -26,29 +26,17 @@ public class Missile : MonoBehaviour
 
 	void Start ()
 	{
-		if(gameObject.layer == 12){
-			EstimationSystem.Missiles = gameObject;
-			MissileRader.AddOutRangeMissile.Add(gameObject.transform);
+		if (gameObject.layer == 12) {
+			ReticleSystem.AddMissiles.Add (gameObject);
+			Speed = 700;//700
+			MissileRader.AddOutRangeMissile.Add (gameObject.transform);
+		} else {
+			Speed = 850;
 		}
 		AudioS.clip = AudioClip1;
 		StartPos = transform.localPosition;
 		StartRot = transform.localRotation;
-		Speed = 700;//700
 	}
-
-	/// <summary>
-	/// 要変更
-	/// </summary>
-//	public IEnumerator Straight ()
-//	{
-//		ShootReady ();
-//		while (!GameManager.GameOver) {
-//			StartCoroutine(MoveForward ());
-//			yield return null;
-//		}
-//	}
-
-
 
 	public IEnumerator StraightToTgt (Transform tgt,bool Player)
 	{
@@ -86,7 +74,6 @@ public class Missile : MonoBehaviour
 			StartCoroutine(MoveForward ());
 			yield return null;
 		}
-		yield return null;
 	}
 
 	public IEnumerator TrackingEnemy (Transform tgt)
@@ -107,7 +94,6 @@ public class Missile : MonoBehaviour
 			}
 			yield return null;
 		}
-		yield return null;
 	}
 
 	private void ErrorTracking(Transform tgt,Vector3 Random3){

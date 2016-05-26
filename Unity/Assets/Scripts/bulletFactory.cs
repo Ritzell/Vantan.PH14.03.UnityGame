@@ -15,11 +15,11 @@ public class BulletFactory : MonoBehaviour
 		}
 	}
 
-	public GameObject MakeBullet (Transform RootOb, Vector3 Pos, Quaternion Rot)
+	public void MakeBullet (Transform RootOb, Vector3 Pos, Quaternion Rot)
 	{
 		var newBullet = (GameObject)Instantiate(Bullet, Pos, Rot);
 		newBullet.name = newBullet.name.Substring (0, 6);
 		newBullet.transform.parent = RootOb;
-        return newBullet;
+        //return newBullet;
 	}
 }
