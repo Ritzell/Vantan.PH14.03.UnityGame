@@ -81,9 +81,6 @@ public class GameManager : MonoBehaviour
 		TimeSpan LimitTime = new TimeSpan (00, 10, 00);
 		while (!gameOver) {
 			StartCoroutine (DisplayTime (Timetext, LimitTime));
-			if(Input.GetKey(KeyCode.Space)){
-				StartCoroutine (GameEnd (false));
-			}
 			yield return null;
 		}
 	}
@@ -143,15 +140,9 @@ public class GameManager : MonoBehaviour
 		yield return null;
 	}
 
-	//三項演算子
 	private static void NewMusicSet(AudioSource AudioBox,bool isWin){
-//		if (Win) {
 		AudioBox.clip = (AudioClip)(Resources.Load (isWin ? "Sounds/FromTheNewWorld" : "Sounds/Sarabande"));
 		AudioBox.volume = isWin ? 0.65f : 0.5f;
-//		} else {
-//			AudioBox.clip = (AudioClip)(Resources.Load ("Sounds/Sarabande"));
-//			AudioBox.volume = 0.5f;
-//		}
 		AudioBox.loop = false;
 		AudioBox.Play ();
 	}
