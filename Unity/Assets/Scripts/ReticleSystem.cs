@@ -112,28 +112,43 @@ public class ReticleSystem : MonoBehaviour
 		return;
 	}
 
-
-
 	private IEnumerator ReleaseLockInput ()
 	{
 		while (!GameManager.GameOver) {
 			if ((Input.GetKeyDown (KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.JoystickButton18))) {
-				AudioBox.pitch = 0.75f;
-				AudioBox.PlayOneShot (LockOnSE);
-				Debug.Log (lockOnTgt.name + " のロックを解除！");
+				ResetReticlePosition ();
 				LockOnTgt = null;
 			}
 			yield return null;
 		}
 	}
 
+	private void ResetReticlePosition(){
+		AudioBox.pitch = 0.75f;
+		AudioBox.PlayOneShot (LockOnSE);
+		Debug.Log (lockOnTgt.name + " のロックを解除！");
+	}
+
 	private IEnumerator ReticleMoveToTgt(){
+		StartCoroutine (ForciblyRelaseLock ());
 		while (!GameManager.GameOver) {
 			var ray = Camera.main.ScreenPointToRay (new Vector3 (transform.position.x, transform.position.y, 0.0f));
 			StartCoroutine (Gun.MuzzuleLookTgt (ray.GetPoint (4000)));
 			UITransform.position = RectTransformUtility.WorldToScreenPoint (Camera.main,lockOnTgt.transform.position);
 			yield return null;
 		}
+	}
+
+	private IEnumerator ForciblyRelaseLock(){
+		while (lockOnTgt != null && !GameManager.GameOver) {
+			if(UITransform.position.x < 0 || UITransform.position.x > Screen.width || UITransform.position.y < 0 || UITransform.position.y > Screen.height){
+				ResetReticlePosition ();
+				LockOnTgt = null;
+				yield return null;
+			}
+			yield return null;
+		}
+		yield return null;
 	}
 
 
