@@ -1,13 +1,28 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class EnemyAttack : MonoBehaviour
 {
+	
+
+
+
 	[SerializeField]
 	private MissileFactory Factory;
+
 	private IEnumerator Tracking;
 	private IEnumerator Straight;
 	private Transform Player;
+
+	private Transform _target;
+	public Transform Target {
+		set {
+			_target = value;
+		}get {
+			return _target;
+		}
+	}
 
 	void Awake ()
 	{
@@ -18,7 +33,9 @@ public class EnemyAttack : MonoBehaviour
 	void Start(){
 		StartCoroutine (Shoot ());
 		StartCoroutine (SpecialAttack ());
+		Target = Player;
 	}
+
 
 	private IEnumerator SpecialAttack(){
 		yield return new WaitForSeconds (10);
@@ -34,9 +51,10 @@ public class EnemyAttack : MonoBehaviour
 		float timer = 0f;
 		const float delay = 1.5f;
 //		StartCoroutine (OmniDirectionAttack());
-		while (!GameManager.GameOver) {
+		while (!GameManager.GameOver ) {
 			timer += Time.deltaTime;
-			if (timer >= delay) {
+			if (timer >= delay && GameManager.EnemyMissiles <= 80) {
+				Debug.Log (GameManager.EnemyMissiles);
 				ChooseAction ();
 				timer = 0;
 			}
@@ -55,7 +73,7 @@ public class EnemyAttack : MonoBehaviour
 
 	private void StraightMissile ()
 	{
-		StartCoroutine (Factory.NewMissileE (transform.position).GetComponent<Missile> ().StraightToTgt (Player,false));
+		StartCoroutine (Factory.NewMissileE (transform.position).GetComponent<Missile> ().StraightToTgt (Target,false));
 	}
 
 	private void StraightMissile (Vector3 Rot)
@@ -65,7 +83,7 @@ public class EnemyAttack : MonoBehaviour
 
 	private void TrackingMissile ()
 	{
-		StartCoroutine (Factory.NewMissileE (transform.position).GetComponent<Missile> ().TrackingEnemy (Player));
+		StartCoroutine (Factory.NewMissileE (transform.position).GetComponent<Missile> ().TrackingEnemy (Target));
 	}
 
 	private IEnumerator OmniDirectionAttack(){

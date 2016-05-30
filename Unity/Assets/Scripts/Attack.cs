@@ -41,18 +41,23 @@ public class Attack : MonoBehaviour
 		StartCoroutine (GunShoot ());
 	}
 
-	//略名 : MMIS
+	//略名 : MMIS 複数ミサイル迎撃システム
 	public IEnumerator MultipleMissileInterceptSystem(){
 		float Reloading = 30.0f;
 
 		while(!GameManager.GameOver){
 			Reloading += Time.deltaTime;
 			if (Reloading >= MMIDelay) {
-				if (!_mmiReady && MMISystemBoot (Reloading)) {
-					Reticle.ChangeMode (true);
-					yield return null;
-				} else if (MMISystemTermination (Reloading)) {
-					LockOrEnd (Reloading);
+				if (!_mmiReady) {
+					if (MMISystemBoot (Reloading)) {
+						Reticle.ChangeMode (true);
+						yield return null;
+					} else if (MMISystemEnd (Reloading)) {
+						Reloading = LockOrReset (Reloading);
+						yield return null;
+					} 
+				} else if (MMISystemCansel()) {
+					Reticle.ChangeMode (false);
 					yield return null;
 				}
 			}
@@ -69,7 +74,7 @@ public class Attack : MonoBehaviour
 		}
 	}
 
-	private bool MMISystemTermination(float Reloading){
+	private bool MMISystemEnd(float Reloading){
 		if ((Input.GetKeyUp (KeyCode.JoystickButton18) || Input.GetKeyUp (KeyCode.Space))) {
 				return true;
 			} else {
@@ -77,13 +82,21 @@ public class Attack : MonoBehaviour
 			}
 	}
 
-	private float LockOrEnd(float Reloading){
+	private float LockOrReset(float Reloading){
 		if (ReticleSystem.MultiMissileLockOn.Count <= 0) {
 			Reticle.ChangeMode (false);
 			return 0;
 		} else {
 			Reticle.MMIReady ();
 			return Reloading;
+		}
+	}
+
+	private bool MMISystemCansel(){
+		if ((Input.GetKeyUp (KeyCode.JoystickButton18) || Input.GetKeyUp (KeyCode.Escape))) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 

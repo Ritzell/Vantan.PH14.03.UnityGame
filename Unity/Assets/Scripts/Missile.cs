@@ -22,11 +22,13 @@ public class Missile : MonoBehaviour
 	void Awake(){
 		AirFrame = GameObject.Find ("eurofighter").GetComponent<Airframe> ();
 		AudioS = gameObject.GetComponent<AudioSource> ();
+		GameManager.EnemyMissiles = 1;
 	}
 
 	void Start ()
 	{
 		if (gameObject.layer == 12) {
+			
 			ReticleSystem.AddMissiles.Add (gameObject);
 			Speed = 700;//700
 			MissileRader.AddOutRangeMissile.Add (gameObject.transform);
@@ -183,10 +185,11 @@ public class Missile : MonoBehaviour
 	private IEnumerator BreakMissile ()
 	{
 		Instantiate (Resources.Load ("prefabs/Explosion"), transform.position, Quaternion.identity);
-		StopAllCoroutines ();
 		MissileRader.DestroyMissile (gameObject.transform);
 		EstimationSystem.RemoveList (gameObject);
+		GameManager.EnemyMissiles = -1;
 		yield return new WaitForSeconds(0.2f);
+		StopAllCoroutines ();
 		Destroy (gameObject);
 		yield return null;
 	}

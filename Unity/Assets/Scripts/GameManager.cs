@@ -27,6 +27,16 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
+	private static int _enemyMissiles = 0;
+	public static int EnemyMissiles {
+		set {
+			_enemyMissiles += value;
+		}get {
+			return _enemyMissiles;
+		}
+	}
+
+
 	private static TimeSpan restTime;
 
 	/// <summary>

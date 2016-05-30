@@ -12,7 +12,7 @@ public class Airframe : MonoBehaviour
 
 	private void OnTriggerEnter (Collider Col)
 	{
-		HP--;
+		//HP--;
 		StartCoroutine( CameraSystem.SwayCamera ());
 		if (HP <= 0 || Col.gameObject.layer == 10) {
 			Instantiate (Resources.Load ("prefabs/Explosion"), transform.position, Quaternion.identity);

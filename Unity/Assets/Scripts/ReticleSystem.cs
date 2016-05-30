@@ -17,6 +17,7 @@ public class ReticleSystem : MonoBehaviour
 	private static List<GameObject> Missiles = new List<GameObject> ();
 	private static AudioClip LockOnSE;
 
+
 	private static List<GameObject> _addMissiles = new List<GameObject> ();
 	public static List<GameObject> AddMissiles {
 		get {
@@ -71,7 +72,7 @@ public class ReticleSystem : MonoBehaviour
 	private GameObject MuzzleB;
 
 	[SerializeField]
-	private GameObject MultipleReticle;
+	private GameObject MultipleReticleObject;
 
 	void Awake ()
 	{
@@ -247,15 +248,17 @@ public class ReticleSystem : MonoBehaviour
 		}
 	}
 
-	public void ChangeMode (bool ToMMI)
+	public void ChangeMode (bool isMMI)
 	{
 		StopAllCoroutines ();
 		UI.color = Color.green;
-		if (ToMMI) {
+		if (isMMI) {
+			
 			StartCoroutine (ReticleScaleUp ());
 			StartCoroutine (MultipleLockOnSystem ());
 		} else {
 			StartCoroutine (ReticleScaleDown ());
+			StartCoroutine (MultipleReticle.AllReleaceReticle());
 		}
 	}
 
@@ -289,7 +292,7 @@ public class ReticleSystem : MonoBehaviour
 
 	private void MultipleLockOnSetting(GameObject Missile){
 		MultiMissileLockOn.Add (Missile);
-		var newReticle = Instantiate (MultipleReticle);
+		var newReticle = Instantiate (MultipleReticleObject);
 		newReticle.GetComponent<MultipleReticle> ().LockOn = Missile;
 		AudioBox.pitch = 1;
 		AudioBox.PlayOneShot (LockOnSE);

@@ -4,6 +4,7 @@ using System.Collections;
 public class MissileFactory : MonoBehaviour
 {
 	private static int Numbering = 0;
+
 	public GameObject NewMissile (Vector3 StartPos, Quaternion StartRot)
 	{
 		GameObject newMissile = (GameObject)Instantiate (Resources.Load ("prefabs/missile"), Vector3.zero, Quaternion.identity);
@@ -33,7 +34,7 @@ public class MissileFactory : MonoBehaviour
 	public GameObject NewMissileE (Vector3 Pos,Vector3 Rot)
 	{
 		Numbering++;
-		GameObject newMissileE = (GameObject)Instantiate (Resources.Load ("prefabs/missile"), Pos, Quaternion.identity);//Rot);
+		GameObject newMissileE = (GameObject)Instantiate (Resources.Load ("prefabs/missile"), Pos, Quaternion.identity);
 		newMissileE.transform.Rotate(Rot);
 		newMissileE.name = newMissileE.name.Substring (0, 7)+Numbering;
 		newMissileE.layer = 12;
