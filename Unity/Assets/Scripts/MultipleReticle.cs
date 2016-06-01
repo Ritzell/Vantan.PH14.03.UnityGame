@@ -20,6 +20,8 @@ public class MultipleReticle : MonoBehaviour
 		}
 	}
 
+
+
 	void Awake ()
 	{
 		Reticle = gameObject.GetComponent<RectTransform> ();
@@ -52,17 +54,14 @@ public class MultipleReticle : MonoBehaviour
 			}
 			yield return null;
 		}
-		yield return null;
 	}
 
 	private IEnumerator ForciblyRelaseLock ()
 	{
-//		StopAllCoroutines (); 死んだ後にポシション検知のメソッドにエラーが出る。
+		StopAllCoroutines ();
 		gameObject.GetComponent<AudioSource> ().Play ();
 		_lockOnTgt = null;
-		yield return new WaitForSeconds (0.3f);
-		Debug.Log ("now");
-		Destroy (gameObject);
+		StartCoroutine (Deth());
 		yield return null;
 	}
 
@@ -72,5 +71,11 @@ public class MultipleReticle : MonoBehaviour
 			return true;
 		}
 		return false;
+	}
+
+	private IEnumerator Deth(){
+		yield return new WaitForSeconds (0.4f);
+		DestroyImmediate (gameObject);
+		yield return null;
 	}
 }

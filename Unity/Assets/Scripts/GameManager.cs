@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
 	
 	private static DateTime StartTime = DateTime.Now;
 	private static GameManager Manager;
+	private static MissileFactory Factory;
+
 
 	private static bool gameOver = false;
 	public static bool GameOver {
@@ -58,27 +60,20 @@ public class GameManager : MonoBehaviour
 	void Awake(){
 		DontDestroyOnLoad (GameObject.Find("GameManager"));
 		Manager = GameObject.Find ("GameManager").GetComponent<GameManager> ();
-
+		Factory = Manager.GetComponent<MissileFactory> ();
 	}
 
 	void Start ()
 	{
 		QualitySettings.vSyncCount = 0; // VSyncをOFFにする
 		Application.targetFrameRate = 60; // ターゲットフレームレートを60に設定
-		StartCoroutine (Timer ());
-		if (SystemInfo.supportsVibration) {
-			Debug.Log ("振動対応");
-			//Handheld.Vibrate ();
-		} else {
-			Debug.Log ("振動非対応");
-		}
+		StartCoroutine (Timer ());//タイマーを起動
 	}
 
 	public IEnumerator ReloadMissile (Vector3 StartPos, Quaternion StartRot)
 	{
-		MissileFactory Factory = Manager.GetComponent<MissileFactory> ();
 		yield return new WaitForSeconds (3f);
-		Attack.Missiles.Enqueue (Factory.NewMissile (StartPos, StartRot));
+		Attack.PlayerMissiles.Enqueue (Factory.NewPlayerMissile (StartPos, StartRot,true));
 		yield return null;
 	}
 
@@ -128,7 +123,6 @@ public class GameManager : MonoBehaviour
 
 	public static IEnumerator GameEnd(bool isWin){
 		StopGame ();
-//		isWin = true;
 		AudioSource AudioBox =  Manager.GetComponent<AudioSource> ();
 		Record.IsVictory = isWin;
 		Manager.StartCoroutine (isWin ? Victory () : Defeat());
@@ -159,7 +153,7 @@ public class GameManager : MonoBehaviour
 
 	public static IEnumerator Victory(){
 		while (true) {
-			if (Input.GetKeyDown (KeyCode.Space)) {
+			if (isNext()) {
 				SceneManager.LoadScene ("Result");
 				yield return null;
 			}
@@ -171,12 +165,16 @@ public class GameManager : MonoBehaviour
 	public static IEnumerator Defeat ()
 	{
 		while (true) {
-			if (Input.GetKeyDown (KeyCode.Space)) {
+			if (isNext()) {
 				SceneManager.LoadScene ("Result");
 				yield return null;
 			}
 			yield return null;
 		}
+	}
+
+	private static bool isNext(){
+		return Input.GetKeyDown (KeyCode.Space);
 	}
 
 	private static void StopGame(){

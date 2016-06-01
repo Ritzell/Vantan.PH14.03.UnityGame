@@ -5,11 +5,11 @@ public class MissileFactory : MonoBehaviour
 {
 	private static int Numbering = 0;
 
-	public GameObject NewMissile (Vector3 StartPos, Quaternion StartRot)
+	public GameObject NewPlayerMissile (Vector3 StartPos, Quaternion StartRot,bool hasParent)
 	{
 		GameObject newMissile = (GameObject)Instantiate (Resources.Load ("prefabs/missile"), Vector3.zero, Quaternion.identity);
 		newMissile.name = newMissile.name.Substring (0, 7);
-		newMissile.transform.transform.parent = GameObject.Find ("missiles").transform;
+		newMissile.transform.transform.parent = hasParent ? GameObject.Find ("missiles").transform : null;
 		newMissile.transform.localPosition = StartPos;
 		newMissile.transform.localRotation = StartRot;
 		return newMissile;
@@ -20,7 +20,7 @@ public class MissileFactory : MonoBehaviour
 	/// </summary>
 	/// <returns>The missile e.</returns>
 	/// <param name="Pos">Position.</param>
-	public GameObject NewMissileE (Vector3 Pos)
+	public GameObject NewEnemyMissile (Vector3 Pos)
 	{
 		Numbering++;
 		GameObject newMissileE = (GameObject)Instantiate (Resources.Load ("prefabs/missile"), Pos, Quaternion.identity);
@@ -31,7 +31,7 @@ public class MissileFactory : MonoBehaviour
 		return newMissileE;
 	}
 
-	public GameObject NewMissileE (Vector3 Pos,Vector3 Rot)
+	public GameObject NewEnemyMissile (Vector3 Pos,Vector3 Rot)
 	{
 		Numbering++;
 		GameObject newMissileE = (GameObject)Instantiate (Resources.Load ("prefabs/missile"), Pos, Quaternion.identity);

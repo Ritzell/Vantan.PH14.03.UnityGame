@@ -17,7 +17,7 @@ public class MissileRader : MonoBehaviour {
 			return outRangeMissiles;
 		}
 	}
-	private static List<Transform> InRangeMissile = new List<Transform>();
+	private static List<Transform> InRangeMissiles = new List<Transform>();
 
 	[SerializeField]
 	private Transform Player;
@@ -38,8 +38,7 @@ public class MissileRader : MonoBehaviour {
 
 	private IEnumerator OutRaderMissileDistance(){
 		while (!GameManager.GameOver) {
-			addOutRangeMissile.ForEach (addMissile => outRangeMissiles.Add(addMissile));
-			addOutRangeMissile.Clear ();
+			yield return StartCoroutine(MissileAddList(true));
 			for(int i = 0; i < outRangeMissiles.Count; i++){
 				if (Mathf.Abs (Vector3.Distance (outRangeMissiles[i].position, Player.position)) <= 2000) {
 					ToInRange (outRangeMissiles [i]);
@@ -50,20 +49,31 @@ public class MissileRader : MonoBehaviour {
 			yield return null;
 		}
 	}
+
 	private IEnumerator InRaderMissileDistance(){
 		while(!GameManager.GameOver){
-			addInRangeMissile.ForEach (addMissile => InRangeMissile.Add(addMissile));
-			addInRangeMissile.Clear ();
-			for(int i = 0; i < InRangeMissile.Count; i++){
-				if (Mathf.Abs (Vector3.Distance (InRangeMissile[i].position, Player.position)) > 2000) {
+			yield return StartCoroutine(MissileAddList(false));
+			for(int i = 0; i < InRangeMissiles.Count; i++){
+				if (Mathf.Abs (Vector3.Distance (InRangeMissiles[i].position, Player.position)) > 2000) {
 					Debug.Log (outRangeMissiles[i]);
-					ToOutRange(InRangeMissile[i]);
+					ToOutRange(InRangeMissiles[i]);
 					yield return null;
 				}
 				yield return null;
 			}
 			yield return null;
 		}
+	}
+
+	private IEnumerator MissileAddList(bool isOutRange){
+		if (isOutRange) {
+			addOutRangeMissile.ForEach (addMissile => outRangeMissiles.Add (addMissile));
+			addOutRangeMissile.Clear ();
+		} else {
+			addInRangeMissile.ForEach (addMissile => InRangeMissiles.Add(addMissile));
+			addInRangeMissile.Clear ();
+		}
+		yield return null;
 	}
 
 	private  void ToInRange(Transform Missile){
@@ -76,13 +86,13 @@ public class MissileRader : MonoBehaviour {
 		addOutRangeMissile.Add (Missile);
 		//Debug.Log (GameObject.Find(Missile.name + "Point").gameObject);
 		Destroy (GameObject.Find(Missile.name + "Point").gameObject);
-		InRangeMissile.Remove (Missile);
+		InRangeMissiles.Remove (Missile);
 	}
 		
 	public static void DestroyMissile(Transform Missile){
 		try{
 		Destroy (GameObject.Find(Missile.name + "Point").gameObject);
-		InRangeMissile.Remove (Missile);
+		InRangeMissiles.Remove (Missile);
 		}catch{
 		}
 	}

@@ -10,6 +10,13 @@ public class PlayerMove : MonoBehaviour
 	private const float MaxSpeed = 690f;
 	private const float Keep = 0;
 
+	private static ParticleSystem Burner;
+	private static ParticleSystem Glow;
+	private static ParticleSystem.EmissionModule em;
+	private static ParticleSystem.MinMaxCurve rate;
+
+	private static Sprite[] SpeedLines;
+
 	private static EngineSound EngineS;
 
 	public static float Speed{
@@ -19,6 +26,11 @@ public class PlayerMove : MonoBehaviour
 	}
 
 	void Awake(){
+		SpeedLines = LoadSprite ("speedLineAll");
+		Glow = GameObject.Find ("Glow").GetComponent<ParticleSystem> ();
+		Burner = GameObject.Find ("Afterburner").GetComponent<ParticleSystem> ();
+		em = Glow.emission;
+		rate = Glow.emission.rate;
 		EngineS = GameObject.Find ("engine").GetComponent<EngineSound> ();
 	}
 
@@ -28,10 +40,14 @@ public class PlayerMove : MonoBehaviour
 		StartCoroutine (ChangeSpeed ());
 	}
 
+	private static Sprite[] LoadSprite(string spriteName){
+		return Resources.LoadAll<Sprite>("Images/" + spriteName);
+	}
+
 	private IEnumerator Move ()
 	{
 		while (!GameManager.GameOver) {
-			Rotation(new Vector3 (Input.GetAxis ("Vertical") * 3, 0, Input.GetAxis ("Horizontal") * 2));
+			Rotation(InputController());
 			MoveForward ();
 			yield return null;
 		}
@@ -49,13 +65,13 @@ public class PlayerMove : MonoBehaviour
 	private IEnumerator ChangeSpeed ()
 	{
 		while (!GameManager.GameOver) {
-			if (Input.GetKey (KeyCode.JoystickButton13) || Input.GetKey (KeyCode.JoystickButton14) || Input.GetKey (KeyCode.Alpha1) || Input.GetKey (KeyCode.Alpha2)) {
-				if (Input.GetKey (KeyCode.JoystickButton13) || Input.GetKey (KeyCode.Alpha1)) {
-					FuelInjector(Decele);
-				} else if (Input.GetKey (KeyCode.JoystickButton14) || Input.GetKey (KeyCode.Alpha2)) {
+			if (AcceleOrDeceleDown()) {
+				if (isAccele()) {
 					FuelInjector(Accele);
+				} else {
+					FuelInjector(Decele);
 				}
-			} else if (Input.GetKeyUp (KeyCode.JoystickButton13) || Input.GetKeyUp (KeyCode.JoystickButton14) || Input.GetKeyUp (KeyCode.Alpha1) || Input.GetKeyUp (KeyCode.Alpha2)) {
+			} else if (AcceleOrDeceleUp()) {
 				AfterBurner (Keep);
 				StartCoroutine (CameraSystem.CameraPosReset ());
 			}
@@ -63,37 +79,43 @@ public class PlayerMove : MonoBehaviour
 		}
 	}
 
+	private bool AcceleOrDeceleUp(){
+		return Input.GetKeyUp (KeyCode.JoystickButton13) || Input.GetKeyUp (KeyCode.JoystickButton14) || Input.GetKeyUp (KeyCode.Alpha1) || Input.GetKeyUp (KeyCode.Alpha2);
+	}
+
+	private bool AcceleOrDeceleDown(){
+		return Input.GetKey (KeyCode.JoystickButton13) || Input.GetKey (KeyCode.JoystickButton14) || Input.GetKey (KeyCode.Alpha1) || Input.GetKey (KeyCode.Alpha2);
+	}
+
+	private bool isAccele(){
+		return Input.GetKey (KeyCode.JoystickButton14) || Input.GetKey (KeyCode.Alpha2);
+	}
+
 	/// <summary>
 	/// 機体の速度に制限。
 	/// 巡航速度1000Km 最高速度2484Km (speed*60*60=時速とする)
 	/// </summary>
 	/// <value>The speed.</value>
-	private void FuelInjector (float Signal){
-		speed = Mathf.Clamp(Speed + Signal,MinSpeed,MaxSpeed);
+	private void FuelInjector (float Power){
+		speed = Mathf.Clamp(Speed + Power,MinSpeed,MaxSpeed);
 			if (Speed > MinSpeed && Speed < MaxSpeed) {
-				AfterBurner (Signal);
-				CameraSystem.MoveCamera (Signal);
+				AfterBurner (Power);
+				CameraSystem.MoveCamera (Power);
 			}
 			EngineS.Pitch = Speed;
 	}
 
 	private void AfterBurner (float Fuel)
 	{
-		ParticleSystem Burner = GameObject.Find ("Afterburner").GetComponent<ParticleSystem> ();
-		ParticleSystem Glow = GameObject.Find ("Glow").GetComponent<ParticleSystem> ();
-		var em = Glow.emission;
-		var rate = Glow.emission.rate;
 
 		if (Fuel > Keep) {
-			HighPower (Burner, Glow, em, rate);
-		} else if (Fuel == Keep) {
-			LowPower (Burner, Glow, em, rate);
+			HighPower ();
 		} else {
+			LowPower ();
 		}
 	}
 
-	//下記二つのプログラムが嫌い
-	private void HighPower (ParticleSystem Burner, ParticleSystem Glow, ParticleSystem.EmissionModule em, ParticleSystem.MinMaxCurve rate)
+	private void HighPower ()//ParticleSystem Burner, ParticleSystem Glow, ParticleSystem.EmissionModule em, ParticleSystem.MinMaxCurve rate)
 	{
 		Burner.startSpeed = 25;
 		Glow.startSpeed = 25;
@@ -101,7 +123,7 @@ public class PlayerMove : MonoBehaviour
 		em.rate = rate;
 	}
 
-	private void LowPower (ParticleSystem Burner, ParticleSystem Glow, ParticleSystem.EmissionModule em, ParticleSystem.MinMaxCurve rate)
+	private void LowPower ()//ParticleSystem Burner, ParticleSystem Glow, ParticleSystem.EmissionModule em, ParticleSystem.MinMaxCurve rate)
 	{
 		Burner.startSpeed = 4;
 		Glow.startSpeed = 4;
@@ -111,5 +133,8 @@ public class PlayerMove : MonoBehaviour
 
 	private void Rotation(Vector3 AddRot) {
 		transform.Rotate (AddRot.x / 1.5f, 0f, AddRot.z * 2f);
+	}
+	private Vector3 InputController(){
+		return new Vector3 (Input.GetAxis ("Vertical") * 3, 0, Input.GetAxis ("Horizontal") * 2);
 	}
 }

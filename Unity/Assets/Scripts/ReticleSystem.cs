@@ -25,8 +25,8 @@ public class ReticleSystem : MonoBehaviour
 		}
 	}
 
-	private static List<GameObject> _multiMissileLockOn = new List<GameObject> ();
-	public static List<GameObject> MultiMissileLockOn {
+	private static Queue<GameObject> _multiMissileLockOn = new Queue<GameObject> ();
+	public static Queue<GameObject> MultiMissileLockOn {
 		get {
 			return _multiMissileLockOn;
 		}
@@ -126,7 +126,7 @@ public class ReticleSystem : MonoBehaviour
 	private IEnumerator ReleaseLockInput ()
 	{
 		while (!GameManager.GameOver) {
-			if ((Input.GetKeyDown (KeyCode.Alpha3) || Input.GetKeyDown (KeyCode.JoystickButton18))) {
+			if (Attack.isCancel()) {
 				LockOnTgt = null;
 			}
 			yield return null;
@@ -248,24 +248,26 @@ public class ReticleSystem : MonoBehaviour
 		}
 	}
 
-	public void ChangeMode (bool isMMI)
+	public IEnumerator ChangeMode (bool isMMI)
 	{
-		StopAllCoroutines ();
 		UI.color = Color.green;
 		if (isMMI) {
-			
+			StopAllCoroutines ();
 			StartCoroutine (ReticleScaleUp ());
 			StartCoroutine (MultipleLockOnSystem ());
 		} else {
-			StartCoroutine (ReticleScaleDown ());
 			StartCoroutine (MultipleReticle.AllReleaceReticle());
+			yield return StartCoroutine (ReticleScaleDown ());
+			ChangeCoroutine(false);
 		}
+		yield return null;
 	}
 
 	public void MMIReady ()
 	{
 		StopAllCoroutines ();
 		Attack.MMIReady = true;
+		Attack.Reloading = 0;
 		UI.color = Color.red;
 
 	}
@@ -287,11 +289,10 @@ public class ReticleSystem : MonoBehaviour
 			}
 			yield return null;
 		}
-		yield return null;
 	}
 
 	private void MultipleLockOnSetting(GameObject Missile){
-		MultiMissileLockOn.Add (Missile);
+		MultiMissileLockOn.Enqueue (Missile);
 		var newReticle = Instantiate (MultipleReticleObject);
 		newReticle.GetComponent<MultipleReticle> ().LockOn = Missile;
 		AudioBox.pitch = 1;
@@ -323,7 +324,6 @@ public class ReticleSystem : MonoBehaviour
 			UITransform.localScale = new Vector3 (Mathf.Clamp (UITransform.localScale.x - time, 0.2f, 100), Mathf.Clamp (UITransform.localScale.y - time, 0.2f, 100), 0);
 			yield return null;
 		}
-		yield return null;
 	}
 
 

@@ -26,8 +26,7 @@ public class Airframe : MonoBehaviour
 		if(GameManager.GameOver){
 			yield break;
 		}
-		StartCoroutine( GameManager.GameEnd (false));
 		Destroy (gameObject);
-		yield return null;
+		yield return StartCoroutine( GameManager.GameEnd (false));
 	}
 }

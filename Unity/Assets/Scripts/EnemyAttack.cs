@@ -26,13 +26,13 @@ public class EnemyAttack : MonoBehaviour
 
 	void Awake ()
 	{
-		Player = GameObject.Find ("eurofighter").transform;
+		Player = GameObject.Find ("AirPlain").transform;
 		Factory = GameObject.Find ("GameManager").GetComponent<MissileFactory> ();
 	}
 
 	void Start(){
 		StartCoroutine (Shoot ());
-		StartCoroutine (SpecialAttack ());
+//		StartCoroutine (SpecialAttack ());
 		Target = Player;
 	}
 
@@ -53,13 +53,17 @@ public class EnemyAttack : MonoBehaviour
 //		StartCoroutine (OmniDirectionAttack());
 		while (!GameManager.GameOver ) {
 			timer += Time.deltaTime;
-			if (timer >= delay && GameManager.EnemyMissiles <= 80) {
-				Debug.Log (GameManager.EnemyMissiles);
+			if (isShoot(timer,delay)) {
+				//Debug.Log (GameManager.EnemyMissiles);
 				ChooseAction ();
 				timer = 0;
 			}
 			yield return null;
 		}
+	}
+
+	private bool isShoot(float timer, float delay){
+		return timer >= delay && GameManager.EnemyMissiles <= 80;
 	}
 
 	public void ChooseAction ()
@@ -73,17 +77,17 @@ public class EnemyAttack : MonoBehaviour
 
 	private void StraightMissile ()
 	{
-		StartCoroutine (Factory.NewMissileE (transform.position).GetComponent<Missile> ().StraightToTgt (Target,false));
+		StartCoroutine (Factory.NewEnemyMissile (transform.position).GetComponent<MissileSystem> ().StraightToTgt (Target,false));
 	}
 
 	private void StraightMissile (Vector3 Rot)
 	{
-		StartCoroutine (Factory.NewMissileE (transform.position,Rot).GetComponent<Missile> ().StraightToTgt (false));
+		StartCoroutine (Factory.NewEnemyMissile (transform.position,Rot).GetComponent<MissileSystem> ().StraightToTgt (false));
 	}
 
 	private void TrackingMissile ()
 	{
-		StartCoroutine (Factory.NewMissileE (transform.position).GetComponent<Missile> ().TrackingEnemy (Target));
+		StartCoroutine (Factory.NewEnemyMissile (transform.position).GetComponent<MissileSystem> ().TrackingForPlayer (Target));
 	}
 
 	private IEnumerator OmniDirectionAttack(){

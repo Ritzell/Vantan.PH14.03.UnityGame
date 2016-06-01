@@ -4,32 +4,30 @@ using System.Collections.Generic;
 
 public class Gun : MonoBehaviour
 {
-	private static GameObject[] Muzzules = new GameObject[2];
+	private static Muzzle[] Muzzles = new Muzzle[2];
 	private static BulletFactory Factory;
 
 	void Awake ()
 	{
 		Factory = GameObject.Find ("GameManager").GetComponent<BulletFactory> ();
-		Muzzules [0] = GameObject.Find ("muzzleA");
-		Muzzules [1] = GameObject.Find ("muzzleB");
+		Muzzles [0] = GameObject.Find ("muzzleA").GetComponent<Muzzle>();
+		Muzzles [1] = GameObject.Find ("muzzleB").GetComponent<Muzzle>();
 	}
 
 	public IEnumerator Shoot ()
 	{
-		foreach (GameObject ob in Muzzules) {
-			Factory.MakeBullet (ob.transform, ob.transform.position, ob.transform.rotation);
-			Muzzle MuzzleScript = ob.GetComponent<Muzzle> ();
-			StartCoroutine (MuzzleScript.Ignition ());
+		foreach (Muzzle muzzle in Muzzles) {
+			yield return StartCoroutine(Factory.MakeBullet (muzzle.transform, muzzle.transform.position, muzzle.transform.rotation));
+			StartCoroutine (muzzle.Ignition ());
 			yield return null;
 		}
-		yield return null;
 	}
 
 	public static IEnumerator MuzzuleLookTgt (Vector3 Tgt)
 	{
 		try{
-		foreach (GameObject Muzzule in Muzzules) {
-			Muzzule.transform.LookAt (Tgt);
+			foreach (Muzzle muzzle in Muzzles) {
+			muzzle.transform.LookAt (Tgt);
 		}
 		}catch{
 			Debug.Log ("マズルの方向転換でエラーが出てます。");

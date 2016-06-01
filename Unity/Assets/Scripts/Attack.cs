@@ -4,20 +4,27 @@ using System.Collections.Generic;
 
 public class Attack : MonoBehaviour
 {
+	public static float Reloading;
 	private const float missileDelay = 0.15f;
 	private const float gunDelay = 0.1f;
-	private const float MMIDelay = 1f;//MultipleMissileInterceptの省略
-	ReticleSystem Reticle;
+	private const float MMIDelay = 1f;
+//MultipleMissileInterceptの省略
+	private static ReticleSystem Reticle;
+	private static Airframe Frame;
 
+	[SerializeField]
+	private Gun Guns;
 
-	private static Queue<GameObject> missiles = new Queue<GameObject> ();
-	public static Queue<GameObject> Missiles {
+	private static Queue<GameObject> _playerMissiles = new Queue<GameObject> ();
+
+	public static Queue<GameObject> PlayerMissiles {
 		get {
-			return missiles;
+			return _playerMissiles;
 		}
 	}
 
 	private static bool _mmiReady;
+
 	public static bool MMIReady {
 		set {
 			_mmiReady = value;
@@ -26,102 +33,134 @@ public class Attack : MonoBehaviour
 		}
 	}
 
-	void Awake(){
-		missiles.Enqueue (GameObject.Find ("missileA"));
-		missiles.Enqueue (GameObject.Find ("missileB"));
-		missiles.Enqueue (GameObject.Find ("missileC"));
-		missiles.Enqueue (GameObject.Find ("missileD"));
+	void Awake ()
+	{
+		_playerMissiles.Enqueue (GameObject.Find ("missileA"));
+		_playerMissiles.Enqueue (GameObject.Find ("missileB"));
+		_playerMissiles.Enqueue (GameObject.Find ("missileC"));
+		_playerMissiles.Enqueue (GameObject.Find ("missileD"));
 		Reticle = GameObject.Find ("ReticleImage").GetComponent<ReticleSystem> ();
+		Frame = GameObject.Find ("eurofighter").GetComponent<Airframe> ();
 	}
 
 	void Start ()
 	{
+		Reloading = 0;
 		StartCoroutine (MultipleMissileInterceptSystem ());
 		StartCoroutine (MissileShoot ());
 		StartCoroutine (GunShoot ());
 	}
 
-	//略名 : MMIS 複数ミサイル迎撃システム
-	public IEnumerator MultipleMissileInterceptSystem(){
-		float Reloading = 30.0f;
 
-		while(!GameManager.GameOver){
+	//略名 : MMIS 複数ミサイル迎撃システム
+	public IEnumerator MultipleMissileInterceptSystem ()
+	{
+
+		while (!GameManager.GameOver) {
 			Reloading += Time.deltaTime;
 			if (Reloading >= MMIDelay) {
-				if (!_mmiReady) {
-					if (MMISystemBoot (Reloading)) {
-						Reticle.ChangeMode (true);
-						yield return null;
-					} else if (MMISystemEnd (Reloading)) {
-						Reloading = LockOrReset (Reloading);
+				if (!MMIReady) {
+					if (isBoot (Reloading)) {
+						yield return StartCoroutine (Reticle.ChangeMode (true));
+					} else if (isEnd (Reloading)) {
+						LockOrReset (Reloading);
 						yield return null;
 					} 
-				} else if (MMISystemCansel()) {
-					Reticle.ChangeMode (false);
-					yield return null;
+				} else if (isCancel ()) {
+					MMIReady = false;
+					yield return StartCoroutine (Reticle.ChangeMode (false));
+				} else if (isTrackingShoot ()) {
+					MMIReady = false;
+					yield return StartCoroutine (MMI_Instruction ());
 				}
 			}
 			yield return null;
 		}
+	}
+
+	private IEnumerator MMI_Instruction ()
+	{
+		yield return StartCoroutine (Missile (false).MultipleMissileInterceptShoot ());
+		Frame.Reload (Missile(false).StartPos, Missile(true).StartRot);//Missile (false).MultipleMissileInterceptShoot ());
 		yield return null;
 	}
 
-	private bool MMISystemBoot(float Reloading){
-		if((Input.GetKeyDown(KeyCode.JoystickButton18) || Input.GetKeyDown(KeyCode.Space))){
+	private bool isBoot (float Reloading)
+	{
+		if ((Input.GetKeyDown (KeyCode.JoystickButton18) || Input.GetKeyDown (KeyCode.Space))) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
 
-	private bool MMISystemEnd(float Reloading){
+	private bool isEnd (float Reloading)
+	{
 		if ((Input.GetKeyUp (KeyCode.JoystickButton18) || Input.GetKeyUp (KeyCode.Space))) {
-				return true;
-			} else {
-				return false;
-			}
+			return true;
+		} else {
+			return false;
+		}
 	}
 
-	private float LockOrReset(float Reloading){
+	private void LockOrReset (float Reloading)
+	{
 		if (ReticleSystem.MultiMissileLockOn.Count <= 0) {
-			Reticle.ChangeMode (false);
-			return 0;
+			StartCoroutine (Reticle.ChangeMode (false));
 		} else {
 			Reticle.MMIReady ();
-			return Reloading;
 		}
 	}
 
-	private bool MMISystemCansel(){
-		if ((Input.GetKeyUp (KeyCode.JoystickButton18) || Input.GetKeyUp (KeyCode.Escape))) {
+	public static bool isCancel ()
+	{
+		if ((Input.GetKeyUp (KeyCode.JoystickButton16) || Input.GetKeyUp (KeyCode.Alpha3))) {
+			
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	private void MMISEnd(){
-
+	private bool isTrackingShoot ()
+	{
+		if ((Input.GetAxis ("LTrigger") == 1 || Input.GetKeyDown (KeyCode.V))) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public IEnumerator MissileShoot ()
 	{
 		float Reloading = 0.0f;
+
 		while (!GameManager.GameOver) {
 			Reloading += Time.deltaTime;
 			if (Reloading >= missileDelay) {
-				if ((Input.GetAxis ("RTrigger") == 1 || Input.GetKeyDown (KeyCode.C)) && missiles.Count >= 1) {
+				if (isStraightMissileShoot ()) {
 					GameManager.MissileCounter = 1;
-					StartCoroutine (missiles.Dequeue ().GetComponent<Missile> ().StraightToTgt (true));
+					StartCoroutine (Missile (true).StraightToTgt (true));
 					Reloading = 0f;
-				} else if ((Input.GetAxis ("LTrigger") == 1 || Input.GetKeyDown (KeyCode.V)) && missiles.Count >= 1 && ReticleSystem.LockOnTgt != null) {
-					StartCoroutine (missiles.Dequeue ().GetComponent<Missile> ().TrackingPlayer (ReticleSystem.LockOnTgt.transform));
+				} else if (isTrackingShoot () && _playerMissiles.Count >= 1 && ReticleSystem.LockOnTgt != null) {
+					StartCoroutine (Missile (true).TrackingForEnemy (ReticleSystem.LockOnTgt.transform,true));
 					Reloading = 0f;
 				}
 			}
 			yield return null;
 		}
 	}
+
+	private bool isStraightMissileShoot ()
+	{
+		if ((Input.GetAxis ("RTrigger") == 1 || Input.GetKeyDown (KeyCode.C)) && _playerMissiles.Count >= 1) {
+			GameManager.MissileCounter = +1;
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 
 	public IEnumerator GunShoot ()
 	{
@@ -129,13 +168,22 @@ public class Attack : MonoBehaviour
 		while (!GameManager.GameOver) {
 			Reloading += Time.deltaTime;
 			if (Reloading >= gunDelay) {
-				if ((Input.GetKey (KeyCode.JoystickButton12) || Input.GetKey (KeyCode.F))) {
-					StartCoroutine (GameObject.Find ("guns").GetComponent<Gun> ().Shoot ());
+				if (isGunShot ()) {
+					StartCoroutine (Guns.Shoot ());//GameObject.Find ("guns").GetComponent<Gun> ().Shoot ());
 					Reloading = 0f;
 				}
 			}
 			yield return null;
 		}
-		yield return null;
+	}
+
+	private static MissileSystem Missile (bool isDequeue)
+	{
+		return (isDequeue ?  PlayerMissiles.Dequeue() :  PlayerMissiles.Peek()) .GetComponent<MissileSystem> ();
+	}
+
+	private bool isGunShot ()
+	{
+		return (Input.GetKey (KeyCode.JoystickButton12) || Input.GetKey (KeyCode.F));
 	}
 }
