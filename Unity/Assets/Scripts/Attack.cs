@@ -9,15 +9,15 @@ public class Attack : MonoBehaviour
 	private const float missileDelay = 0.15f;
 	private const float gunDelay = 0.1f;
 	private const float MMIDelay = 1f;
-//MultipleMissileInterceptの省略
+	//MultipleMissileInterceptの省略
 	private static ReticleSystem Reticle;
 	private static Airframe Frame;
-
 
 	[SerializeField]
 	private Gun Guns;
 
 	private static Queue<GameObject> _playerMissiles = new Queue<GameObject> ();
+
 	public static Queue<GameObject> PlayerMissiles {
 		get {
 			return _playerMissiles;
@@ -25,6 +25,7 @@ public class Attack : MonoBehaviour
 	}
 
 	private static bool _mmiReady;
+
 	public static bool MMIisReady {
 		set {
 			_mmiReady = value;
@@ -82,7 +83,7 @@ public class Attack : MonoBehaviour
 	private IEnumerator MMI_Instruction ()
 	{
 		yield return StartCoroutine (Missile (false).MultipleMissileInterceptShoot ());
-		Frame.Reload (Missile(false).StartPos, Missile(true).StartRot);//Missile (false).MultipleMissileInterceptShoot ());
+		Frame.Reload (Missile (false).StartPos, Missile (true).StartRot);//Missile (false).MultipleMissileInterceptShoot ());
 		yield return null;
 	}
 
@@ -144,7 +145,7 @@ public class Attack : MonoBehaviour
 					StartCoroutine (Missile (true).StraightToTgt (true));
 					Reloading = 0f;
 				} else if (isTrackingShoot () && _playerMissiles.Count >= 1 && ReticleSystem.LockOnTgt != null) {
-					StartCoroutine (Missile (true).TrackingForEnemy (ReticleSystem.LockOnTgt.transform,true));
+					StartCoroutine (Missile (true).TrackingForEnemy (ReticleSystem.LockOnTgt.transform, true));
 					Reloading = 0f;
 				}
 			}
@@ -180,7 +181,7 @@ public class Attack : MonoBehaviour
 
 	private static MissileSystem Missile (bool isDequeue)
 	{
-		return (isDequeue ?  PlayerMissiles.Dequeue() :  PlayerMissiles.Peek()) .GetComponent<MissileSystem> ();
+		return (isDequeue ? PlayerMissiles.Dequeue () : PlayerMissiles.Peek ()).GetComponent<MissileSystem> ();
 	}
 
 	private bool isGunShot ()

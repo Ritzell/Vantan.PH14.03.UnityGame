@@ -26,6 +26,7 @@ public class MissileRader : MonoBehaviour {
 
 	void Start () {
 		StartCoroutine (OutRaderMissileDistance());
+		StartCoroutine (InRaderMissileDistance ());
 		StartCoroutine (RotateRader());
 	}
 
@@ -51,11 +52,11 @@ public class MissileRader : MonoBehaviour {
 	}
 
 	private IEnumerator InRaderMissileDistance(){
+		Vector2 RaderPos = new Vector2 (transform.position.x, transform.position.y);
 		while(!GameManager.GameOver){
 			yield return StartCoroutine(MissileAddList(false));
 			for(int i = 0; i < InRangeMissiles.Count; i++){
-				if (Mathf.Abs (Vector3.Distance (InRangeMissiles[i].position, Player.position)) > 2000) {
-					Debug.Log (outRangeMissiles[i]);
+				if (Mathf.Abs (Vector2.Distance (new Vector2(InRangeMissiles[i].position.x,InRangeMissiles[i].position.y), RaderPos)) > RaderPos.x) {
 					ToOutRange(InRangeMissiles[i]);
 					yield return null;
 				}
@@ -77,16 +78,15 @@ public class MissileRader : MonoBehaviour {
 	}
 
 	private  void ToInRange(Transform Missile){
-		addInRangeMissile.Add (Missile);
-		NewMissilePointUI (Missile);
+		addInRangeMissile.Add (NewMissilePointUI (Missile).transform);
 		outRangeMissiles.Remove (Missile);
 	}
 
-	private  void ToOutRange(Transform Missile){
-		addOutRangeMissile.Add (Missile);
+	private  void ToOutRange(Transform MissilePoint){
+		addOutRangeMissile.Add (MissilePoint.GetComponent<MapMissilePosition>().Tgt);
 		//Debug.Log (GameObject.Find(Missile.name + "Point").gameObject);
-		Destroy (GameObject.Find(Missile.name + "Point").gameObject);
-		InRangeMissiles.Remove (Missile);
+		Destroy (GameObject.Find(MissilePoint.name));
+		InRangeMissiles.Remove (MissilePoint);
 	}
 		
 	public static void DestroyMissile(Transform Missile){
@@ -97,8 +97,9 @@ public class MissileRader : MonoBehaviour {
 		}
 	}
 
-	private  void NewMissilePointUI(Transform Missile){
+	private  GameObject NewMissilePointUI(Transform Missile){
 		GameObject MissileUI = Instantiate (PointOb);
 		MissileUI.GetComponent<MapMissilePosition> ().StartCoroutine (MissileUI.GetComponent<MapMissilePosition> ().UpdatePosition (Missile));
+		return MissileUI;
 	}
 }

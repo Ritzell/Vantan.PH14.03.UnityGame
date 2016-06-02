@@ -137,6 +137,7 @@ public class MissileSystem : MonoBehaviour
 
 	public IEnumerator MultipleMissileInterceptShoot ()
 	{
+		Speed = 850;
 		StartCoroutine (TrackingForEnemy (ReticleSystem.MultiMissileLockOn.Dequeue ().transform,false));
 		yield return null;
 		if (ReticleSystem.MultiMissileLockOn.Count > 0) {

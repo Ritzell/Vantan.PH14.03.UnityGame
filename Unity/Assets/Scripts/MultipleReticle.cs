@@ -25,7 +25,7 @@ public class MultipleReticle : MonoBehaviour
 	void Awake ()
 	{
 		Reticle = gameObject.GetComponent<RectTransform> ();
-		transform.parent = GameObject.Find ("Canvas").transform;
+		transform.SetParent(GameObject.Find ("Canvas").transform,false);
 		Reticles.Add (gameObject.GetComponent<MultipleReticle>());
 	}
 
