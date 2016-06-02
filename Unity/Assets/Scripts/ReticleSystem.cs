@@ -259,6 +259,8 @@ public class ReticleSystem : MonoBehaviour
 			StartCoroutine (MultipleReticle.AllReleaceReticle());
 			yield return StartCoroutine (ReticleScaleDown ());
 			ChangeCoroutine(false);
+			Debug.Log ("Change");
+
 		}
 		yield return null;
 	}
@@ -319,11 +321,13 @@ public class ReticleSystem : MonoBehaviour
 
 	private IEnumerator ReticleScaleDown ()
 	{
-		while (!GameManager.GameOver && UITransform.localScale.x != 0.2f) {
-			float time = Time.deltaTime * 7f;
-			UITransform.localScale = new Vector3 (Mathf.Clamp (UITransform.localScale.x - time, 0.2f, 100), Mathf.Clamp (UITransform.localScale.y - time, 0.2f, 100), 0);
+		while (!GameManager.GameOver && UITransform.localScale.x > 0.2f) {
+			float time = Time.deltaTime*3;///1000;
+			UITransform.localScale = new Vector3 (Mathf.Clamp (UITransform.localScale.x - time, 0.18f, 100), Mathf.Clamp (UITransform.localScale.y - time, 0.18f, 100), 0);
 			yield return null;
 		}
+		UITransform.localScale = new Vector3 (0.2f, 0.2f, 0);
+			yield return null;
 	}
 
 

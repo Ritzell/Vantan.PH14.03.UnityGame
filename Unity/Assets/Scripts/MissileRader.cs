@@ -90,10 +90,12 @@ public class MissileRader : MonoBehaviour {
 	}
 		
 	public static void DestroyMissile(Transform Missile){
+		GameObject MissilePoint = GameObject.Find (Missile.name + "Point");
+		Destroy (MissilePoint);
 		try{
-		Destroy (GameObject.Find(Missile.name + "Point").gameObject);
-		InRangeMissiles.Remove (Missile);
+			InRangeMissiles.Remove (MissilePoint.transform);
 		}catch{
+			OutRangeMissiles.Remove (Missile);
 		}
 	}
 

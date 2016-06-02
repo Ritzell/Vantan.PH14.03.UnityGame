@@ -115,9 +115,9 @@ public class MissileSystem : MonoBehaviour
 	{
 		ShootReady (isReload);
 		while (true) {
-			yield return StartCoroutine (GetAimingPlayer (tgt));
-			yield return StartCoroutine (MoveForward ());
-//			yield return null;
+			StartCoroutine (GetAimingPlayer (tgt));
+			StartCoroutine (MoveForward());
+			yield return null;
 		}
 	}
 
@@ -137,7 +137,6 @@ public class MissileSystem : MonoBehaviour
 
 	public IEnumerator MultipleMissileInterceptShoot ()
 	{
-		Speed = 850;
 		StartCoroutine (TrackingForEnemy (ReticleSystem.MultiMissileLockOn.Dequeue ().transform,false));
 		yield return null;
 		if (ReticleSystem.MultiMissileLockOn.Count > 0) {
@@ -158,7 +157,6 @@ public class MissileSystem : MonoBehaviour
 	private IEnumerator Leave(){
 		Vector2 Dis = new Vector2 (Random.value <= 0.5f ? -10 : 10, Random.value <= 0.5f ? -10 : 10);
 		float time = 0f;
-
 		while (time < 0.1f) {
 			time += Time.deltaTime;
 			transform.Translate (Dis.x*(Time.deltaTime*10),Dis.y*(Time.deltaTime*10),0);
@@ -199,8 +197,11 @@ public class MissileSystem : MonoBehaviour
 
 	private IEnumerator GetAimingPlayer (Transform tgt)
 	{
+		try{
 		Vector3 TgtPos = new Vector3 (tgt.transform.position.x, tgt.transform.position.y, tgt.transform.position.z);
 		transform.LookAt (TgtPos);
+		}catch{
+		}
 		yield return null;
 	}
 

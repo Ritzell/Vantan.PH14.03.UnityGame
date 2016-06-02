@@ -3,7 +3,9 @@ using System.Collections;
 
 public class Airframe : MonoBehaviour
 {
-	private static int HP = 3;
+	private static int HP = 5;
+
+
 
 	public void Reload (Vector3 StartPos, Quaternion StartRot)
 	{
@@ -12,11 +14,12 @@ public class Airframe : MonoBehaviour
 
 	private void OnTriggerEnter (Collider Col)
 	{
-		//HP--;
+		HP -= 1;
+		StartCoroutine (PlayerHpUI.LifeExhaustion ());
 		StartCoroutine( CameraSystem.SwayCamera ());
+		PlayerSound.HitSound ();
 		if (HP <= 0 || Col.gameObject.layer == 10) {
 			Instantiate (Resources.Load ("prefabs/Explosion"), transform.position, Quaternion.identity);
-			PlayerSound.HitSound ();
 			StartCoroutine (Deth ());
 		}
 	}

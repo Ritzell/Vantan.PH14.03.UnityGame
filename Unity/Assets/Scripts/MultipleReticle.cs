@@ -34,6 +34,7 @@ public class MultipleReticle : MonoBehaviour
 			reticle.StartCoroutine (reticle.ForciblyRelaseLock());
 		}
 		Reticles.Clear ();
+		ReticleSystem.MultiMissileLockOn.Clear ();
 		yield return null;
 	}
 

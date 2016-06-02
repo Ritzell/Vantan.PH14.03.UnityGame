@@ -12,7 +12,22 @@ public class CameraSystem : MonoBehaviour
 	private static Vector3 LookBehindPos;
 	private static Vector3 LookFrontPos;
 	private static GameObject AirPlain;
-	private static bool LookBehind = false;
+	private static bool _lookBehind = false;
+	public  static bool LookBehind {
+		set{
+			if (value) {
+//				MyCamera.GetComponent<CameraSystem>().StopAllCoroutines ();
+//				Color color = ReticleSystem.UIImage.color;
+//				Debug.Log ("a");
+//				ReticleSystem.UIImage.color = new Vector4 (color.r, color.g, color.b, 1);
+			} else {
+			}
+			_lookBehind = value;
+
+		}get{
+			return _lookBehind;
+		}
+	}
 
 
 	private static bool freemove = false;
