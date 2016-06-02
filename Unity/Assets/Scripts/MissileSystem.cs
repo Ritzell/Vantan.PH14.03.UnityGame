@@ -11,14 +11,38 @@ public class MissileSystem : MonoBehaviour
 
 	private AudioSource AudioS;
 	private float Speed;
-//700
 	private float LifeTime = 40;
 	private static Airframe AirFrame;
+	private readonly Vector3 MissilePosA = new Vector3 (8.5f,-0.6f,-8);
+	private readonly Vector3 MissilePosB = new Vector3 (5,-0.6f,-5.35f);
+	private readonly Vector3 MissilePosC = new Vector3 (-5f,-0.6f,-5.35f);
+	private readonly Vector3 MissilePosD = new Vector3 (-8.5f,-0.6f,-8);
+
+
+
 	private Vector3 _startPos;
 	public Vector3 StartPos{
 		set{
+			if (value == MissilePosA) {
+				StartCoroutine (MissileUI.TurningOn (0));
+			} else if(value == MissilePosB){
+				StartCoroutine (MissileUI.TurningOn (1));
+			}else if(value == MissilePosC){
+				StartCoroutine (MissileUI.TurningOn (2));
+			}else if(value == MissilePosD){
+				StartCoroutine (MissileUI.TurningOn (3));
+			}
 			_startPos = value;
 		}get{
+			if (_startPos == MissilePosA) {
+				StartCoroutine (MissileUI.TurningOff (0));
+			} else if(_startPos == MissilePosB){
+				StartCoroutine (MissileUI.TurningOff (1));
+			}else if(_startPos == MissilePosC){
+				StartCoroutine (MissileUI.TurningOff (2));
+			}else if(_startPos == MissilePosD){
+				StartCoroutine (MissileUI.TurningOff (3));
+			}
 			return _startPos;
 		}
 	}

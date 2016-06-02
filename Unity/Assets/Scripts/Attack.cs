@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class Attack : MonoBehaviour
 {
@@ -12,11 +13,11 @@ public class Attack : MonoBehaviour
 	private static ReticleSystem Reticle;
 	private static Airframe Frame;
 
+
 	[SerializeField]
 	private Gun Guns;
 
 	private static Queue<GameObject> _playerMissiles = new Queue<GameObject> ();
-
 	public static Queue<GameObject> PlayerMissiles {
 		get {
 			return _playerMissiles;
@@ -24,8 +25,7 @@ public class Attack : MonoBehaviour
 	}
 
 	private static bool _mmiReady;
-
-	public static bool MMIReady {
+	public static bool MMIisReady {
 		set {
 			_mmiReady = value;
 		}get {
@@ -39,6 +39,7 @@ public class Attack : MonoBehaviour
 		_playerMissiles.Enqueue (GameObject.Find ("missileB"));
 		_playerMissiles.Enqueue (GameObject.Find ("missileC"));
 		_playerMissiles.Enqueue (GameObject.Find ("missileD"));
+
 		Reticle = GameObject.Find ("ReticleImage").GetComponent<ReticleSystem> ();
 		Frame = GameObject.Find ("eurofighter").GetComponent<Airframe> ();
 	}
@@ -59,7 +60,7 @@ public class Attack : MonoBehaviour
 		while (!GameManager.GameOver) {
 			Reloading += Time.deltaTime;
 			if (Reloading >= MMIDelay) {
-				if (!MMIReady) {
+				if (!MMIisReady) {
 					if (isBoot (Reloading)) {
 						yield return StartCoroutine (Reticle.ChangeMode (true));
 					} else if (isEnd (Reloading)) {
@@ -67,10 +68,10 @@ public class Attack : MonoBehaviour
 						yield return null;
 					} 
 				} else if (isCancel ()) {
-					MMIReady = false;
+					MMIisReady = false;
 					yield return StartCoroutine (Reticle.ChangeMode (false));
 				} else if (isTrackingShoot ()) {
-					MMIReady = false;
+					MMIisReady = false;
 					yield return StartCoroutine (MMI_Instruction ());
 				}
 			}

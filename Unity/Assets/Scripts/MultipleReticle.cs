@@ -59,8 +59,8 @@ public class MultipleReticle : MonoBehaviour
 	private IEnumerator ForciblyRelaseLock ()
 	{
 		StopAllCoroutines ();
-		gameObject.GetComponent<AudioSource> ().Play ();
 		_lockOnTgt = null;
+		gameObject.GetComponent<AudioSource> ().Play ();
 		StartCoroutine (Deth());
 		yield return null;
 	}

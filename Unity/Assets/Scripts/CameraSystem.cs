@@ -6,9 +6,7 @@ public class CameraSystem : MonoBehaviour
 	private static GameObject MyCamera;
 
 	private static float NormalZ;
-//-26
-	private  static float NormalY;
-//7.5
+	private static float NormalY;
 	private static float MaxNormalZ_Error;
 	private static float MinNormalZ_Error;
 	private static Vector3 LookBehindPos;
@@ -18,7 +16,6 @@ public class CameraSystem : MonoBehaviour
 
 
 	private static bool freemove = false;
-
 	public static bool FreeMove {
 		set {
 			if (value == false) {
@@ -35,7 +32,6 @@ public class CameraSystem : MonoBehaviour
 	}
 
 	private static bool stopReset = false;
-
 	public static bool StopReset {
 		set {
 			stopReset = value;

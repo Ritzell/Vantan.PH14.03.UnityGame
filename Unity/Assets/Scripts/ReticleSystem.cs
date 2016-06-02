@@ -266,7 +266,7 @@ public class ReticleSystem : MonoBehaviour
 	public void MMIReady ()
 	{
 		StopAllCoroutines ();
-		Attack.MMIReady = true;
+		Attack.MMIisReady = true;
 		Attack.Reloading = 0;
 		UI.color = Color.red;
 
