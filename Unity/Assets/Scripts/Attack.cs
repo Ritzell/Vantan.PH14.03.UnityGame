@@ -71,7 +71,7 @@ public class Attack : MonoBehaviour
 				} else if (isCancel ()) {
 					MMIisReady = false;
 					yield return StartCoroutine (Reticle.ChangeMode (false));
-				} else if (isTrackingShoot ()) {
+				} else if (isTrackingShoot () ) {
 					MMIisReady = false;
 					yield return StartCoroutine (MMI_Instruction ());
 				}
@@ -126,7 +126,7 @@ public class Attack : MonoBehaviour
 
 	private bool isTrackingShoot ()
 	{
-		if ((Input.GetAxis ("LTrigger") == 1 || Input.GetKeyDown (KeyCode.V))) {
+		if (((Input.GetAxis ("LTrigger") == 1 || Input.GetKeyDown (KeyCode.V)) && _playerMissiles.Count >= 1)) {
 			return true;
 		} else {
 			return false;
@@ -142,9 +142,9 @@ public class Attack : MonoBehaviour
 			if (Reloading >= missileDelay) {
 				if (isStraightMissileShoot ()) {
 					GameManager.MissileCounter = 1;
-					StartCoroutine (Missile (true).StraightToTgt (true));
+					StartCoroutine (Missile (true).Straight (true));
 					Reloading = 0f;
-				} else if (isTrackingShoot () && _playerMissiles.Count >= 1 && ReticleSystem.LockOnTgt != null) {
+				} else if (isTrackingShoot () && ReticleSystem.LockOnTgt != null) {
 					StartCoroutine (Missile (true).TrackingForEnemy (ReticleSystem.LockOnTgt.transform, true));
 					Reloading = 0f;
 				}

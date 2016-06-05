@@ -25,8 +25,15 @@ public class ReticleSystem : MonoBehaviour
 		}
 	}
 
-	private static Queue<GameObject> _multiMissileLockOn = new Queue<GameObject> ();
-	public static Queue<GameObject> MultiMissileLockOn {
+	private static List<GameObject> _removeMissiles = new List<GameObject> ();
+	public static List<GameObject> RemoveMissiles {
+		get {
+			return _removeMissiles;
+		}
+	}
+
+	private static List<GameObject> _multiMissileLockOn = new List<GameObject> ();
+	public static List<GameObject> MultiMissileLockOn {
 		get {
 			return _multiMissileLockOn;
 		}
@@ -259,7 +266,6 @@ public class ReticleSystem : MonoBehaviour
 			StartCoroutine (MultipleReticle.AllReleaceReticle());
 			yield return StartCoroutine (ReticleScaleDown ());
 			ChangeCoroutine(false);
-			Debug.Log ("Change");
 
 		}
 		yield return null;
@@ -277,8 +283,14 @@ public class ReticleSystem : MonoBehaviour
 	private IEnumerator MultipleLockOnSystem ()
 	{
 		while (!GameManager.GameOver) {
+			yield return StartCoroutine (RemoveMissile());
 			foreach (GameObject Missile in Missiles) {
-				Vector3 ScreenMissilePos = Camera.main.WorldToScreenPoint (Missile.transform.position);
+				Vector3 ScreenMissilePos;
+				try{
+					ScreenMissilePos = Camera.main.WorldToScreenPoint (Missile.transform.position);
+				}catch{
+					continue;
+				}
 				if (MissileInReticle (ScreenMissilePos)) {
 					MultipleLockOnSetting (Missile);
 					yield return null;
@@ -286,15 +298,24 @@ public class ReticleSystem : MonoBehaviour
 				yield return null;
 			}
 			Missiles.AddRange (AddMissiles);
-			foreach (GameObject Missile in MultiMissileLockOn) {
-				Missiles.Remove (Missile);
-			}
 			yield return null;
 		}
 	}
 
+	private IEnumerator RemoveMissile(){
+		Debug.Log ("aa");
+		foreach (GameObject Missile in MultiMissileLockOn) {
+			Missiles.Remove (Missile);
+		}
+		yield return null;
+		foreach (GameObject Missile in RemoveMissiles) {
+			Missiles.Remove (Missile);
+		}
+		yield return null;
+	}
+
 	private void MultipleLockOnSetting(GameObject Missile){
-		MultiMissileLockOn.Enqueue (Missile);
+		MultiMissileLockOn.Add (Missile);//Enqueue (Missile);
 		var newReticle = Instantiate (MultipleReticleObject);
 		newReticle.GetComponent<MultipleReticle> ().LockOn = Missile;
 		AudioBox.pitch = 1;

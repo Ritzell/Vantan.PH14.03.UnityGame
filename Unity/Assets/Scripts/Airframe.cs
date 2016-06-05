@@ -15,7 +15,7 @@ public class Airframe : MonoBehaviour
 	private void OnTriggerEnter (Collider Col)
 	{
 		HP -= 1;
-		StartCoroutine (PlayerHpUI.LifeExhaustion ());
+		StartCoroutine (LightingControlSystem.TurningOff (UIType.HP));
 		StartCoroutine( CameraSystem.SwayCamera ());
 		PlayerSound.HitSound ();
 		if (HP <= 0 || Col.gameObject.layer == 10) {

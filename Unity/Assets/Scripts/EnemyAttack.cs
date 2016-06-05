@@ -77,12 +77,12 @@ public class EnemyAttack : MonoBehaviour
 
 	private void StraightMissile ()
 	{
-		StartCoroutine (Factory.NewEnemyMissile (transform.position).GetComponent<MissileSystem> ().StraightToTgt (Target,false));
+		StartCoroutine (Factory.NewEnemyMissile (transform.position).GetComponent<MissileSystem> ().Straight (Target,false));
 	}
 
 	private void StraightMissile (Vector3 Rot)
 	{
-		StartCoroutine (Factory.NewEnemyMissile (transform.position,Rot).GetComponent<MissileSystem> ().StraightToTgt (false));
+		StartCoroutine (Factory.NewEnemyMissile (transform.position,Rot).GetComponent<MissileSystem> ().Straight (false));
 	}
 
 	private void TrackingMissile ()

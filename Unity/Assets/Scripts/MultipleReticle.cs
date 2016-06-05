@@ -41,7 +41,11 @@ public class MultipleReticle : MonoBehaviour
 	private IEnumerator ReticleMoveToTgt ()
 	{
 		while (!GameManager.GameOver) {
+			try{
 			Reticle.position = RectTransformUtility.WorldToScreenPoint (Camera.main, _lockOnTgt.transform.position);
+			}catch{
+				yield break;
+			}
 			yield return null;
 		}
 	}

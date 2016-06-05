@@ -13,36 +13,14 @@ public class MissileSystem : MonoBehaviour
 	private float Speed;
 	private float LifeTime = 40;
 	private static Airframe AirFrame;
-	private readonly Vector3 MissilePosA = new Vector3 (8.5f,-0.6f,-8);
-	private readonly Vector3 MissilePosB = new Vector3 (5,-0.6f,-5.35f);
-	private readonly Vector3 MissilePosC = new Vector3 (-5f,-0.6f,-5.35f);
-	private readonly Vector3 MissilePosD = new Vector3 (-8.5f,-0.6f,-8);
-
-
 
 	private Vector3 _startPos;
 	public Vector3 StartPos{
 		set{
-			if (value == MissilePosA) {
-				StartCoroutine (MissileUI.TurningOn (0));
-			} else if(value == MissilePosB){
-				StartCoroutine (MissileUI.TurningOn (1));
-			}else if(value == MissilePosC){
-				StartCoroutine (MissileUI.TurningOn (2));
-			}else if(value == MissilePosD){
-				StartCoroutine (MissileUI.TurningOn (3));
-			}
 			_startPos = value;
 		}get{
-			if (_startPos == MissilePosA) {
-				StartCoroutine (MissileUI.TurningOff (0));
-			} else if(_startPos == MissilePosB){
-				StartCoroutine (MissileUI.TurningOff (1));
-			}else if(_startPos == MissilePosC){
-				StartCoroutine (MissileUI.TurningOff (2));
-			}else if(_startPos == MissilePosD){
-				StartCoroutine (MissileUI.TurningOff (3));
-			}
+			StartCoroutine (LightingControlSystem.TurningOff (UIType.Missile));
+
 			return _startPos;
 		}
 	}
@@ -72,19 +50,22 @@ public class MissileSystem : MonoBehaviour
 	void Start ()
 	{
 		if (gameObject.layer == 12) {
-			
+
 			ReticleSystem.AddMissiles.Add (gameObject);
 			Speed = 700;//700
 			MissileRader.AddOutRangeMissile.Add (gameObject.transform);
 		} else {
 			Speed = 850;
+			if (transform.parent != null) {
+				StartCoroutine (LightingControlSystem.TurningOn (UIType.Missile));
+			}
 		}
 		AudioS.clip = AudioClip1;
 		StartPos = transform.localPosition;
 		StartRot = transform.localRotation;
 	}
 
-	public IEnumerator StraightToTgt (Transform tgt, bool isPlayer)
+	public IEnumerator Straight (Transform tgt, bool isPlayer)
 	{
 		if (isPlayer) {
 			ShootReady (true);
@@ -99,7 +80,7 @@ public class MissileSystem : MonoBehaviour
 		}
 	}
 
-	public IEnumerator StraightToTgt (bool isPlayer)
+	public IEnumerator Straight (bool isPlayer)
 	{
 		if (isPlayer) {
 			ShootReady (true);
@@ -114,8 +95,12 @@ public class MissileSystem : MonoBehaviour
 	public IEnumerator TrackingForEnemy (Transform tgt,bool isReload)
 	{
 		ShootReady (isReload);
-		while (true) {
+		while (tgt != null) {
 			StartCoroutine (GetAimingPlayer (tgt));
+			StartCoroutine (MoveForward());
+			yield return null;
+		}
+		while (true) {
 			StartCoroutine (MoveForward());
 			yield return null;
 		}
@@ -134,10 +119,15 @@ public class MissileSystem : MonoBehaviour
 			}
 		}
 	}
-
 	public IEnumerator MultipleMissileInterceptShoot ()
 	{
-		StartCoroutine (TrackingForEnemy (ReticleSystem.MultiMissileLockOn.Dequeue ().transform,false));
+		try{
+		StartCoroutine (TrackingForEnemy (ReticleSystem.MultiMissileLockOn[0].transform,false));
+		ReticleSystem.MultiMissileLockOn.RemoveAt (0);
+		}catch{
+			ReticleSystem.MultiMissileLockOn.RemoveAt (0);
+			StartCoroutine (Straight (true));
+		}
 		yield return null;
 		if (ReticleSystem.MultiMissileLockOn.Count > 0) {
 			StartCoroutine (MakeAvater ());
@@ -198,28 +188,13 @@ public class MissileSystem : MonoBehaviour
 	private IEnumerator GetAimingPlayer (Transform tgt)
 	{
 		try{
-		Vector3 TgtPos = new Vector3 (tgt.transform.position.x, tgt.transform.position.y, tgt.transform.position.z);
-		transform.LookAt (TgtPos);
+			Vector3 TgtPos = new Vector3 (tgt.transform.position.x, tgt.transform.position.y, tgt.transform.position.z);
+			transform.LookAt (TgtPos);
 		}catch{
 		}
 		yield return null;
 	}
 
-	//	private Vector3 GetAimingEnemy (Transform tgt)
-	//	{
-	//
-	////		try{
-	////			Vector3 Distance = new Vector3 ((tgt.transform.position.x+ Random.Range (-40, 40)) - transform.position.x,(tgt.transform.position.y+ Random.Range (-40, 40)) - transform.position.y, (tgt.transform.position.z+ Random.Range (-40, 40)) - transform.position.z);
-	////			Vector3 TgtPos = new Vector3 (tgt.position.x - Distance.x/2,tgt.position.y - Distance.y/2,tgt.position.z - Distance.z/2);
-	////		transform.LookAt (TgtPos);
-	////			return TgtPos;
-	////		}catch{
-	////			return Vector3.zero;
-	////		}
-	//		Vector3 a;
-	//		return Vector3;
-	//	}
-	//
 	private IEnumerator MoveForward ()
 	{
 		transform.Translate (Vector3.forward * Time.deltaTime * Speed);
@@ -258,6 +233,13 @@ public class MissileSystem : MonoBehaviour
 
 	private IEnumerator Deth ()
 	{
+		if (gameObject.layer == 12) {
+			ReticleSystem.RemoveMissiles.Add (gameObject);
+			try{
+				ReticleSystem.MultiMissileLockOn.Remove (gameObject);
+			}catch{
+			}
+		}
 		yield return new WaitForSeconds (0.5f);
 		Destroy (gameObject);
 		yield return null;

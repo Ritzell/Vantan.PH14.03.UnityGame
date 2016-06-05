@@ -12,8 +12,8 @@ public class MissileRader : MonoBehaviour {
 	private static List<Transform> addInRangeMissile = new List<Transform>();
 
 	private static List<Transform> outRangeMissiles = new List<Transform> ();
-	public static List<Transform> OutRangeMissiles{
-		get{
+	public static List<Transform> OutRangeMissiles {
+		get {
 			return outRangeMissiles;
 		}
 	}

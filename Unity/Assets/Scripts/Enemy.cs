@@ -30,7 +30,6 @@ public class Enemy : MonoBehaviour
 
 	void OnTriggerStay (Collider Col)
 	{
-		Debug.Log (Col);
 		EnemyBase.Rest = EnemyBase.Rest - 1;
 		PlayerReticle.DestoroyLockOnTgt (gameObject);
 		Destroy (gameObject);
