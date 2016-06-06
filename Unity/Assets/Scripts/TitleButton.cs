@@ -8,8 +8,8 @@ public class TitleButton : MonoBehaviour {
 		if (gameObject.name == "StartButton") {
 			SceneManager.LoadScene ("stage");
 //			Application.LoadLevel("stage");
-		} else if (gameObject.name == "ConfigButton") {
-			SceneManager.LoadScene ("stage");
+		} else if (gameObject.name == "ArsenalButton") {
+			SceneManager.LoadScene ("Customize");
 //			Application.LoadLevel("stage");
 		} else if (gameObject.name == "EndButton") {
 			Application.Quit ();
