@@ -83,7 +83,7 @@ public class Attack : MonoBehaviour
 	private IEnumerator MMI_Instruction ()
 	{
 		yield return StartCoroutine (Missile (false).MultipleMissileInterceptShoot ());
-		Frame.Reload (Missile (false).StartPos, Missile (true).StartRot);//Missile (false).MultipleMissileInterceptShoot ());
+		StartCoroutine(Frame.Reload (Missile (false).StartPos, Missile (true).StartRot));//Missile (false).MultipleMissileInterceptShoot ());
 		yield return null;
 	}
 

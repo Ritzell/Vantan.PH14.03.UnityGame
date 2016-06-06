@@ -28,6 +28,12 @@ public class LightingControlSystem : MonoBehaviour {
 			MissileIcons [Number (ref _missileNumber)].color = Color.gray;
 		} else if (UI == UIType.HP) {
 			HPBarUI.Dequeue ().color = Color.black;
+			if (HPBarUI.Count == 2) {
+				foreach (Image HPBar in HPBarUI) {
+					HPBar.color = Color.red;
+				}
+				yield return null;
+			}
 		}
 		yield return null;
 	}

@@ -183,14 +183,14 @@ public class ReticleSystem : MonoBehaviour
 
 	private void SelectTgt (GameObject TgtOb)
 	{
-		FadeToColor (Color.red);
+		ReticleColorFade (Color.red);
 		LockNow (TgtOb);
 	}
 
 	private void FadeCancel ()
 	{
 		if (UI.color.g < 1) {
-			FadeToColor (Color.green);
+			ReticleColorFade (Color.green);
 		}
 	}
 
@@ -223,12 +223,22 @@ public class ReticleSystem : MonoBehaviour
 		}
 	}
 
+
+	/// <summary>
+	/// レティクルの座標を調べる
+	/// </summary>
+	/// <returns>The distance.</returns>
+	/// <param name="Dis">Dis.</param>
 	private float ReticleDistance (Vector3 Dis)
 	{
 		return Vector2.Distance (new Vector2 (transform.position.x + Dis.x, transform.position.y - Dis.y),
 			new Vector2 (Screen.width / 2, Screen.height / 2));
 	}
 
+	/// <summary>
+	/// レティクルを動かす
+	/// </summary>
+	/// <param name="Dis">Dis.</param>
 	private void ReticleMove (Vector3 Dis)
 	{
 		if (CameraSystem.FreeMove) {
@@ -242,6 +252,10 @@ public class ReticleSystem : MonoBehaviour
 
 	}
 
+	/// <summary>
+	/// 使うコルーチンを変える
+	/// </summary>
+	/// <param name="LockOn">If set to <c>true</c> lock on.</param>
 	private void ChangeCoroutine (bool LockOn)
 	{
 		if (LockOn) {
@@ -255,6 +269,11 @@ public class ReticleSystem : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// MMIモードとノーマルモードを切り替える
+	/// </summary>
+	/// <returns>The mode.</returns>
+	/// <param name="isMMI">If set to <c>true</c> is MM.</param>
 	public IEnumerator ChangeMode (bool isMMI)
 	{
 		UI.color = Color.green;
@@ -280,6 +299,10 @@ public class ReticleSystem : MonoBehaviour
 
 	}
 
+	/// <summary>
+	/// 敵のミサイルの全てを対象にロックオン判定を行う
+	/// </summary>
+	/// <returns>The lock on system.</returns>
 	private IEnumerator MultipleLockOnSystem ()
 	{
 		while (!GameManager.GameOver) {
@@ -303,19 +326,14 @@ public class ReticleSystem : MonoBehaviour
 	}
 
 	private IEnumerator RemoveMissile(){
-		Debug.Log ("aa");
-		foreach (GameObject Missile in MultiMissileLockOn) {
-			Missiles.Remove (Missile);
-		}
-		yield return null;
-		foreach (GameObject Missile in RemoveMissiles) {
-			Missiles.Remove (Missile);
-		}
+		MultiMissileLockOn.ForEach (Missile => Missiles.Remove(Missile));
+		RemoveMissiles.ForEach (Missile => Missiles.Remove (Missile));
 		yield return null;
 	}
 
 	private void MultipleLockOnSetting(GameObject Missile){
-		MultiMissileLockOn.Add (Missile);//Enqueue (Missile);
+		MultiMissileLockOn.Add (Missile);
+//		Missiles.Remove (Missile);
 		var newReticle = Instantiate (MultipleReticleObject);
 		newReticle.GetComponent<MultipleReticle> ().LockOn = Missile;
 		AudioBox.pitch = 1;
@@ -353,10 +371,10 @@ public class ReticleSystem : MonoBehaviour
 
 
 
-	private void FadeToColor (Color Color)
+	private void ReticleColorFade (Color Color)
 	{
-		UI.color = new Vector4 (UI.color.r + (Color == Color.red ? (1 * (Time.deltaTime / 2)) : (-1 * (Time.deltaTime / 2))),
-			UI.color.g + (Color == Color.red ? (-1 * (Time.deltaTime / 2)) : (1 * (Time.deltaTime / 2))), 0, 1);
+		UI.color = new Vector4 (UI.color.r + (Color == Color.red ? (Time.deltaTime / 2) : (Time.deltaTime / -2)),
+			UI.color.g + (Color == Color.red ? (Time.deltaTime / -2) : (Time.deltaTime / 2)), 0, 1);
 
 	}
 }

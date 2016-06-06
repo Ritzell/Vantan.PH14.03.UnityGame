@@ -20,7 +20,6 @@ public class MissileSystem : MonoBehaviour
 			_startPos = value;
 		}get{
 			StartCoroutine (LightingControlSystem.TurningOff (UIType.Missile));
-
 			return _startPos;
 		}
 	}
@@ -56,9 +55,6 @@ public class MissileSystem : MonoBehaviour
 			MissileRader.AddOutRangeMissile.Add (gameObject.transform);
 		} else {
 			Speed = 850;
-			if (transform.parent != null) {
-				StartCoroutine (LightingControlSystem.TurningOn (UIType.Missile));
-			}
 		}
 		AudioS.clip = AudioClip1;
 		StartPos = transform.localPosition;
@@ -176,7 +172,7 @@ public class MissileSystem : MonoBehaviour
 	private void ShootReady (bool isReload)
 	{
 		if (isReload) {
-			AirFrame.Reload (StartPos, StartRot);
+			StartCoroutine(AirFrame.Reload (StartPos, StartRot));
 		}
 		transform.parent = null;
 		AudioS.Play ();

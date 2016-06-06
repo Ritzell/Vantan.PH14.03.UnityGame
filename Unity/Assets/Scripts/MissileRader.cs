@@ -84,7 +84,6 @@ public class MissileRader : MonoBehaviour {
 
 	private  void ToOutRange(Transform MissilePoint){
 		addOutRangeMissile.Add (MissilePoint.GetComponent<MapMissilePosition>().Tgt);
-		//Debug.Log (GameObject.Find(Missile.name + "Point").gameObject);
 		Destroy (GameObject.Find(MissilePoint.name));
 		InRangeMissiles.Remove (MissilePoint);
 	}
