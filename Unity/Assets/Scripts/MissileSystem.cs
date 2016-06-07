@@ -92,7 +92,10 @@ public class MissileSystem : MonoBehaviour
 	{
 		ShootReady (isReload);
 		while (tgt != null) {
+			try{
 			StartCoroutine (GetAimingPlayer (tgt));
+			}catch{
+			}
 			StartCoroutine (MoveForward());
 			yield return null;
 		}
@@ -193,6 +196,9 @@ public class MissileSystem : MonoBehaviour
 
 	private IEnumerator MoveForward ()
 	{
+		if(GameManager.GameOver){
+		Debug.Log ("やってるやってる");
+		}
 		transform.Translate (Vector3.forward * Time.deltaTime * Speed);
 		yield return null;
 	}

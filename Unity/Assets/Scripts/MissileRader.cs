@@ -56,8 +56,15 @@ public class MissileRader : MonoBehaviour {
 		while(!GameManager.GameOver){
 			yield return StartCoroutine(MissileAddList(false));
 			for(int i = 0; i < InRangeMissiles.Count; i++){
-				if (Mathf.Abs (Vector2.Distance (new Vector2(InRangeMissiles[i].position.x,InRangeMissiles[i].position.y), RaderPos)) > RaderPos.x) {
-					ToOutRange(InRangeMissiles[i]);
+				float distance;
+				try{
+					distance = Mathf.Abs (Vector2.Distance (new Vector2 (InRangeMissiles [i].position.x, InRangeMissiles [i].position.y), RaderPos));
+				}catch{
+					InRangeMissiles.Remove (InRangeMissiles[i]);
+					continue;
+				}
+				if (distance > RaderPos.x) {
+					ToOutRange (InRangeMissiles [i]);
 					yield return null;
 				}
 				yield return null;
@@ -90,12 +97,16 @@ public class MissileRader : MonoBehaviour {
 		
 	public static void DestroyMissile(Transform Missile){
 		GameObject MissilePoint = GameObject.Find (Missile.name + "Point");
-		Destroy (MissilePoint);
-		try{
-			InRangeMissiles.Remove (MissilePoint.transform);
-		}catch{
+		if(OutRangeMissiles.Contains(Missile)){
 			OutRangeMissiles.Remove (Missile);
+		}else{
+			try{
+				InRangeMissiles.Remove (MissilePoint.transform);
+			}catch{
+				Debug.Log ("error");
+			}
 		}
+		Destroy (MissilePoint);
 	}
 
 	private  GameObject NewMissilePointUI(Transform Missile){

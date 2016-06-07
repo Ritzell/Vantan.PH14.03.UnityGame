@@ -27,7 +27,7 @@ public class Airframe : MonoBehaviour
 
 	private void OnTriggerEnter (Collider Col)
 	{
-		HP -= 1;
+		//HP -= 1;
 		StartCoroutine (LightingControlSystem.TurningOff (UIType.HP));
 		StartCoroutine( CameraSystem.SwayCamera ());
 		PlayerSound.HitSound ();

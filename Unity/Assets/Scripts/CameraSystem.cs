@@ -167,7 +167,7 @@ public class CameraSystem : MonoBehaviour
 		float SwayTime = 0;
 		Vector3 NormalPos = new Vector3 (0, 15, -50);//MyCamera.transform.localPosition;
 
-		while (SwayTime < 0.4f) {
+		while (SwayTime < 0.4f && !GameManager.GameOver) {
 			SwayTime += Time.deltaTime;
 
 			Vector3 Amplitude = new Vector3 (Random.Range (-5, 5), Random.Range (-5, 5), 0);

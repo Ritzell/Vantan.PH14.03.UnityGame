@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class EnemyBase : MonoBehaviour
 {
+	private Material material;
+
 	private const int TowerA = 0;
 	private const int TowerB = 1;
 	private const int TowerC = 2;
@@ -30,14 +32,15 @@ public class EnemyBase : MonoBehaviour
 		Towers.Add (GameObject.Find("TowerE").transform);
 		Towers.Add (GameObject.Find("TowerF").transform);
 
-		Childs.Add (GameObject.Find ("childEnemyA").GetComponent<EnemyAttack> ());
-		Childs.Add (GameObject.Find ("childEnemyB").GetComponent<EnemyAttack> ());
+		Childs.Add (GameObject.Find ("ChildEnemyA").GetComponent<EnemyAttack> ());
+		Childs.Add (GameObject.Find ("ChildEnemyB").GetComponent<EnemyAttack> ());
 
 
 	}
 
 	void Start(){
-		StartCoroutine (ChangeTarget ());
+//		StartCoroutine (ChangeTarget ());
+		StartCoroutine (Breathing());
 	}
 
 	void OnTriggerEnter (Collider Col)
@@ -45,9 +48,35 @@ public class EnemyBase : MonoBehaviour
         if (RestChildren <= 0)
         {
 			GameObject.Find ("engine").GetComponent<AudioSource> ().Stop ();
+			StopAllCoroutines ();
             StartCoroutine(GameManager.GameEnd(true));
-            Destroy(gameObject);
+            //Destroy(gameObject);
         }
+	}
+
+	private IEnumerator Breathing(){
+		Material material;
+		material = gameObject.GetComponent<Renderer> ().material;
+		material.EnableKeyword("_EMISSION");
+		Color MaterialMaxColor = material.GetColor("_EmissionColor");
+		float Turning = (MaterialMaxColor.r + MaterialMaxColor.g + MaterialMaxColor.b)/3;
+		while(true){
+			
+			while (0.05f < (material.GetColor("_EmissionColor").r + material.GetColor("_EmissionColor").g + material.GetColor("_EmissionColor").b) / 3) {
+				Color mColor = material.GetColor ("_EmissionColor");
+				material.SetColor("_EmissionColor", new Color (mColor.r - (MaterialMaxColor.r * (Time.deltaTime))
+					, mColor.g - (MaterialMaxColor.g * (Time.deltaTime))
+					, mColor.b - (MaterialMaxColor.b * (Time.deltaTime))));
+				yield return null;
+			}
+			while (Turning > (material.GetColor("_EmissionColor").r + material.GetColor("_EmissionColor").g + material.GetColor("_EmissionColor").b) / 3) {
+				Color mColor = material.GetColor ("_EmissionColor");
+				material.SetColor("_EmissionColor", new Color (mColor.r + (MaterialMaxColor.r * (Time.deltaTime))
+					, mColor.g + (MaterialMaxColor.g * (Time.deltaTime))
+					, mColor.b + (MaterialMaxColor.b * (Time.deltaTime))));
+				yield return null;
+			}
+		}
 	}
 
 	public static IEnumerator ChangeTarget(){
