@@ -7,7 +7,6 @@ public class EnemyAttack : MonoBehaviour
 	
 
 
-
 	[SerializeField]
 	private MissileFactory Factory;
 

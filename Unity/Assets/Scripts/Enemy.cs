@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
+//	private static Text Announce = GameObject.Find("Announce").GetComponent<Text>();
+
 	/// <summary>
 	/// フレアによる回避はミサイルのスクリプトで行う
 	/// </summary>
@@ -30,6 +33,7 @@ public class Enemy : MonoBehaviour
 
 	void OnTriggerStay (Collider Col)
 	{
+//		Announce.text = "";
 		EnemyBase.Rest = EnemyBase.Rest - 1;
 		PlayerReticle.DestoroyLockOnTgt (gameObject);
 		Destroy (gameObject);

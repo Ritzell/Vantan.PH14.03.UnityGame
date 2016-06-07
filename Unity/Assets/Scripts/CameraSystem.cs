@@ -165,7 +165,7 @@ public class CameraSystem : MonoBehaviour
 	public static IEnumerator SwayCamera ()
 	{
 		float SwayTime = 0;
-		Vector3 NormalPos = MyCamera.transform.localPosition;
+		Vector3 NormalPos = new Vector3 (0, 15, -50);//MyCamera.transform.localPosition;
 
 		while (SwayTime < 0.4f) {
 			SwayTime += Time.deltaTime;

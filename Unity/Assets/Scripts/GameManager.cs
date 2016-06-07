@@ -133,6 +133,7 @@ public class GameManager : MonoBehaviour
 
 	private static IEnumerator ChangeMusic(AudioSource AudioBox,bool isWin){
 		int TimeSpeed = (int)(1 / Time.timeScale);
+
 		while (AudioBox.volume > 0) {
 			AudioBox.volume -= 0.05f*(Time.deltaTime*TimeSpeed);
 			yield return null;

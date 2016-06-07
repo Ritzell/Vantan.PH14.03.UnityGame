@@ -41,7 +41,6 @@ public class Airframe : MonoBehaviour
 		int Sign = 1;
 		AlertAudio.Play ();
 		while (true) {
-			Debug.Log (AlertUI.color.a);
 			AlertUI.color = new Color (1, 1, 1, AlertUI.color.a + (1.5f*Time.deltaTime*Sign));
 			if((AlertUI.color.a > 0.9f && Sign == 1) || (AlertUI.color.a < 0.1f && Sign == -1)){
 				Sign *= -1;

@@ -44,6 +44,7 @@ public class EnemyBase : MonoBehaviour
 	{
         if (RestChildren <= 0)
         {
+			GameObject.Find ("engine").GetComponent<AudioSource> ().Stop ();
             StartCoroutine(GameManager.GameEnd(true));
             Destroy(gameObject);
         }
