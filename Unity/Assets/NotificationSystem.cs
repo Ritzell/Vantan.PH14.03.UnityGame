@@ -17,7 +17,7 @@ public class NotificationSystem : MonoBehaviour {
 	}
 
 	void Start(){
-		StartCoroutine (test ());
+//		StartCoroutine (test ());
 	}
 
 	private IEnumerator test(){
@@ -34,7 +34,7 @@ public class NotificationSystem : MonoBehaviour {
 		GameObject TextBox = NewTextBox ();
 		yield return NotiSystem.StartCoroutine (MoveUpSentences());
 		yield return NotiSystem.StartCoroutine (TextBoxStartUp(TextBox));
-		TextBox.GetComponent<Text> ().text = text;
+		yield return NotiSystem.StartCoroutine(NotificationSystem.FadeInText(TextBox.GetComponent<Text> (),text));
 		yield return null;
 	}
 
@@ -43,6 +43,14 @@ public class NotificationSystem : MonoBehaviour {
 		TextBox.transform.parent = Notification.transform;
 		TextBox.AddComponent<Text> ();
 		return TextBox;
+	}
+
+	public static IEnumerator FadeInText(Text TextBox,string text){
+		TextBox.text = text;
+		while(TextBox.color.a < 1){
+			TextBox.color = new Color (TextBox.color.r,TextBox.color.g,TextBox.color.b,TextBox.color.a + (Time.deltaTime/0.1f));
+				yield return null;
+		}
 	}
 
 	public static IEnumerator MoveUpSentences(){
@@ -74,6 +82,7 @@ public class NotificationSystem : MonoBehaviour {
 		TextComponent.alignment = TextAnchor.MiddleRight;
 		TextComponent.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
 		TextComponent.fontSize = (int)(ScreenRatio * 10);
+		TextComponent.color = new Color (TextComponent.color.r,TextComponent.color.g,TextComponent.color.b,0);
 		Sentences.Add (TextBox.GetComponent<RectTransform>());
 		yield return null;
 	}

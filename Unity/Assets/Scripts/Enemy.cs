@@ -25,10 +25,12 @@ public class Enemy : MonoBehaviour
 	}
 
 	private static ReticleSystem PlayerReticle;
+	private static Airframe Frame;
 
 	void Awake(){
 //		material.SetColor("_EmissionColor", new Color(1,0,0));
 		PlayerReticle = GameObject.Find("ReticleImage").GetComponent<ReticleSystem>();
+		Frame = GameObject.Find ("eurofighter").GetComponent<Airframe> ();
 		Tgt = GameObject.Find ("eurofighter");
 	}
 
@@ -81,6 +83,7 @@ public class Enemy : MonoBehaviour
 		yield return null;
 		while(true){
 			if (CryBox.isPlaying == false) {
+				Frame.StartCoroutine (NotificationSystem.UpdateNotification(gameObject.name + "を撃破しました！"));
 				Destroy (gameObject);
 			} else {
 //				gameObject.

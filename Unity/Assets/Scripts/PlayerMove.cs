@@ -53,6 +53,14 @@ public class PlayerMove : MonoBehaviour
 		}
 	}
 
+	private IEnumerator AutoMove(){
+		
+		while(true){
+			MoveForward ();
+			yield return null;
+		}
+	}
+
 	private void MoveForward ()
 	{
 		transform.Translate (Vector3.forward * Time.deltaTime * Speed);
@@ -65,13 +73,13 @@ public class PlayerMove : MonoBehaviour
 	private IEnumerator ChangeSpeed ()
 	{
 		while (!GameManager.GameOver) {
-			if (AcceleOrDeceleDown()) {
+			if (isKeyDown()) {
 				if (isAccele()) {
 					FuelInjector(Accele);
 				} else {
 					FuelInjector(Decele);
 				}
-			} else if (AcceleOrDeceleUp()) {
+			} else if (isKeyUp()) {
 				AfterBurner (Keep);
 				StartCoroutine (CameraSystem.CameraPosReset ());
 			}
@@ -79,11 +87,11 @@ public class PlayerMove : MonoBehaviour
 		}
 	}
 
-	private bool AcceleOrDeceleUp(){
+	private bool isKeyUp(){
 		return Input.GetKeyUp (KeyCode.JoystickButton13) || Input.GetKeyUp (KeyCode.JoystickButton14) || Input.GetKeyUp (KeyCode.Alpha1) || Input.GetKeyUp (KeyCode.Alpha2);
 	}
 
-	private bool AcceleOrDeceleDown(){
+	private bool isKeyDown(){
 		return Input.GetKey (KeyCode.JoystickButton13) || Input.GetKey (KeyCode.JoystickButton14) || Input.GetKey (KeyCode.Alpha1) || Input.GetKey (KeyCode.Alpha2);
 	}
 

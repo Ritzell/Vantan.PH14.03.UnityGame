@@ -76,17 +76,20 @@ public class EnemyAttack : MonoBehaviour
 
 	private void StraightMissile ()
 	{
-		StartCoroutine (Factory.NewEnemyMissile (transform.position).GetComponent<MissileSystem> ().Straight (Target,false));
+		GameObject Missile = Factory.NewEnemyMissile (transform.position);
+		Missile.GetComponent<MissileSystem>().StartCoroutine (Missile.GetComponent<MissileSystem> ().Straight (Target,false));
 	}
 
 	private void StraightMissile (Vector3 Rot)
 	{
-		StartCoroutine (Factory.NewEnemyMissile (transform.position,Rot).GetComponent<MissileSystem> ().Straight (false));
+		GameObject Missile = Factory.NewEnemyMissile (transform.position,Rot);
+		Missile.GetComponent<MissileSystem>().StartCoroutine (Missile.GetComponent<MissileSystem> ().Straight (Target));
 	}
 
 	private void TrackingMissile ()
 	{
-		StartCoroutine (Factory.NewEnemyMissile (transform.position).GetComponent<MissileSystem> ().TrackingForPlayer (Target));
+		GameObject Missile = Factory.NewEnemyMissile (transform.position);
+		Missile.GetComponent<MissileSystem>().StartCoroutine (Missile.GetComponent<MissileSystem> ().TrackingForPlayer (Target));
 	}
 
 	private IEnumerator OmniDirectionAttack(){

@@ -4,14 +4,12 @@ using System.Collections;
 public class CameraSystem : MonoBehaviour
 {
 	private static GameObject MyCamera;
-
-	private static float NormalZ;
-	private static float NormalY;
 	private static float MaxNormalZ_Error;
 	private static float MinNormalZ_Error;
 	private static Vector3 LookBehindPos;
 	private static Vector3 LookFrontPos;
 	private static GameObject AirPlain;
+
 	private static bool _lookBehind = false;
 	public  static bool LookBehind {
 		set{
@@ -60,18 +58,16 @@ public class CameraSystem : MonoBehaviour
 	{
 		MyCamera = GameObject.Find ("Main Camera");
 		AirPlain = GameObject.Find ("eurofighter");
-		NormalZ = GameObject.Find ("Main Camera").transform.localPosition.z;
-		NormalY = GameObject.Find ("Main Camera").transform.localPosition.y;
-		MaxNormalZ_Error = NormalZ + 0.1f;
-		MinNormalZ_Error = NormalZ - 0.1f;
 	}
 
 	void Start ()
 	{
 		StartCoroutine (CameraChangePosition ());
 		StartCoroutine (CameraModeChange ());
-		LookBehindPos = new Vector3 (0, 5.8f, 30.5f);//GameObject.Find ("CameraPos1").transform.localPosition;
 		LookFrontPos = MyCamera.transform.localPosition;
+		LookBehindPos = new Vector3 (0,  LookFrontPos.y-9.2f, LookFrontPos.z+80.5f);//GameObject.Find ("CameraPos1").transform.localPosition;
+		MaxNormalZ_Error = LookFrontPos.z + 0.1f;
+		MinNormalZ_Error = LookFrontPos.z - 0.1f;
 	}
 
 	public IEnumerator LookTgt (GameObject Tgt)
@@ -137,7 +133,7 @@ public class CameraSystem : MonoBehaviour
 
 	private static Vector3 ChangePos (Vector3 NowPos)
 	{
-		if (NowPos.z <= NormalZ + 7 && NowPos.x >= NormalZ - 7) {
+		if (!LookBehind) {
 			LookBehind = true;
 			return LookBehindPos;
 		} else {
@@ -151,13 +147,13 @@ public class CameraSystem : MonoBehaviour
 		if (LookBehind) {
 			yield break;
 		}
-		float dis = MyCamera.transform.localPosition.z - (NormalZ);
+		float dis = MyCamera.transform.localPosition.z - (LookFrontPos.z);
 		while ((MyCamera.transform.localPosition.z >= MaxNormalZ_Error || MyCamera.transform.localPosition.z <= MinNormalZ_Error) && !stopReset) {
 			MyCamera.transform.Translate (0, 0, -0.05f * System.Math.Sign (dis));
 			yield return null;
 		}
 		if (MyCamera.transform.localPosition.z <= MaxNormalZ_Error && MyCamera.transform.localPosition.z >= MinNormalZ_Error) {
-			MyCamera.transform.localPosition = new Vector3 (0, NormalY, NormalZ);
+			MyCamera.transform.localPosition = new Vector3 (0, LookFrontPos.y, LookFrontPos.z);
 		}
 		yield return null;
 	}
@@ -171,12 +167,11 @@ public class CameraSystem : MonoBehaviour
 			SwayTime += Time.deltaTime;
 
 			Vector3 Amplitude = new Vector3 (Random.Range (-5, 5), Random.Range (-5, 5), 0);
-			MyCamera.transform.localPosition = new Vector3 (NormalPos.x + Amplitude.x, NormalPos.y + Amplitude.y, NormalPos.z);
+			MyCamera.transform.localPosition = new Vector3 (NormalPos.x + Amplitude.x, NormalPos.y + Amplitude.y,MyCamera.transform.localPosition.z);
 			yield return new WaitForSeconds (0.01f);
-
 			yield return null;
 		}
-		MyCamera.transform.localPosition = NormalPos;
+		MyCamera.transform.localPosition = LookBehind ? LookBehindPos : NormalPos;
 		yield return null;
 	}
 
@@ -186,8 +181,7 @@ public class CameraSystem : MonoBehaviour
 			return;
 		}
 		Vector3 CameraPos = MyCamera.transform.localPosition;
-		Vector3 BehindPos = GameObject.Find ("CameraPos1").transform.localPosition;
-		MyCamera.transform.localPosition = new Vector3 (CameraPos.x, CameraPos.y, Mathf.Clamp (CameraPos.z + -0.05f * (value / (value / value)), NormalZ - 7, NormalZ + 7));
+		MyCamera.transform.localPosition = new Vector3 (CameraPos.x, CameraPos.y, Mathf.Clamp (CameraPos.z + -0.05f * (value / (value / value)), LookFrontPos.z - 7, LookFrontPos.z + 7));
 	}
 
 }

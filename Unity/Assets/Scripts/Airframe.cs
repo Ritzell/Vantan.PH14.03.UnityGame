@@ -11,25 +11,28 @@ public class Airframe : MonoBehaviour
 	[SerializeField]
 	private AudioSource AlertAudio;
 
-	void Awake(){
+	void Awake ()
+	{
 		Manager = GameObject.Find ("GameManager").GetComponent<GameManager> ();
 	}
 
-	void Start(){
+	void Start ()
+	{
+		StartCoroutine (NotificationSystem.UpdateNotification ("戦闘を開始します"));
 		StartCoroutine (ObstacleWarning ());
 	}
 
 	public IEnumerator Reload (Vector3 StartPos, Quaternion StartRot)
 	{
 		yield return StartCoroutine (Manager.ReloadMissile (StartPos, StartRot));
-		yield return StartCoroutine (LightingControlSystem.TurningOn(UIType.Missile));
+		yield return StartCoroutine (LightingControlSystem.TurningOn (UIType.Missile));
 	}
 
 	private void OnTriggerEnter (Collider Col)
 	{
 		//HP -= 1;
 		StartCoroutine (LightingControlSystem.TurningOff (UIType.HP));
-		StartCoroutine( CameraSystem.SwayCamera ());
+		StartCoroutine (CameraSystem.SwayCamera ());
 		PlayerSound.HitSound ();
 		if (HP <= 0 || Col.gameObject.layer == 10) {
 			Instantiate (Resources.Load ("prefabs/Explosion"), transform.position, Quaternion.identity);
@@ -37,12 +40,13 @@ public class Airframe : MonoBehaviour
 		}
 	}
 
-	private IEnumerator Alert(){
+	private IEnumerator Alert ()
+	{
 		int Sign = 1;
 		AlertAudio.Play ();
 		while (true) {
-			AlertUI.color = new Color (1, 1, 1, AlertUI.color.a + (1.5f*Time.deltaTime*Sign));
-			if((AlertUI.color.a > 0.9f && Sign == 1) || (AlertUI.color.a < 0.1f && Sign == -1)){
+			AlertUI.color = new Color (1, 1, 1, AlertUI.color.a + (1.5f * Time.deltaTime * Sign));
+			if ((AlertUI.color.a > 0.9f && Sign == 1) || (AlertUI.color.a < 0.1f && Sign == -1)) {
 				Sign *= -1;
 
 			}
@@ -56,7 +60,9 @@ public class Airframe : MonoBehaviour
 	/// </summary>
 	/// <returns>The warning.</returns>
 	private static Coroutine alert;
-	private IEnumerator ObstacleWarning(){
+
+	private IEnumerator ObstacleWarning ()
+	{
 		RaycastHit hit;
 		var isAlert = false;
 		while (true) {
@@ -65,9 +71,9 @@ public class Airframe : MonoBehaviour
 				alert = StartCoroutine (Alert ());
 				isAlert = true;
 				yield return null;
-			} else if(isAlert && !Physics.Raycast (ray, out hit, 1000, 1 << 10)){
+			} else if (isAlert && !Physics.Raycast (ray, out hit, 1000, 1 << 10)) {
 				AlertAudio.Stop ();
-				AlertUI.color = new Color (1,1,1,0);
+				AlertUI.color = new Color (1, 1, 1, 0);
 				StopCoroutine (alert);
 				isAlert = false;
 				yield return null;
@@ -78,10 +84,10 @@ public class Airframe : MonoBehaviour
 
 	private IEnumerator Deth ()
 	{
-		if(GameManager.GameOver){
+		if (GameManager.GameOver) {
 			yield break;
 		}
 		Destroy (gameObject);
-		yield return StartCoroutine( GameManager.GameEnd (false));
+		yield return StartCoroutine (GameManager.GameEnd (false));
 	}
 }

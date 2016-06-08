@@ -8,6 +8,8 @@ public class MissileSystem : MonoBehaviour
 	private AudioClip AudioClip1;
 	[SerializeField]
 	private AudioClip AudioClip2;
+	[SerializeField]
+	private AudioClip AudioClip3;
 
 	private AudioSource AudioS;
 	private float Speed;
@@ -37,6 +39,7 @@ public class MissileSystem : MonoBehaviour
 
 	void Awake ()
 	{
+		
 		AirFrame = GameObject.Find ("eurofighter").GetComponent<Airframe> ();
 		AudioS = gameObject.GetComponent<AudioSource> ();
 		GameManager.EnemyMissiles = 1;
@@ -49,14 +52,19 @@ public class MissileSystem : MonoBehaviour
 	void Start ()
 	{
 		if (gameObject.layer == 12) {
-
+			AudioS.volume = 0.65f;
+			AudioS.spatialBlend = 1;
+			AudioS.maxDistance = 300f;
+			AudioS.clip = AudioClip3;
+			AudioS.loop = true;
+			AudioS.Play ();
 			ReticleSystem.AddMissiles.Add (gameObject);
 			Speed = 700;//700
 			MissileRader.AddOutRangeMissile.Add (gameObject.transform);
 		} else {
 			Speed = 850;
+			AudioS.clip = AudioClip1;
 		}
-		AudioS.clip = AudioClip1;
 		StartPos = transform.localPosition;
 		StartRot = transform.localRotation;
 	}
@@ -196,9 +204,6 @@ public class MissileSystem : MonoBehaviour
 
 	private IEnumerator MoveForward ()
 	{
-		if(GameManager.GameOver){
-		Debug.Log ("やってるやってる");
-		}
 		transform.Translate (Vector3.forward * Time.deltaTime * Speed);
 		yield return null;
 	}
@@ -243,6 +248,7 @@ public class MissileSystem : MonoBehaviour
 			}
 		}
 		yield return new WaitForSeconds (0.5f);
+		StopAllCoroutines ();
 		Destroy (gameObject);
 		yield return null;
 	}
