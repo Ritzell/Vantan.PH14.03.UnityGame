@@ -40,16 +40,12 @@ public class MissileRader : MonoBehaviour {
 	private IEnumerator OutRaderMissileDistance(){
 		while (!GameManager.GameOver) {
 			yield return StartCoroutine(MissileAddList(true));
-			for(int i = 0; i < outRangeMissiles.Count-1; i++){
-//				if (OutRangeMissiles [i] != null) {
+			for(int i = 0; i <= outRangeMissiles.Count-1; i++){
 					if (Mathf.Abs (Vector3.Distance (outRangeMissiles [i].position, Player.position)) <= 2000) {
 						ToInRange (outRangeMissiles [i]);
 						yield return null;
 					}
-//				} else {
-//					OutRangeMissiles.RemoveAt(i);
-//				}
-				yield return null;
+
 			}
 			yield return null;
 		}
@@ -59,19 +55,11 @@ public class MissileRader : MonoBehaviour {
 		Vector2 RaderPos = new Vector2 (transform.position.x, transform.position.y);
 		while(!GameManager.GameOver){
 			yield return StartCoroutine(MissileAddList(false));
-			for(int i = 0; i < InRangeMissiles.Count-1; i++){
-				float distance;
-//				try{
-					distance = Mathf.Abs (Vector2.Distance (new Vector2 (InRangeMissiles [i].position.x, InRangeMissiles [i].position.y), RaderPos));
-//				}catch{
-//					InRangeMissiles.Remove (InRangeMissiles[i]);
-//					continue;
-//				}
+			for(int i = 0; i <= InRangeMissiles.Count-1; i++){
+				float	distance = Mathf.Abs (Vector2.Distance (new Vector2 (InRangeMissiles [i].position.x, InRangeMissiles [i].position.y), RaderPos));
 				if (distance > RaderPos.x) {
 					ToOutRange (InRangeMissiles [i]);
-					yield return null;
 				}
-				yield return null;
 			}
 			yield return null;
 		}
@@ -103,12 +91,8 @@ public class MissileRader : MonoBehaviour {
 		GameObject MissilePoint = GameObject.Find (Missile.name + "Point");
 		if(OutRangeMissiles.Contains(Missile)){
 			OutRangeMissiles.Remove (Missile);
-		}else{
-			try{
+		}else if(InRangeMissiles.Contains(MissilePoint.transform)){
 				InRangeMissiles.Remove (MissilePoint.transform);
-			}catch{
-				Debug.Log (MissilePoint);
-			}
 		}
 		Destroy (MissilePoint);
 	}

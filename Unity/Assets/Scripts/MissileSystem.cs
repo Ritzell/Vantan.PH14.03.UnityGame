@@ -232,7 +232,6 @@ public class MissileSystem : MonoBehaviour
 		StopAllCoroutines ();
 		Instantiate (Resources.Load ("prefabs/Explosion"), transform.position, Quaternion.identity);
 		MissileRader.DestroyMissile (gameObject.transform);
-		EstimationSystem.RemoveList (gameObject);
 		GameManager.EnemyMissiles = -1;
 		StartCoroutine (Deth ());
 		yield return null;
