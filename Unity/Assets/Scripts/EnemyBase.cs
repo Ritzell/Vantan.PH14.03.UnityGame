@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class EnemyBase : MonoBehaviour
 {
+	[SerializeField]
 	private Material material;
 
 	private const int TowerA = 0;
@@ -41,7 +42,9 @@ public class EnemyBase : MonoBehaviour
 
 	void Start(){
 //		StartCoroutine (ChangeTarget ());
+		//material.color = Color.gray;
 		StartCoroutine (Breathing());
+		material.color = new Color (0.3f, 0.3f, 0.3f, 1);
 	}
 
 	void OnTriggerEnter (Collider Col)

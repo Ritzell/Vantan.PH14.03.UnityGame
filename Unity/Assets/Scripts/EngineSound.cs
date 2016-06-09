@@ -16,25 +16,10 @@ public class EngineSound : MonoBehaviour
 		AudioBox = GetComponent<AudioSource> ();
 	}
 
-	void Start ()
-	{
-		//AudioBox.pitch = AudioBox.pitch;
-	}
-//
-//	public IEnumerator AnimationUpPitch(){
-//		while(AudioBox.pitch < 3){
-//			AudioBox.pitch += 0.8f * Time.deltaTime;
-//		yield return null;
-//		}
-//	}
-
 	public float Pitch {
 		set {
 			float v = (value - engineConfig.normalSpeed) * engineConfig.pitchUpSpeed;
-			try {
-				ChangePitch (v);
-			} catch {
-			}
+			ChangePitch (v);
 		}get {
 			return AudioBox.pitch;
 		}
