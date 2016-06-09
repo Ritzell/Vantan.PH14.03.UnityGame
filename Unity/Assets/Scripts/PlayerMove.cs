@@ -24,7 +24,7 @@ public class PlayerMove : MonoBehaviour
 			return speed;
 		}
 	}
-
+		
 	void Awake(){
 		SpeedLines = LoadSprite ("speedLineAll");
 		Glow = GameObject.Find ("Glow").GetComponent<ParticleSystem> ();
@@ -34,7 +34,22 @@ public class PlayerMove : MonoBehaviour
 		EngineS = GameObject.Find ("engine").GetComponent<EngineSound> ();
 	}
 
-	void Start ()
+	void Start(){
+		StartCoroutine (StopAnimator(gameObject.GetComponent<Animator>()));
+	}
+
+	private IEnumerator StopAnimator(Animator anim){
+		float time = 0f;
+		while(time < 8.9f){
+			time += Time.deltaTime;
+			yield return null;
+		}
+		anim.enabled = false;
+		Manual ();
+		yield return null;
+	}
+
+	public void Manual ()
 	{
 		StartCoroutine (Move ());
 		StartCoroutine (ChangeSpeed ());
@@ -143,6 +158,7 @@ public class PlayerMove : MonoBehaviour
 		transform.Rotate (AddRot.x / 1.5f, 0f, AddRot.z * 2f);
 	}
 	private Vector3 InputController(){
+		Debug.Log (new Vector3 (Input.GetAxis ("Vertical") * 3, 0, Input.GetAxis ("Horizontal") * 2));
 		return new Vector3 (Input.GetAxis ("Vertical") * 3, 0, Input.GetAxis ("Horizontal") * 2);
 	}
 }

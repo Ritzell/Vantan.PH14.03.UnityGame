@@ -15,6 +15,7 @@ public class EnemyBase : MonoBehaviour
 	private static List<Transform> Towers = new List<Transform> ();
 	private static List<EnemyAttack> Childs = new List<EnemyAttack>();
 	private static int RestChildren = 0;
+	private static int HP = 6;
 
 	public static int Rest {
 		set {
@@ -45,7 +46,8 @@ public class EnemyBase : MonoBehaviour
 
 	void OnTriggerEnter (Collider Col)
 	{
-        if (RestChildren <= 0)
+		HP--;
+		if (RestChildren <= 0 && HP == 0)
         {
 			GameObject.Find ("engine").GetComponent<AudioSource> ().Stop ();
 			StopAllCoroutines ();

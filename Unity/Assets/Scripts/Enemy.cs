@@ -10,6 +10,7 @@ public class Enemy : MonoBehaviour
 
 	private Material Emission;
 	private bool isLife = true;
+	private int HP = 4;
 
 	/// <summary>
 	/// フレアによる回避はミサイルのスクリプトで行う
@@ -45,11 +46,13 @@ public class Enemy : MonoBehaviour
 		if (!isLife) {
 			return;
 		}
-		isLife = false;
-//		Announce.text = "";
-		EnemyBase.Rest = EnemyBase.Rest - 1;
-		PlayerReticle.DestoroyLockOnTgt (gameObject);
-		 StartCoroutine (Deth ());
+		HP--;
+		if (HP <= 0) {
+			isLife = false;
+			EnemyBase.Rest = EnemyBase.Rest - 1;
+			PlayerReticle.DestoroyLockOnTgt (gameObject);
+			StartCoroutine (Deth ());
+		}
 	}
 
 	private IEnumerator Breathing(){
@@ -78,7 +81,7 @@ public class Enemy : MonoBehaviour
 	}
 
 	private IEnumerator Deth(){
-		CryBox.pitch = Random.Range (0.65f,1.1f);
+		CryBox.pitch = Random.Range (0.65f,1.3f);
 		CryBox.Play ();
 		yield return null;
 		while(true){

@@ -18,8 +18,15 @@ public class EngineSound : MonoBehaviour
 
 	void Start ()
 	{
-		AudioBox.pitch = AudioBox.pitch;
+		//AudioBox.pitch = AudioBox.pitch;
 	}
+//
+//	public IEnumerator AnimationUpPitch(){
+//		while(AudioBox.pitch < 3){
+//			AudioBox.pitch += 0.8f * Time.deltaTime;
+//		yield return null;
+//		}
+//	}
 
 	public float Pitch {
 		set {

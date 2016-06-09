@@ -13,7 +13,7 @@ public class MissileSystem : MonoBehaviour
 
 	private AudioSource AudioS;
 	private float Speed;
-	private float LifeTime = 40;
+	private float LifeTime = 25;
 	private static Airframe AirFrame;
 
 	private Vector3 _startPos;
@@ -100,10 +100,7 @@ public class MissileSystem : MonoBehaviour
 	{
 		ShootReady (isReload);
 		while (tgt != null) {
-			try{
 			StartCoroutine (GetAimingPlayer (tgt));
-			}catch{
-			}
 			StartCoroutine (MoveForward());
 			yield return null;
 		}
@@ -121,6 +118,7 @@ public class MissileSystem : MonoBehaviour
 			while (Distance (tgt) >= 40) {
 				yield return StartCoroutine (ErrorTracking (tgt, RandomError));
 			}
+			RefreshSelfBreak ();
 			while (true) {
 				yield return StartCoroutine (MoveForward ());
 			}

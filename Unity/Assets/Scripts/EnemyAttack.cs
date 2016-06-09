@@ -29,31 +29,29 @@ public class EnemyAttack : MonoBehaviour
 		Factory = GameObject.Find ("GameManager").GetComponent<MissileFactory> ();
 	}
 
-	void Start(){
+	public void Start(){
 		StartCoroutine (Shoot ());
 //		StartCoroutine (SpecialAttack ());
 		Target = Player;
 	}
 
 
-	private IEnumerator SpecialAttack(){
-		yield return new WaitForSeconds (10);
-		while(GameManager.RestTime.Seconds > 30){
-			yield return null;
-		}
-		StartCoroutine (OmniDirectionAttack());
-		yield return null;
-	}
+//	private IEnumerator SpecialAttack(){
+//		yield return new WaitForSeconds (10);
+//		while(GameManager.RestTime.Seconds > 30){
+//			yield return null;
+//		}
+//		StartCoroutine (OmniDirectionAttack());
+//		yield return null;
+//	}
 
 	private IEnumerator Shoot ()
 	{
 		float timer = 0f;
 		const float delay = 1.5f;
-//		StartCoroutine (OmniDirectionAttack());
 		while (!GameManager.GameOver ) {
 			timer += Time.deltaTime;
 			if (isShoot(timer,delay)) {
-				//Debug.Log (GameManager.EnemyMissiles);
 				ChooseAction ();
 				timer = 0;
 			}
