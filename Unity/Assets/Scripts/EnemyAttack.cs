@@ -25,14 +25,14 @@ public class EnemyAttack : MonoBehaviour
 
 	void Awake ()
 	{
-		Player = GameObject.Find ("AirPlain").transform;
+		Target = GameObject.Find ("eurofighter").transform;
 		Factory = GameObject.Find ("GameManager").GetComponent<MissileFactory> ();
 	}
 
 	public void Start(){
-		StartCoroutine (Shoot ());
+//		StartCoroutine (Attack ());
 //		StartCoroutine (SpecialAttack ());
-		Target = Player;
+//		Target = Player;
 	}
 
 
@@ -45,7 +45,7 @@ public class EnemyAttack : MonoBehaviour
 //		yield return null;
 //	}
 
-	private IEnumerator Shoot ()
+	public IEnumerator Attack ()
 	{
 		float timer = 0f;
 		const float delay = 1.5f;

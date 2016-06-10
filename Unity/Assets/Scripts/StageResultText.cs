@@ -10,8 +10,9 @@ public class StageResultText : MonoBehaviour {
 	void Awake () {
 		ForwardText = transform.FindChild ("ResultForward").GetComponent<Text>();
 		BackText = transform.FindChild ("ResultBack").GetComponent<Text>();
-		Result = GameObject.Find ("ResultText").GetComponent<StageResultText> ();
+		Result = GameObject.FindObjectOfType<StageResultText> ();
 	}
+		
 	
 	public static void DisplayResult(bool Victory){
 		Result.StartCoroutine(Result.ChangeColor(Victory));

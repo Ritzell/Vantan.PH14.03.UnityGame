@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using System;
+using UnityEngine.SceneManagement;
 
 public class Record : MonoBehaviour {
 	private static Text BattleIssue;
@@ -27,8 +28,20 @@ public class Record : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Start () {
+		Time.timeScale = 1;
 		ElapsedTime =  new TimeSpan (0, 10, 0) - GameManager.RestTime;
+		StartCoroutine (NextScene ());
 		ResultEntry ();
+	}
+
+	private IEnumerator NextScene(){
+		while(true){
+			if (Input.GetKeyDown (KeyCode.Space)) {
+				SceneManager.LoadScene ("title");
+				GameObject.Find ("GameManager").GetComponent<AudioSource> ().Stop ();
+			}
+			yield return null;
+		}
 	}
 
 	private static void ResultEntry(){

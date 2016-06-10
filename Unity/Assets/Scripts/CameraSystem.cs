@@ -1,14 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityStandardAssets.ImageEffects;
 
 public class CameraSystem : MonoBehaviour
 {
 	private static GameObject MyCamera;
-	private static float MaxNormalZ_Error;
-	private static float MinNormalZ_Error;
+	/// <summary>
+	/// x is Min, y is Max
+	/// </summary>
+	private static Vector2 CameraZErrorRange = new Vector2(0,0);
 	private static Vector3 LookBehindPos;
 	private static Vector3 LookFrontPos;
 	private static GameObject AirPlain;
+	private static Bloom CameraBloom;
 
 	private static bool _lookBehind = false;
 	public  static bool LookBehind {
@@ -58,6 +62,7 @@ public class CameraSystem : MonoBehaviour
 	{
 		MyCamera = GameObject.Find ("Main Camera");
 		AirPlain = GameObject.Find ("eurofighter");
+		CameraBloom = gameObject.GetComponent<Bloom> ();
 	}
 
 	void Start ()
@@ -66,8 +71,8 @@ public class CameraSystem : MonoBehaviour
 		StartCoroutine (CameraModeChange ());
 		LookFrontPos = MyCamera.transform.localPosition;
 		LookBehindPos = new Vector3 (0,  LookFrontPos.y-9.2f, LookFrontPos.z+80.5f);//GameObject.Find ("CameraPos1").transform.localPosition;
-		MaxNormalZ_Error = LookFrontPos.z + 0.1f;
-		MinNormalZ_Error = LookFrontPos.z - 0.1f;
+		CameraZErrorRange.y = LookFrontPos.z + 0.1f;
+		CameraZErrorRange.x = LookFrontPos.z - 0.1f;
 	}
 
 	public IEnumerator LookTgt (GameObject Tgt)
@@ -148,11 +153,11 @@ public class CameraSystem : MonoBehaviour
 			yield break;
 		}
 		float dis = MyCamera.transform.localPosition.z - (LookFrontPos.z);
-		while ((MyCamera.transform.localPosition.z >= MaxNormalZ_Error || MyCamera.transform.localPosition.z <= MinNormalZ_Error) && !stopReset) {
+		while ((MyCamera.transform.localPosition.z >= CameraZErrorRange.y || MyCamera.transform.localPosition.z <= CameraZErrorRange.x) && !stopReset) {
 			MyCamera.transform.Translate (0, 0, -0.05f * System.Math.Sign (dis));
 			yield return null;
 		}
-		if (MyCamera.transform.localPosition.z <= MaxNormalZ_Error && MyCamera.transform.localPosition.z >= MinNormalZ_Error) {
+		if (MyCamera.transform.localPosition.z <= CameraZErrorRange.y && MyCamera.transform.localPosition.z >= CameraZErrorRange.x) {
 			MyCamera.transform.localPosition = new Vector3 (0, LookFrontPos.y, LookFrontPos.z);
 		}
 		yield return null;
@@ -172,6 +177,59 @@ public class CameraSystem : MonoBehaviour
 			yield return null;
 		}
 		MyCamera.transform.localPosition = LookBehind ? LookBehindPos : NormalPos;
+		yield return null;
+	}
+
+	public IEnumerator Flash(float FlashPower,bool isOut){
+		float StartThreshold = CameraBloom.bloomThreshold;
+		while (CameraBloom.bloomThreshold > 0) {
+			CameraBloom.bloomThreshold -= Time.deltaTime * (int)(1 / Time.timeScale);
+			CameraBloom.bloomIntensity += Time.deltaTime * FlashPower * (int)(1 / Time.timeScale);
+			yield return null;
+		}
+		if(isOut){
+			while (CameraBloom.bloomThreshold < StartThreshold) {
+				CameraBloom.bloomThreshold += Time.deltaTime * (int)(1 / Time.timeScale);
+				CameraBloom.bloomIntensity -= Time.deltaTime * FlashPower * (int)(1 / Time.timeScale);
+				yield return null;
+			}
+		}
+		yield return null;
+	}
+
+	public IEnumerator Flash(float FlashPower,bool isOut,float FlashSpeed){
+		float StartThreshold = CameraBloom.bloomThreshold;
+		while (CameraBloom.bloomThreshold > 0) {
+			CameraBloom.bloomThreshold -= Time.deltaTime * (int)(1 / Time.timeScale) * FlashSpeed;
+			CameraBloom.bloomIntensity += Time.deltaTime * FlashPower * (int)(1 / Time.timeScale) * FlashSpeed;
+			yield return null;
+		}
+		if(isOut){
+			while (CameraBloom.bloomThreshold < StartThreshold) {
+				CameraBloom.bloomThreshold += Time.deltaTime * (int)(1 / Time.timeScale)*FlashSpeed;
+				CameraBloom.bloomIntensity -= Time.deltaTime * FlashPower * (int)(1 / Time.timeScale)*FlashSpeed;
+				yield return null;
+			}
+		}
+		yield return null;
+	}
+
+	public IEnumerator Flash(float FlashPower,bool isOut,float FlashSpeed,GameObject sync){
+		float StartThreshold = CameraBloom.bloomThreshold;
+		while (CameraBloom.bloomThreshold > 0) {
+			CameraBloom.bloomThreshold -= Time.deltaTime * (int)(1 / Time.timeScale) * FlashSpeed;
+			CameraBloom.bloomIntensity += Time.deltaTime * FlashPower * (int)(1 / Time.timeScale) * FlashSpeed;
+			yield return null;
+		}
+		while(isOut && sync != null){
+			yield return null;
+		}
+		while (CameraBloom.bloomThreshold < StartThreshold) {
+			CameraBloom.bloomThreshold += Time.deltaTime * (int)(1 / Time.timeScale) * FlashSpeed;
+			CameraBloom.bloomIntensity -= Time.deltaTime * FlashPower * (int)(1 / Time.timeScale) * FlashSpeed;
+			yield return null;
+		}
+		CameraBloom.bloomThreshold = StartThreshold;
 		yield return null;
 	}
 

@@ -14,7 +14,7 @@ public class EnemyBase : MonoBehaviour
 	private const int TowerE = 4;
 	private const int TowerF = 5;
 	private static List<Transform> Towers = new List<Transform> ();
-	private static List<EnemyAttack> Childs = new List<EnemyAttack>();
+	private static List<EnemyAttack> Childs = new List<EnemyAttack> ();
 	private static int RestChildren = 0;
 	private static int HP = 6;
 
@@ -26,13 +26,14 @@ public class EnemyBase : MonoBehaviour
 		}
 	}
 
-	void Awake(){
-		Towers.Add (GameObject.Find("TowerA").transform);
-		Towers.Add (GameObject.Find("TowerB").transform);
-		Towers.Add (GameObject.Find("TowerC").transform);
-		Towers.Add (GameObject.Find("TowerD").transform);
-		Towers.Add (GameObject.Find("TowerE").transform);
-		Towers.Add (GameObject.Find("TowerF").transform);
+	void Awake ()
+	{
+		Towers.Add (GameObject.Find ("TowerA").transform);
+		Towers.Add (GameObject.Find ("TowerB").transform);
+		Towers.Add (GameObject.Find ("TowerC").transform);
+		Towers.Add (GameObject.Find ("TowerD").transform);
+		Towers.Add (GameObject.Find ("TowerE").transform);
+		Towers.Add (GameObject.Find ("TowerF").transform);
 
 		Childs.Add (GameObject.Find ("ChildEnemyA").GetComponent<EnemyAttack> ());
 		Childs.Add (GameObject.Find ("ChildEnemyB").GetComponent<EnemyAttack> ());
@@ -40,43 +41,54 @@ public class EnemyBase : MonoBehaviour
 
 	}
 
-	void Start(){
+	void Start ()
+	{
 //		StartCoroutine (ChangeTarget ());
 		//material.color = Color.gray;
-		StartCoroutine (Breathing());
+		StartCoroutine (Breathing ());
 		material.color = new Color (0.3f, 0.3f, 0.3f, 1);
+	}
+
+
+	public static IEnumerator PlayerInArea(){
+		yield return new WaitForSeconds (5f);
+		foreach(EnemyAttack Enemy in GameObject.FindObjectsOfType<EnemyAttack>()){
+			Enemy.StartCoroutine (Enemy.Attack ());
+		}
+		GameObject.FindObjectOfType<NotificationSystem>().StartCoroutine(NotificationSystem.UpdateNotification("敵の攻撃が開始しました"));
+		yield return null;
 	}
 
 	void OnTriggerEnter (Collider Col)
 	{
 		HP--;
-		if (RestChildren <= 0 && HP == 0)
-        {
+		if (RestChildren <= 0 && HP == 0) {
 			GameObject.Find ("engine").GetComponent<AudioSource> ().Stop ();
 			StopAllCoroutines ();
-            StartCoroutine(GameManager.GameEnd(true));
-            //Destroy(gameObject);
-        }
+			StartCoroutine (GameManager.GameEnd (true));
+			//Destroy(gameObject);
+		}
 	}
 
-	private IEnumerator Breathing(){
+	private IEnumerator Breathing ()
+	{
 		Material material;
 		material = gameObject.GetComponent<Renderer> ().material;
-		material.EnableKeyword("_EMISSION");
-		Color MaterialMaxColor = material.GetColor("_EmissionColor");
-		float Turning = (MaterialMaxColor.r + MaterialMaxColor.g + MaterialMaxColor.b)/3;
-		while(true){
+		material.EnableKeyword ("_EMISSION");
+		Color MaterialMaxColor = material.GetColor ("_EmissionColor");
+		float Turning = (MaterialMaxColor.r + MaterialMaxColor.g + MaterialMaxColor.b) / 3;
+		while (true) {
 			
-			while (0.05f < (material.GetColor("_EmissionColor").r + material.GetColor("_EmissionColor").g + material.GetColor("_EmissionColor").b) / 3) {
+			while (0.05f < (material.GetColor ("_EmissionColor").r + material.GetColor ("_EmissionColor").g + material.GetColor ("_EmissionColor").b) / 3) {
 				Color mColor = material.GetColor ("_EmissionColor");
-				material.SetColor("_EmissionColor", new Color (mColor.r - (MaterialMaxColor.r * (Time.deltaTime))
+				material.SetColor ("_EmissionColor", new Color (mColor.r - (MaterialMaxColor.r * (Time.deltaTime))
 					, mColor.g - (MaterialMaxColor.g * (Time.deltaTime))
 					, mColor.b - (MaterialMaxColor.b * (Time.deltaTime))));
 				yield return null;
 			}
-			while (Turning > (material.GetColor("_EmissionColor").r + material.GetColor("_EmissionColor").g + material.GetColor("_EmissionColor").b) / 3) {
+			while (Turning > (material.GetColor ("_EmissionColor").r + material.GetColor ("_EmissionColor").g + material.GetColor ("_EmissionColor").b) / 3) {
 				Color mColor = material.GetColor ("_EmissionColor");
-				material.SetColor("_EmissionColor", new Color (mColor.r + (MaterialMaxColor.r * (Time.deltaTime))
+				material.SetColor ("_EmissionColor", new Color (mColor.r + (MaterialMaxColor.r * (Time.deltaTime))
 					, mColor.g + (MaterialMaxColor.g * (Time.deltaTime))
 					, mColor.b + (MaterialMaxColor.b * (Time.deltaTime))));
 				yield return null;
@@ -84,7 +96,8 @@ public class EnemyBase : MonoBehaviour
 		}
 	}
 
-	public static IEnumerator ChangeTarget(){
+	public static IEnumerator ChangeTarget ()
+	{
 		while (true) {
 			yield return new WaitForSeconds (3000);
 			Childs [0].Target = Towers [TowerA];

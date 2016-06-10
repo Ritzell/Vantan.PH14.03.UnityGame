@@ -3,20 +3,21 @@ using System.Collections;
 
 public class PlayerMove : MonoBehaviour
 {
+	[SerializeField]
+	private ReticleSystem Reticle;
+
 	private static float speed = 300f;
+	private static Transform AirFrame;
+	private static Quaternion DefaltRotation;
 	private const short Accele = +1;
 	private const short Decele = -1;
 	private const float MinSpeed = 200f;
 	private const float MaxSpeed = 690f;
 	private const float Keep = 0;
-
 	private static ParticleSystem Burner;
 	private static ParticleSystem Glow;
 	private static ParticleSystem.EmissionModule em;
 	private static ParticleSystem.MinMaxCurve rate;
-
-	private static Sprite[] SpeedLines;
-
 	private static EngineSound EngineS;
 
 	public static float Speed{
@@ -26,33 +27,36 @@ public class PlayerMove : MonoBehaviour
 	}
 		
 	void Awake(){
-		SpeedLines = LoadSprite ("speedLineAll");
 		Glow = GameObject.Find ("Glow").GetComponent<ParticleSystem> ();
 		Burner = GameObject.Find ("Afterburner").GetComponent<ParticleSystem> ();
 		em = Glow.emission;
 		rate = Glow.emission.rate;
-		EngineS = GameObject.Find ("engine").GetComponent<EngineSound> ();
+		EngineS = GameObject.FindObjectOfType<EngineSound> ();
+		AirFrame = GameObject.Find ("eurofighter").transform;
+		DefaltRotation = AirFrame.localRotation;
 	}
 
 	void Start(){
-		StartCoroutine (StopAnimator(gameObject.GetComponent<Animator>()));
+		StartCoroutine (StopAnimator(gameObject.GetComponent<Animator> ()));
 	}
 
 	private IEnumerator StopAnimator(Animator anim){
-		float time = 0f;
-		while(time < 8.9f){
-			time += Time.deltaTime;
+		for(float time = 0f; time < 8.9f; 	time += Time.deltaTime){
 			yield return null;
 		}
-		anim.enabled = false;
+		anim.Stop();
 		Manual ();
 		yield return null;
 	}
 
 	public void Manual ()
 	{
+		StartCoroutine (NotificationSystem.UpdateNotification ("操縦権を搭乗者に委託します"));
 		StartCoroutine (Move ());
 		StartCoroutine (ChangeSpeed ());
+		GameObject.FindObjectOfType<EnemyBase> ().StartCoroutine (EnemyBase.PlayerInArea ());
+		gameObject.GetComponent<Attack> ().EnableAttack ();
+		Reticle.EnableReticle ();
 	}
 
 	private static Sprite[] LoadSprite(string spriteName){
@@ -156,9 +160,9 @@ public class PlayerMove : MonoBehaviour
 
 	private void Rotation(Vector3 AddRot) {
 		transform.Rotate (AddRot.x / 1.5f, 0f, AddRot.z * 2f);
+		AirFrame.localRotation = new Quaternion (DefaltRotation.x + AddRot.x/50,DefaltRotation.y,DefaltRotation.z,DefaltRotation.w);
 	}
 	private Vector3 InputController(){
-		Debug.Log (new Vector3 (Input.GetAxis ("Vertical") * 3, 0, Input.GetAxis ("Horizontal") * 2));
 		return new Vector3 (Input.GetAxis ("Vertical") * 3, 0, Input.GetAxis ("Horizontal") * 2);
 	}
 }

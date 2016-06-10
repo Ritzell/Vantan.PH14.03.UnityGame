@@ -11,6 +11,7 @@ public class Airframe : MonoBehaviour
 	[SerializeField]
 	private AudioSource AlertAudio;
 
+
 	void Awake ()
 	{
 		Manager = GameObject.Find ("GameManager").GetComponent<GameManager> ();
@@ -30,7 +31,7 @@ public class Airframe : MonoBehaviour
 
 	private void OnTriggerEnter (Collider Col)
 	{
-		//HP -= 1;
+		HP -= 0;
 		StartCoroutine (LightingControlSystem.TurningOff (UIType.HP));
 		StartCoroutine (CameraSystem.SwayCamera ());
 		PlayerSound.HitSound ();

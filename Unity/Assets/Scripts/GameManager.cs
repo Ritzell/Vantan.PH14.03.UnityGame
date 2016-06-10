@@ -4,10 +4,11 @@ using System;
 using UnityEngine.UI;
 //using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityStandardAssets.ImageEffects;
 
 public class GameManager : MonoBehaviour
 {
-	
+	private static CameraSystem CameraS;
 	private static DateTime StartTime = DateTime.Now;
 	private static GameManager Manager;
 	private static MissileFactory Factory;
@@ -48,7 +49,7 @@ public class GameManager : MonoBehaviour
 		set {
 			restTime = value;
 			if (restTime.Minutes + restTime.Seconds <= 0) {
-				Manager.GetComponent<GameManager>().StartCoroutine(GameEnd (false));
+				Manager.StartCoroutine(GameEnd (false));
 			}
 		}
 		get {
@@ -59,8 +60,9 @@ public class GameManager : MonoBehaviour
 
 	void Awake(){
 		DontDestroyOnLoad (GameObject.Find("GameManager"));
-		Manager = GameObject.Find ("GameManager").GetComponent<GameManager> ();
-		Factory = Manager.GetComponent<MissileFactory> ();
+		CameraS = Camera.main.gameObject.GetComponent<CameraSystem>();
+		Manager = GameObject.FindObjectOfType<GameManager>();
+		Factory = GameObject.FindObjectOfType<MissileFactory>();
 	}
 
 	void Start ()
@@ -125,10 +127,18 @@ public class GameManager : MonoBehaviour
 		StopGame ();
 		AudioSource AudioBox =  Manager.GetComponent<AudioSource> ();
 		Record.IsVictory = isWin;
+		Manager.StartCoroutine (Manager.StopSounds());
 		Manager.StartCoroutine (isWin ? Victory () : Defeat());
 		Manager.StartCoroutine (ChangeMusic(AudioBox,isWin));
 		yield return null;
 
+	}
+
+	public IEnumerator StopSounds(){
+		foreach(GameObject missile in GameObject.FindGameObjectsWithTag("EnemyMissile")){
+			missile.GetComponent<AudioSource> ().Stop ();
+		}
+		yield return null;
 	}
 
 	private static IEnumerator ChangeMusic(AudioSource AudioBox,bool isWin){
@@ -155,8 +165,10 @@ public class GameManager : MonoBehaviour
 	public static IEnumerator Victory(){
 		while (true) {
 			if (isNext()) {
+				yield return CameraS.StartCoroutine(CameraS.Flash(3f,false));
 				SceneManager.LoadScene ("Result");
 				yield return null;
+				yield break;
 			}
 			yield return null;
 		}
@@ -167,8 +179,10 @@ public class GameManager : MonoBehaviour
 	{
 		while (true) {
 			if (isNext()) {
+				yield return CameraS.StartCoroutine(CameraS.Flash(3f,false));
 				SceneManager.LoadScene ("Result");
 				yield return null;
+				yield break;
 			}
 			yield return null;
 		}

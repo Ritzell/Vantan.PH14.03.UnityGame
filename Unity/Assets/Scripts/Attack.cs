@@ -41,13 +41,17 @@ public class Attack : MonoBehaviour
 		_playerMissiles.Enqueue (GameObject.Find ("missileC"));
 		_playerMissiles.Enqueue (GameObject.Find ("missileD"));
 
-		Reticle = GameObject.Find ("ReticleImage").GetComponent<ReticleSystem> ();
-		Frame = GameObject.Find ("eurofighter").GetComponent<Airframe> ();
+		Reticle = GameObject.FindObjectOfType<ReticleSystem> ();
+		Frame = GameObject.FindObjectOfType<Airframe> ();
 	}
 
 	void Start ()
 	{
 		Reloading = 0;
+
+	}
+
+	public void EnableAttack(){
 		StartCoroutine (MultipleMissileInterceptSystem ());
 		StartCoroutine (MissileShoot ());
 		StartCoroutine (GunShoot ());

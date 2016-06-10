@@ -26,6 +26,7 @@ public class MissileFactory : MonoBehaviour
 		GameObject newMissileE = (GameObject)Instantiate (Resources.Load ("prefabs/missile"), Pos, Quaternion.identity);
 		newMissileE.name = newMissileE.name.Substring (0, 7)+Numbering;
 		newMissileE.layer = 12;
+		newMissileE.tag = "EnemyMissile";
 		newMissileE.transform.FindChild ("Steam").gameObject.SetActive(true);
 		newMissileE.transform.FindChild ("Afterburner").gameObject.SetActive(true);
 		return newMissileE;
@@ -38,6 +39,8 @@ public class MissileFactory : MonoBehaviour
 		newMissileE.transform.Rotate(Rot);
 		newMissileE.name = newMissileE.name.Substring (0, 7)+Numbering;
 		newMissileE.layer = 12;
+		newMissileE.tag = "EnemyMissile";
+
 		newMissileE.transform.FindChild ("Steam").gameObject.SetActive(true);
 		newMissileE.transform.FindChild ("Afterburner").gameObject.SetActive(true);
 		return newMissileE;

@@ -12,7 +12,7 @@ public class NotificationSystem : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 		ScreenRatio = (float)Screen.height / 332;
-		Notification = gameObject;//.GetComponent<Text> ();
+		Notification = gameObject;
 		NotiSystem = gameObject.GetComponent<NotificationSystem>();
 	}
 
@@ -55,6 +55,9 @@ public class NotificationSystem : MonoBehaviour {
 
 	public static IEnumerator MoveUpSentences(){
 		MoveTrashSentence ();
+		if (Sentences.Count != 0) {
+			Sentences [Sentences.Count - 1].GetComponent<Text> ().color = Color.white;
+		}
 		for (float time = 0f; time < 0.1f; time += Time.deltaTime) {
 			foreach (RectTransform Sentence in Sentences) {
 				Sentence.Translate (0, (ScreenRatio * 10) * (Time.deltaTime / 0.1f), 0);
@@ -76,13 +79,13 @@ public class NotificationSystem : MonoBehaviour {
 		var TextComponent = TextBox.GetComponent<Text> ();
 		TextRect.pivot = new Vector2 (1,1);
 		TextRect.transform.localPosition = new Vector3 (0,0,0);
-		TextRect.sizeDelta = new Vector2 (170,ScreenRatio * 20);
+		TextRect.sizeDelta = new Vector2 (((float)Screen.width/(float)565)*170,ScreenRatio * 20);
 		TextRect.anchorMax = new Vector2 (1,0);
 		TextRect.anchorMin = new Vector2 (1,0);
 		TextComponent.alignment = TextAnchor.MiddleRight;
 		TextComponent.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
 		TextComponent.fontSize = (int)(ScreenRatio * 10);
-		TextComponent.color = new Color (TextComponent.color.r,TextComponent.color.g,TextComponent.color.b,0);
+		TextComponent.color = new Color (1,0.92f,0.16f,0);
 		Sentences.Add (TextBox.GetComponent<RectTransform>());
 		yield return null;
 	}

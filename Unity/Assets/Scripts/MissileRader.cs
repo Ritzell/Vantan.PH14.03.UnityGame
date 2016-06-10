@@ -17,7 +17,12 @@ public class MissileRader : MonoBehaviour {
 			return outRangeMissiles;
 		}
 	}
-	private static List<Transform> InRangeMissiles = new List<Transform>();
+	private static List<Transform> _inRangeMissiles = new List<Transform>();
+	public static List<Transform> InRangeMissiles{
+		get{
+			return _inRangeMissiles;
+		}
+	}
 
 	[SerializeField]
 	private Transform Player;
@@ -55,10 +60,10 @@ public class MissileRader : MonoBehaviour {
 		Vector2 RaderPos = new Vector2 (transform.position.x, transform.position.y);
 		while(!GameManager.GameOver){
 			yield return StartCoroutine(MissileAddList(false));
-			for(int i = 0; i <= InRangeMissiles.Count-1; i++){
-				float	distance = Mathf.Abs (Vector2.Distance (new Vector2 (InRangeMissiles [i].position.x, InRangeMissiles [i].position.y), RaderPos));
+			for(int i = 0; i <= _inRangeMissiles.Count-1; i++){
+				float	distance = Mathf.Abs (Vector2.Distance (new Vector2 (_inRangeMissiles [i].position.x, _inRangeMissiles [i].position.y), RaderPos));
 				if (distance > RaderPos.x) {
-					ToOutRange (InRangeMissiles [i]);
+					ToOutRange (_inRangeMissiles [i]);
 				}
 			}
 			yield return null;
@@ -70,7 +75,7 @@ public class MissileRader : MonoBehaviour {
 			addOutRangeMissile.ForEach (addMissile => outRangeMissiles.Add (addMissile));
 			addOutRangeMissile.Clear ();
 		} else {
-			addInRangeMissile.ForEach (addMissile => InRangeMissiles.Add(addMissile));
+			addInRangeMissile.ForEach (addMissile => _inRangeMissiles.Add(addMissile));
 			addInRangeMissile.Clear ();
 		}
 		yield return null;
@@ -84,7 +89,7 @@ public class MissileRader : MonoBehaviour {
 	private  void ToOutRange(Transform MissilePoint){
 		addOutRangeMissile.Add (MissilePoint.GetComponent<MapMissilePosition>().Tgt);
 		Destroy (GameObject.Find(MissilePoint.name));
-		InRangeMissiles.Remove (MissilePoint);
+		_inRangeMissiles.Remove (MissilePoint);
 	}
 		
 	public static void DestroyMissile(Transform Missile){
@@ -92,8 +97,8 @@ public class MissileRader : MonoBehaviour {
 		try{
 		if(OutRangeMissiles.Contains(Missile)){
 			OutRangeMissiles.Remove (Missile);
-		}else if(InRangeMissiles.Contains(MissilePoint.transform)){
-				InRangeMissiles.Remove (MissilePoint.transform);
+		}else if(_inRangeMissiles.Contains(MissilePoint.transform)){
+				_inRangeMissiles.Remove (MissilePoint.transform);
 		}
 		}catch{
 		}

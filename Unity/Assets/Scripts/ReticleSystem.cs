@@ -91,9 +91,12 @@ public class ReticleSystem : MonoBehaviour
 
 	void Start ()
 	{
+		UI.color = Color.green;
+	}
+
+	public void EnableReticle(){
 		StartCoroutine (SerchEnemy ());
 		StartCoroutine (ReticleMoveInput ());
-		UI.color = Color.green;
 	}
 
 	private IEnumerator ReticleMoveInput ()
@@ -333,7 +336,6 @@ public class ReticleSystem : MonoBehaviour
 
 	private void MultipleLockOnSetting(GameObject Missile){
 		MultiMissileLockOn.Add (Missile);
-//		Missiles.Remove (Missile);
 		var newReticle = Instantiate (MultipleReticleObject);
 		newReticle.GetComponent<MultipleReticle> ().LockOn = Missile;
 		AudioBox.pitch = 1;

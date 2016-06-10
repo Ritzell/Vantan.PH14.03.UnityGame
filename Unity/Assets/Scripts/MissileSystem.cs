@@ -10,10 +10,14 @@ public class MissileSystem : MonoBehaviour
 	private AudioClip AudioClip2;
 	[SerializeField]
 	private AudioClip AudioClip3;
+	[SerializeField]
+	private float ChangeModeDistance = 100f;
+	[SerializeField]
+	private Vector2 RandomRange = new Vector2 (-10,10);
 
 	private AudioSource AudioS;
 	private float Speed;
-	private float LifeTime = 25;
+	private float LifeTime = 40;
 	private static Airframe AirFrame;
 
 	private Vector3 _startPos;
@@ -35,16 +39,16 @@ public class MissileSystem : MonoBehaviour
 	}
 	private static MissileFactory Factory;
 	private static ReticleSystem Reticle;
-
+	private Coroutine selfBrake;
 
 	void Awake ()
 	{
 		
-		AirFrame = GameObject.Find ("eurofighter").GetComponent<Airframe> ();
+		AirFrame = GameObject.FindObjectOfType<Airframe> ();
 		AudioS = gameObject.GetComponent<AudioSource> ();
 		GameManager.EnemyMissiles = 1;
-		Factory = GameObject.Find ("GameManager").GetComponent<MissileFactory> ();
-		Reticle = GameObject.Find ("ReticleImage").GetComponent<ReticleSystem> ();
+		Factory = GameObject.FindObjectOfType<MissileFactory> ();
+		Reticle = GameObject.FindObjectOfType<ReticleSystem> ();
 
 
 	}
@@ -52,9 +56,9 @@ public class MissileSystem : MonoBehaviour
 	void Start ()
 	{
 		if (gameObject.layer == 12) {
-			AudioS.volume = 0.65f;
+			AudioS.volume = 0.5f;
 			AudioS.spatialBlend = 1;
-			AudioS.maxDistance = 300f;
+			AudioS.maxDistance = 250f;
 			AudioS.clip = AudioClip3;
 			AudioS.loop = true;
 			AudioS.Play ();
@@ -89,7 +93,7 @@ public class MissileSystem : MonoBehaviour
 		if (isPlayer) {
 			ShootReady (true);
 		} else {
-			StartCoroutine (SelfBreak ());
+			selfBrake = StartCoroutine (SelfBreak ());
 		}
 		while (true) {
 			yield return StartCoroutine (MoveForward ());
@@ -112,10 +116,10 @@ public class MissileSystem : MonoBehaviour
 
 	public IEnumerator TrackingForPlayer (Transform tgt)
 	{
-		StartCoroutine (SelfBreak ());
+		selfBrake = StartCoroutine (SelfBreak ());
 		while (true) {
-			Vector3 RandomError = new Vector3 (Random.Range (-10, 10), Random.Range (-10, 10), Random.Range (-10, 10));
-			while (Distance (tgt) >= 40) {
+			Vector3 RandomError = new Vector3 (Random.Range (RandomRange.x, RandomRange.y), Random.Range (RandomRange.x, RandomRange.y), Random.Range (RandomRange.x, RandomRange.y));
+			while (tgt != null && Distance (tgt) >= ChangeModeDistance) {
 				yield return StartCoroutine (ErrorTracking (tgt, RandomError));
 			}
 			RefreshSelfBreak ();
@@ -151,9 +155,7 @@ public class MissileSystem : MonoBehaviour
 	}
 	private IEnumerator Leave(){
 		Vector2 Dis = new Vector2 (Random.value <= 0.5f ? -10 : 10, Random.value <= 0.5f ? -10 : 10);
-		float time = 0f;
-		while (time < 0.1f) {
-			time += Time.deltaTime;
+		for (float time = 0f; time < 0.1f; time += Time.deltaTime) {
 			transform.Translate (Dis.x*(Time.deltaTime*10),Dis.y*(Time.deltaTime*10),0);
 			yield return null;
 		}
@@ -168,8 +170,8 @@ public class MissileSystem : MonoBehaviour
 
 	private void RefreshSelfBreak ()
 	{
-		StopCoroutine (SelfBreak ());
-		LifeTime = 4;
+		StopCoroutine (selfBrake);
+		LifeTime = 10;
 		StartCoroutine (SelfBreak ());
 	}
 
@@ -185,7 +187,7 @@ public class MissileSystem : MonoBehaviour
 		}
 		transform.parent = null;
 		AudioS.Play ();
-		StartCoroutine (SelfBreak ());
+		selfBrake   = StartCoroutine (SelfBreak ());
 		transform.FindChild ("Steam").gameObject.SetActive (true);
 		transform.FindChild ("Afterburner").gameObject.SetActive (true);
 	}
@@ -216,9 +218,7 @@ public class MissileSystem : MonoBehaviour
 
 	private IEnumerator SelfBreak ()
 	{
-		float time = 0f;
-		while (time < LifeTime) {
-			time += Time.deltaTime;
+		for (float time = 0f; time < LifeTime; time += Time.deltaTime) {
 			yield return null;
 		}
 		StartCoroutine (BreakMissile ());
