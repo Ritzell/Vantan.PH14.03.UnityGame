@@ -36,6 +36,7 @@ public class Airframe : MonoBehaviour
 		StartCoroutine (CameraSystem.SwayCamera ());
 		PlayerSound.HitSound ();
 		if (HP <= 0 || Col.gameObject.layer == 10) {
+			LightingControlSystem.ShatDown ();
 			Instantiate (Resources.Load ("prefabs/Explosion"), transform.position, Quaternion.identity);
 			StartCoroutine (Deth ());
 		}
@@ -68,7 +69,7 @@ public class Airframe : MonoBehaviour
 		var isAlert = false;
 		while (true) {
 			Ray ray = new Ray (transform.position, transform.forward);
-			if (!isAlert && Physics.Raycast (ray, out hit, 1000, 1 << 10)) {
+			if (!isAlert && Physics.Raycast (ray, out hit, 1500, 1 << 10)) {
 				alert = StartCoroutine (Alert ());
 				isAlert = true;
 				yield return null;

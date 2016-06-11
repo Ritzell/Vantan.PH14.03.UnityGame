@@ -67,8 +67,6 @@ public class CameraSystem : MonoBehaviour
 
 	void Start ()
 	{
-		StartCoroutine (CameraChangePosition ());
-		StartCoroutine (CameraModeChange ());
 		LookFrontPos = MyCamera.transform.localPosition;
 		LookBehindPos = new Vector3 (0,  LookFrontPos.y-9.2f, LookFrontPos.z+80.5f);//GameObject.Find ("CameraPos1").transform.localPosition;
 		CameraZErrorRange.y = LookFrontPos.z + 0.1f;
@@ -85,7 +83,7 @@ public class CameraSystem : MonoBehaviour
 		yield return null;
 	}
 
-	private IEnumerator CameraModeChange ()
+	public IEnumerator CameraModeChange ()
 	{
 		while (!GameManager.GameOver) {
 			if (Input.GetKeyDown (KeyCode.JoystickButton6)) {
@@ -115,7 +113,7 @@ public class CameraSystem : MonoBehaviour
 		transform.RotateAround (AirPlain.transform.position, Vector3.left, Move.y * 2);
 	}
 
-	private static IEnumerator CameraChangePosition ()
+	public static IEnumerator CameraChangePosition ()
 	{
 		while (!GameManager.GameOver) {
 			if (isChange ()) {

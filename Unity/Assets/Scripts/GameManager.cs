@@ -68,7 +68,8 @@ public class GameManager : MonoBehaviour
 	void Start ()
 	{
 		QualitySettings.vSyncCount = 0; // VSyncをOFFにする
-		Application.targetFrameRate = 60; // ターゲットフレームレートを60に設定
+		QualitySettings.antiAliasing = 0;
+		Camera.main.renderingPath = RenderingPath.Forward;
 		StartCoroutine (Timer ());//タイマーを起動
 	}
 
@@ -163,6 +164,7 @@ public class GameManager : MonoBehaviour
 	}
 
 	public static IEnumerator Victory(){
+		yield return new WaitForSeconds (5*Time.timeScale);
 		while (true) {
 			if (isNext()) {
 				yield return CameraS.StartCoroutine(CameraS.Flash(3f,false));
@@ -177,6 +179,7 @@ public class GameManager : MonoBehaviour
 
 	public static IEnumerator Defeat ()
 	{
+		yield return new WaitForSeconds (5*Time.timeScale);
 		while (true) {
 			if (isNext()) {
 				yield return CameraS.StartCoroutine(CameraS.Flash(3f,false));

@@ -39,6 +39,7 @@ public class Record : MonoBehaviour {
 			if (Input.GetKeyDown (KeyCode.Space)) {
 				SceneManager.LoadScene ("title");
 				GameObject.Find ("GameManager").GetComponent<AudioSource> ().Stop ();
+				Destroy (GameObject.Find ("GameManager"));
 			}
 			yield return null;
 		}

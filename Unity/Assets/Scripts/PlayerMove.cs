@@ -54,6 +54,9 @@ public class PlayerMove : MonoBehaviour
 		StartCoroutine (NotificationSystem.UpdateNotification ("操縦権を搭乗者に委託します"));
 		StartCoroutine (Move ());
 		StartCoroutine (ChangeSpeed ());
+		CameraSystem cameraSystem = GameObject.FindObjectOfType<CameraSystem> ();
+		cameraSystem.StartCoroutine(CameraSystem.CameraChangePosition());
+		cameraSystem.StartCoroutine(cameraSystem.CameraModeChange());
 		GameObject.FindObjectOfType<EnemyBase> ().StartCoroutine (EnemyBase.PlayerInArea ());
 		gameObject.GetComponent<Attack> ().EnableAttack ();
 		Reticle.EnableReticle ();

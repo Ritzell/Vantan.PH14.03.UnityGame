@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class LightingControlSystem : MonoBehaviour {
 	private static List<Image> MissileIcons = new List<Image>();
 	private static Queue<Image> HPBarUI = new Queue<Image>();
+
     private static int _missileNumber = -1;
 	private static int _missileOffNumber = -1;
 
@@ -37,6 +38,13 @@ public class LightingControlSystem : MonoBehaviour {
 		}
 		yield return null;
 	}
+
+	public static void ShatDown(){
+		for(int i = 0; i <= HPBarUI.Count; i++){
+			HPBarUI.Dequeue ().color = Color.black;
+		}
+	}
+
 	public static IEnumerator TurningOn(UIType UI){
 		if (UI == UIType.Missile) {
 			MissileIcons [Number (ref _missileOffNumber)].color = Color.white;
