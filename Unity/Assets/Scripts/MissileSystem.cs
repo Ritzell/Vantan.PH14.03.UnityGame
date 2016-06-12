@@ -104,8 +104,11 @@ public class MissileSystem : MonoBehaviour
 	{
 		ShootReady (isReload);
 		while (tgt != null) {
+			try{
 			StartCoroutine (GetAimingPlayer (tgt));
 			StartCoroutine (MoveForward());
+			}catch{
+			}
 			yield return null;
 		}
 		while (true) {

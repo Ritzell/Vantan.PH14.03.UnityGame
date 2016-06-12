@@ -5,6 +5,10 @@ public class PlayerMove : MonoBehaviour
 {
 	[SerializeField]
 	private ReticleSystem Reticle;
+	[SerializeField]
+	private Material SpeedLineMaterial;
+	[SerializeField]
+	private float SpeedLineThickness = 0.75f;
 
 	private static float speed = 300f;
 	private static Transform AirFrame;
@@ -37,20 +41,13 @@ public class PlayerMove : MonoBehaviour
 	}
 
 	void Start(){
-		StartCoroutine (StopAnimator(gameObject.GetComponent<Animator> ()));
-	}
-
-	private IEnumerator StopAnimator(Animator anim){
-		for(float time = 0f; time < 8.9f; 	time += Time.deltaTime){
-			yield return null;
-		}
-		anim.Stop();
-		Manual ();
-		yield return null;
+		SpeedLineMaterial.SetColor ("_Color", new Color (1, 1, 1, 0));
 	}
 
 	public void Manual ()
 	{
+		
+		gameObject.GetComponent<Animator>().Stop ();
 		StartCoroutine (NotificationSystem.UpdateNotification ("操縦権を搭乗者に委託します"));
 		StartCoroutine (Move ());
 		StartCoroutine (ChangeSpeed ());
@@ -62,8 +59,11 @@ public class PlayerMove : MonoBehaviour
 		Reticle.EnableReticle ();
 	}
 
-	private static Sprite[] LoadSprite(string spriteName){
-		return Resources.LoadAll<Sprite>("Images/" + spriteName);
+	public IEnumerator FadeInSpeedLine(){
+		while (SpeedLineMaterial.GetColor ("_Color").a < SpeedLineThickness/2) {
+			SpeedLineMaterial.SetColor ("_Color", new Color (1, 1, 1, SpeedLineMaterial.GetColor ("_Color").a + (Time.deltaTime*SpeedLineThickness)));
+			yield return null;
+		}
 	}
 
 	private IEnumerator Move ()
@@ -128,6 +128,7 @@ public class PlayerMove : MonoBehaviour
 	/// <value>The speed.</value>
 	private void FuelInjector (float Power){
 		speed = Mathf.Clamp(Speed + Power,MinSpeed,MaxSpeed);
+		SpeedLineMaterial.SetColor("_Color",new Color (1,1,1,(speed/300)*SpeedLineThickness));
 			if (Speed > MinSpeed && Speed < MaxSpeed) {
 				AfterBurner (Power);
 				CameraSystem.MoveCamera (Power);

@@ -50,7 +50,6 @@ public class Airframe : MonoBehaviour
 			AlertUI.color = new Color (1, 1, 1, AlertUI.color.a + (1.5f * Time.deltaTime * Sign));
 			if ((AlertUI.color.a > 0.9f && Sign == 1) || (AlertUI.color.a < 0.1f && Sign == -1)) {
 				Sign *= -1;
-
 			}
 			yield return null;
 

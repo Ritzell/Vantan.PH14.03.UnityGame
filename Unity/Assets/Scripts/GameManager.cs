@@ -136,8 +136,11 @@ public class GameManager : MonoBehaviour
 	}
 
 	public IEnumerator StopSounds(){
-		foreach(GameObject missile in GameObject.FindGameObjectsWithTag("EnemyMissile")){
-			missile.GetComponent<AudioSource> ().Stop ();
+		foreach(AudioSource audio in GameObject.FindObjectsOfType<AudioSource>()){
+			audio.Stop ();
+//		foreach(GameObject missile in GameObject.FindGameObjectsWithTag("EnemyMissile")){
+//			missile.GetComponent<AudioSource> ().Stop ();
+//		}
 		}
 		yield return null;
 	}
