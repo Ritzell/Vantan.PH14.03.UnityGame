@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class MultipleReticle : MonoBehaviour
 {
 	private RectTransform Reticle;
-	private static List<MultipleReticle> Reticles = new List<MultipleReticle>();
+//	private static List<MultipleReticle> Reticles = new List<MultipleReticle>();
 
 	private GameObject _lockOnTgt;
 	public GameObject LockOn {
@@ -26,48 +26,43 @@ public class MultipleReticle : MonoBehaviour
 	{
 		Reticle = gameObject.GetComponent<RectTransform> ();
 		transform.SetParent(GameObject.Find ("Canvas").transform,false);
-		Reticles.Add (gameObject.GetComponent<MultipleReticle>());
 	}
 
 	public static IEnumerator AllReleaceReticle(){
-		foreach (MultipleReticle reticle in Reticles) {
-			reticle.StartCoroutine (reticle.ForciblyRelaseLock());
+		foreach (MultipleReticle reticle in FindObjectsOfType<MultipleReticle>()) {
+			reticle.ForciblyRelaseLock(true);
 		}
-		Reticles.Clear ();
 		ReticleSystem.MultiMissileLockOn.Clear ();
 		yield return null;
 	}
 
 	private IEnumerator ReticleMoveToTgt ()
 	{
-		while (!GameManager.GameOver) {
-			try{
+		while (!GameManager.GameOver && _lockOnTgt != null) {
 			Reticle.position = RectTransformUtility.WorldToScreenPoint (Camera.main, _lockOnTgt.transform.position);
-			}catch{
-				yield break;
-			}
 			yield return null;
 		}
+		ForciblyRelaseLock (false);
 	}
 
 	private IEnumerator LockOnCanceler ()
 	{
 		while (_lockOnTgt != null && !GameManager.GameOver) {
 			if (ReticleIsOutOfScreen ()) {
-				StartCoroutine (ForciblyRelaseLock());
+				ForciblyRelaseLock(false);
 				yield return null;
 			}
 			yield return null;
 		}
 	}
 
-	private IEnumerator ForciblyRelaseLock ()
+	private void ForciblyRelaseLock (bool isSilent)
 	{
 		StopAllCoroutines ();
-		_lockOnTgt = null;
-		gameObject.GetComponent<AudioSource> ().Play ();
-		StartCoroutine (Deth());
-		yield return null;
+		if (!isSilent) {
+			gameObject.GetComponent<AudioSource> ().Play ();
+		}
+		DestroyImmediate (gameObject);
 	}
 
 	private bool ReticleIsOutOfScreen ()
@@ -76,11 +71,5 @@ public class MultipleReticle : MonoBehaviour
 			return true;
 		}
 		return false;
-	}
-
-	private IEnumerator Deth(){
-		yield return new WaitForSeconds (0.4f);
-		DestroyImmediate (gameObject);
-		yield return null;
 	}
 }

@@ -4,10 +4,15 @@ using System.Collections;
 public class MissileFactory : MonoBehaviour
 {
 	private static int Numbering = 0;
+	private static Object missilePrefab;
+
+	void Awake(){
+		missilePrefab = Resources.Load ("prefabs/missile");
+	}
 
 	public GameObject NewPlayerMissile (Vector3 StartPos, Quaternion StartRot,bool hasParent)
 	{
-		GameObject newMissile = (GameObject)Instantiate (Resources.Load ("prefabs/missile"), Vector3.zero, Quaternion.identity);
+		GameObject newMissile = (GameObject)Instantiate (missilePrefab, Vector3.zero, Quaternion.identity);
 		newMissile.name = newMissile.name.Substring (0, 7);
 		newMissile.transform.transform.parent = hasParent ? GameObject.Find ("missiles").transform : null;
 		newMissile.transform.localPosition = StartPos;
@@ -23,7 +28,7 @@ public class MissileFactory : MonoBehaviour
 	public GameObject NewEnemyMissile (Vector3 Pos)
 	{
 		Numbering++;
-		GameObject newMissileE = (GameObject)Instantiate (Resources.Load ("prefabs/missile"), Pos, Quaternion.identity);
+		GameObject newMissileE = (GameObject)Instantiate (missilePrefab, Pos, Quaternion.identity);
 		newMissileE.name = newMissileE.name.Substring (0, 7)+Numbering;
 		newMissileE.layer = 12;
 		newMissileE.tag = "EnemyMissile";
@@ -34,15 +39,8 @@ public class MissileFactory : MonoBehaviour
 
 	public GameObject NewEnemyMissile (Vector3 Pos,Vector3 Rot)
 	{
-		Numbering++;
-		GameObject newMissileE = (GameObject)Instantiate (Resources.Load ("prefabs/missile"), Pos, Quaternion.identity);
+		GameObject newMissileE = NewEnemyMissile (Pos);
 		newMissileE.transform.Rotate(Rot);
-		newMissileE.name = newMissileE.name.Substring (0, 7)+Numbering;
-		newMissileE.layer = 12;
-		newMissileE.tag = "EnemyMissile";
-
-		newMissileE.transform.FindChild ("Steam").gameObject.SetActive(true);
-		newMissileE.transform.FindChild ("Afterburner").gameObject.SetActive(true);
 		return newMissileE;
 	}
 }

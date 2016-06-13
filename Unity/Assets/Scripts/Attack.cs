@@ -28,6 +28,9 @@ public class Attack : MonoBehaviour
 
 	public static bool MMIisReady {
 		set {
+			if (value == false) {
+				ReticleSystem.LockOnTgt = null;
+			}
 			_mmiReady = value;
 		}get {
 			return _mmiReady;

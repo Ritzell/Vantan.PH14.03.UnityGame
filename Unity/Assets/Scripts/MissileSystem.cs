@@ -49,8 +49,6 @@ public class MissileSystem : MonoBehaviour
 		GameManager.EnemyMissiles = 1;
 		Factory = GameObject.FindObjectOfType<MissileFactory> ();
 		Reticle = GameObject.FindObjectOfType<ReticleSystem> ();
-
-
 	}
 
 	void Start ()
@@ -111,7 +109,7 @@ public class MissileSystem : MonoBehaviour
 			}
 			yield return null;
 		}
-		while (true) {
+		while (gameObject != null) {
 			StartCoroutine (MoveForward());
 			yield return null;
 		}
@@ -133,12 +131,12 @@ public class MissileSystem : MonoBehaviour
 	}
 	public IEnumerator MultipleMissileInterceptShoot ()
 	{
-		try{
-		StartCoroutine (TrackingForEnemy (ReticleSystem.MultiMissileLockOn[0].transform,false));
-		ReticleSystem.MultiMissileLockOn.RemoveAt (0);
-		}catch{
+		if (ReticleSystem.MultiMissileLockOn [0] != null) {
+			StartCoroutine (TrackingForEnemy (ReticleSystem.MultiMissileLockOn [0].transform, false));
 			ReticleSystem.MultiMissileLockOn.RemoveAt (0);
-			StartCoroutine (Straight (true));
+		} else {
+			ReticleSystem.MultiMissileLockOn.RemoveAt (0);
+				StartCoroutine (Straight (true));
 		}
 		yield return null;
 		if (ReticleSystem.MultiMissileLockOn.Count > 0) {

@@ -60,8 +60,9 @@ public class PlayerMove : MonoBehaviour
 	}
 
 	public IEnumerator FadeInSpeedLine(){
-		while (SpeedLineMaterial.GetColor ("_Color").a < SpeedLineThickness/2) {
-			SpeedLineMaterial.SetColor ("_Color", new Color (1, 1, 1, SpeedLineMaterial.GetColor ("_Color").a + (Time.deltaTime*SpeedLineThickness)));
+		float fadeSpeed = 0.1f;
+		while (SpeedLineMaterial.GetColor ("_Color").a < (300/MaxSpeed)*SpeedLineThickness) {
+			SpeedLineMaterial.SetColor ("_Color", new Color (1, 1, 1, SpeedLineMaterial.GetColor ("_Color").a + (Time.deltaTime*SpeedLineThickness*fadeSpeed)));
 			yield return null;
 		}
 	}
@@ -128,7 +129,7 @@ public class PlayerMove : MonoBehaviour
 	/// <value>The speed.</value>
 	private void FuelInjector (float Power){
 		speed = Mathf.Clamp(Speed + Power,MinSpeed,MaxSpeed);
-		SpeedLineMaterial.SetColor("_Color",new Color (1,1,1,(speed/300)*SpeedLineThickness));
+		SpeedLineMaterial.SetColor("_Color",new Color (1,1,1,(speed/MaxSpeed)*SpeedLineThickness));
 			if (Speed > MinSpeed && Speed < MaxSpeed) {
 				AfterBurner (Power);
 				CameraSystem.MoveCamera (Power);

@@ -133,6 +133,10 @@ public class ReticleSystem : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// ロックを外す
+	/// </summary>
+	/// <returns>The lock input.</returns>
 	private IEnumerator ReleaseLockInput ()
 	{
 		while (!GameManager.GameOver) {
@@ -364,7 +368,7 @@ public class ReticleSystem : MonoBehaviour
 	private IEnumerator ReticleScaleDown ()
 	{
 		while (!GameManager.GameOver && UITransform.localScale.x > 0.2f) {
-			float time = Time.deltaTime*3;///1000;
+			float time = Time.deltaTime*5;///1000;
 			UITransform.localScale = new Vector3 (Mathf.Clamp (UITransform.localScale.x - time, 0.18f, 100), Mathf.Clamp (UITransform.localScale.y - time, 0.18f, 100), 0);
 			yield return null;
 		}
