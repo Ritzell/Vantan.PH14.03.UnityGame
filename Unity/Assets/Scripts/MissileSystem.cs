@@ -13,30 +13,35 @@ public class MissileSystem : MonoBehaviour
 	[SerializeField]
 	private float ChangeModeDistance = 100f;
 	[SerializeField]
-	private Vector2 RandomRange = new Vector2 (-10,10);
+	private Vector2 RandomRange = new Vector2 (-10, 10);
 
 	private AudioSource AudioS;
 	private float Speed;
 	private float LifeTime = 40;
 	private static Airframe AirFrame;
-
+	private LightingControlSystem LightingSystem;
+	private Attack PlayerAttackSystem;
 	private Vector3 _startPos;
-	public Vector3 StartPos{
-		set{
+
+	public Vector3 StartPos {
+		set {
 			_startPos = value;
-		}get{
-			StartCoroutine (LightingControlSystem.TurningOff (UIType.Missile));
+		}get {
+			LightingSystem.TurningOff (UIType.Missile);
 			return _startPos;
 		}
 	}
+
 	private Quaternion _startRot;
-	public Quaternion StartRot{
-		set{
+
+	public Quaternion StartRot {
+		set {
 			_startRot = value;
-		}get{
+		}get {
 			return _startRot;
 		}
 	}
+
 	private static MissileFactory Factory;
 	private static ReticleSystem Reticle;
 	private Coroutine selfBrake;
@@ -49,6 +54,8 @@ public class MissileSystem : MonoBehaviour
 		GameManager.EnemyMissiles = 1;
 		Factory = GameObject.FindObjectOfType<MissileFactory> ();
 		Reticle = GameObject.FindObjectOfType<ReticleSystem> ();
+		LightingSystem = FindObjectOfType<LightingControlSystem> ();
+		PlayerAttackSystem = FindObjectOfType<Attack> ();
 	}
 
 	void Start ()
@@ -98,19 +105,19 @@ public class MissileSystem : MonoBehaviour
 		}
 	}
 
-	public IEnumerator TrackingForEnemy (Transform tgt,bool isReload)
+	public IEnumerator TrackingForEnemy (Transform tgt, bool isReload)
 	{
 		ShootReady (isReload);
 		while (tgt != null) {
-			try{
-			StartCoroutine (GetAimingPlayer (tgt));
-			StartCoroutine (MoveForward());
-			}catch{
+			try {
+				StartCoroutine (GetAimingPlayer (tgt));
+				StartCoroutine (MoveForward ());
+			} catch {
 			}
 			yield return null;
 		}
 		while (gameObject != null) {
-			StartCoroutine (MoveForward());
+			StartCoroutine (MoveForward ());
 			yield return null;
 		}
 	}
@@ -129,6 +136,7 @@ public class MissileSystem : MonoBehaviour
 			}
 		}
 	}
+
 	public IEnumerator MultipleMissileInterceptShoot ()
 	{
 		if (ReticleSystem.MultiMissileLockOn [0] != null) {
@@ -136,7 +144,7 @@ public class MissileSystem : MonoBehaviour
 			ReticleSystem.MultiMissileLockOn.RemoveAt (0);
 		} else {
 			ReticleSystem.MultiMissileLockOn.RemoveAt (0);
-				StartCoroutine (Straight (true));
+			StartCoroutine (Straight (true));
 		}
 		yield return null;
 		if (ReticleSystem.MultiMissileLockOn.Count > 0) {
@@ -154,10 +162,12 @@ public class MissileSystem : MonoBehaviour
 		MissileScript.StartCoroutine (MissileScript.MultipleMissileInterceptShoot ());
 		yield return MissileScript.StartCoroutine (MissileScript.Leave ());
 	}
-	private IEnumerator Leave(){
+
+	private IEnumerator Leave ()
+	{
 		Vector2 Dis = new Vector2 (Random.value <= 0.5f ? -10 : 10, Random.value <= 0.5f ? -10 : 10);
 		for (float time = 0f; time < 0.1f; time += Time.deltaTime) {
-			transform.Translate (Dis.x*(Time.deltaTime*10),Dis.y*(Time.deltaTime*10),0);
+			transform.Translate (Dis.x * (Time.deltaTime * 10), Dis.y * (Time.deltaTime * 10), 0);
 			yield return null;
 		}
 		yield return null;
@@ -184,21 +194,21 @@ public class MissileSystem : MonoBehaviour
 	private void ShootReady (bool isReload)
 	{
 		if (isReload) {
-			StartCoroutine(AirFrame.Reload (StartPos, StartRot));
+			PlayerAttackSystem.StartCoroutine (AirFrame.Reload (StartPos, StartRot));
 		}
 		transform.parent = null;
 		AudioS.Play ();
-		selfBrake   = StartCoroutine (SelfBreak ());
+		selfBrake = StartCoroutine (SelfBreak ());
 		transform.FindChild ("Steam").gameObject.SetActive (true);
 		transform.FindChild ("Afterburner").gameObject.SetActive (true);
 	}
 
 	private IEnumerator GetAimingPlayer (Transform tgt)
 	{
-		try{
+		try {
 			Vector3 TgtPos = new Vector3 (tgt.transform.position.x, tgt.transform.position.y, tgt.transform.position.z);
 			transform.LookAt (TgtPos);
-		}catch{
+		} catch {
 		}
 		yield return null;
 	}
@@ -212,6 +222,7 @@ public class MissileSystem : MonoBehaviour
 	void OnTriggerEnter (Collider col)
 	{
 		if (transform.parent != null) {
+			Debug.Log ("a");
 			return;
 		}
 		StartCoroutine (BreakMissile ());
@@ -219,9 +230,7 @@ public class MissileSystem : MonoBehaviour
 
 	private IEnumerator SelfBreak ()
 	{
-		for (float time = 0f; time < LifeTime; time += Time.deltaTime) {
-			yield return null;
-		}
+		yield return new WaitForSeconds (LifeTime);
 		StartCoroutine (BreakMissile ());
 		yield return null;
 	}
@@ -240,9 +249,9 @@ public class MissileSystem : MonoBehaviour
 	{
 		if (gameObject.layer == 12) {
 			ReticleSystem.RemoveMissiles.Add (gameObject);
-			try{
+			try {
 				ReticleSystem.MultiMissileLockOn.Remove (gameObject);
-			}catch{
+			} catch {
 			}
 		}
 		yield return new WaitForSeconds (0.5f);

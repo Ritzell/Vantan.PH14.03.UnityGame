@@ -16,7 +16,7 @@ public class EnemyBase : MonoBehaviour
 	private static List<Transform> Towers = new List<Transform> ();
 	private static List<EnemyAttack> Childs = new List<EnemyAttack> ();
 	private static int RestChildren = 0;
-	private static int HP = 6;
+	private static int HP = 2000;
 	private static IEnumerator StateNotice;
 
 	public static int Rest {

@@ -14,7 +14,7 @@ public class Enemy : MonoBehaviour
 
 	//	private Material Emission;
 	private bool isLife = true;
-	private float HP = 1000;
+	private float HP = 700;
 	private Material MyMaterial;
 	private Color MaterialColor;
 	private Coroutine Breth;
@@ -55,7 +55,7 @@ public class Enemy : MonoBehaviour
 		CryBox.pitch = Random.Range (0.65f, 1.3f);
 	}
 
-	void OnTriggerStay (Collider Col)
+	void OnTriggerEnter (Collider Col)
 	{
 		if (!isLife) {
 			return;
@@ -65,6 +65,7 @@ public class Enemy : MonoBehaviour
 		} else if (Col.gameObject.layer == (int)PlayerAttackPower.missileLayer) {
 			HP -= (int)PlayerAttackPower.missile;
 		}
+//		Debug.Log (HP);
 		StateNotice.MoveNext ();
 		DiedJudgment ();
 	}
@@ -80,7 +81,7 @@ public class Enemy : MonoBehaviour
 	private IEnumerator StateNotification(){
 		bool isPassing = false;
 		while (!isPassing) {
-			if (HP <= 500) {
+			if (HP <= 350) {
 				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "の体力が著しく消耗しています。"));
 				isPassing = true;
 				yield return null;
@@ -89,8 +90,8 @@ public class Enemy : MonoBehaviour
 		}
 		isPassing = false;
 		while (!isPassing) {
-			if (HP <= 250) {
-				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "が非常に弱っています"));
+			if (HP <= 175) {
+				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "が弱っています"));
 				isPassing = true;
 				yield return null;
 			}
@@ -98,8 +99,8 @@ public class Enemy : MonoBehaviour
 		}
 		isPassing = false;
 		while (!isPassing) {
-			if (HP <= 50) {
-				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "敵がもう少しで撃破できます。"));
+			if (HP <= 80) {
+				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "がもう少しで撃破できます。"));
 				isPassing = true;
 				yield return null;
 			}

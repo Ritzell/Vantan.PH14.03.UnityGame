@@ -25,17 +25,19 @@ public class Bullet : MonoBehaviour
 
 	private IEnumerator  TimeLimit ()
 	{
-		float time = 0f;
-		while (time < 7f && !GameManager.GameOver) {
-			time += Time.deltaTime;
-			yield return null;
-		}
-		Destroy (gameObject);
+		yield return new WaitForSeconds (15);
+		StartCoroutine (BreakBullet ());
 		yield return null;
 	}
 
 	void OnTriggerEnter (Collider col)
 	{
+		StartCoroutine (BreakBullet ());
+	}
+
+	private IEnumerator BreakBullet ()
+	{
 		Destroy (gameObject);
+		yield return null;
 	}
 }

@@ -44,7 +44,6 @@ public class Attack : MonoBehaviour
 		_playerMissiles.Enqueue (GameObject.Find ("missileB"));
 		_playerMissiles.Enqueue (GameObject.Find ("missileC"));
 		_playerMissiles.Enqueue (GameObject.Find ("missileD"));
-
 		Reticle = GameObject.FindObjectOfType<ReticleSystem> ();
 		Frame = GameObject.FindObjectOfType<Airframe> ();
 	}
@@ -52,7 +51,6 @@ public class Attack : MonoBehaviour
 	void Start ()
 	{
 		Reloading = 0;
-
 	}
 
 	public void EnableAttack(){

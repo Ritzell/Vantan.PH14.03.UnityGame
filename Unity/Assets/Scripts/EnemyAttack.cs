@@ -27,6 +27,7 @@ public class EnemyAttack : MonoBehaviour
 	{
 		Target = GameObject.Find ("eurofighter").transform;
 		Factory = GameObject.Find ("GameManager").GetComponent<MissileFactory> ();
+
 	}
 
 	public void Start(){
@@ -47,20 +48,19 @@ public class EnemyAttack : MonoBehaviour
 
 	public IEnumerator Attack ()
 	{
-		float timer = 0f;
-		const float delay = 3f;
+		float delay = 3f;
 		while (!GameManager.GameOver ) {
-			timer += Time.deltaTime;
-			if (isShoot(timer,delay)) {
-				ChooseAction ();
-				timer = 0;
+			yield return new WaitForSeconds (delay);
+			while (!isShoot()) {
+				yield return null;
 			}
+			ChooseAction ();
 			yield return null;
 		}
 	}
 
-	private bool isShoot(float timer, float delay){
-		return timer >= delay && GameManager.EnemyMissiles <= 80;
+	private bool isShoot(){
+		return GameManager.EnemyMissiles <= 80;
 	}
 
 	public void ChooseAction ()

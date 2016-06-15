@@ -79,7 +79,7 @@ public class NotificationSystem : MonoBehaviour {
 		var TextComponent = TextBox.GetComponent<Text> ();
 		TextRect.pivot = new Vector2 (1,1);
 		TextRect.transform.localPosition = new Vector3 (0,0,0);
-		TextRect.sizeDelta = new Vector2 (((float)Screen.width/(float)565)*170,ScreenRatio * 20);
+		TextRect.sizeDelta = new Vector2 (((float)Screen.width/(float)565)*300,ScreenRatio * 20);
 		TextRect.anchorMax = new Vector2 (1,0);
 		TextRect.anchorMin = new Vector2 (1,0);
 		TextComponent.alignment = TextAnchor.MiddleRight;

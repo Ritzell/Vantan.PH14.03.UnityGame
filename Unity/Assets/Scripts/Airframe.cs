@@ -6,6 +6,7 @@ public class Airframe : MonoBehaviour
 {
 	private static int HP = 5;
 	private static GameManager Manager;
+	private LightingControlSystem LightingSystem;
 	[SerializeField]
 	private Image AlertUI;
 	[SerializeField]
@@ -15,6 +16,7 @@ public class Airframe : MonoBehaviour
 	void Awake ()
 	{
 		Manager = GameObject.Find ("GameManager").GetComponent<GameManager> ();
+		LightingSystem = FindObjectOfType<LightingControlSystem> ();
 	}
 
 	void Start ()
@@ -26,24 +28,24 @@ public class Airframe : MonoBehaviour
 	public IEnumerator Reload (Vector3 StartPos, Quaternion StartRot)
 	{
 		yield return StartCoroutine (Manager.ReloadMissile (StartPos, StartRot));
-		yield return StartCoroutine (LightingControlSystem.TurningOn (UIType.Missile));
+		LightingSystem.TurningOn (UIType.Missile);
 	}
 
 	private void OnTriggerEnter (Collider Col)
 	{
-		//Bombed ();
-		//DiedJudgment (Col.gameObject);
+		Bombed ();
+		DiedJudgment (Col.gameObject);
 	}
 
 	private void Bombed(){
-		HP -= 1;
-		StartCoroutine (LightingControlSystem.TurningOff (UIType.HP));
+		//HP -= 1;
+		LightingSystem.TurningOff (UIType.HP);
 		StartCoroutine (CameraSystem.SwayCamera ());
 		PlayerSound.HitSound ();
 	}
 
 	private void DiedJudgment(GameObject Col){
-		if (HP <= 0 || Col.layer == 10) {
+		if (HP <= 0 || Col.layer == 10 || Col.layer == 15 || Col.layer == 11) {
 			LightingControlSystem.ShatDown ();
 			Instantiate (Resources.Load ("prefabs/Explosion"), transform.position, Quaternion.identity);
 			StartCoroutine (Deth ());

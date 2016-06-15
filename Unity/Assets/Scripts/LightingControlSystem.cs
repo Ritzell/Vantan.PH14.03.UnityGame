@@ -23,8 +23,8 @@ public class LightingControlSystem : MonoBehaviour {
 		HPBarUI.Enqueue (GameObject.Find("HPBarD").GetComponent<Image>());
 		HPBarUI.Enqueue (GameObject.Find("HPBarE").GetComponent<Image>());
 	}
-	
-	public static IEnumerator TurningOff(UIType UI){
+
+	public void TurningOff(UIType UI){
 		if (UI == UIType.Missile) {
 			MissileIcons [Number (ref _missileNumber)].color = Color.gray;
 		} else if (UI == UIType.HP) {
@@ -33,10 +33,8 @@ public class LightingControlSystem : MonoBehaviour {
 				foreach (Image HPBar in HPBarUI) {
 					HPBar.color = Color.red;
 				}
-				yield return null;
 			}
 		}
-		yield return null;
 	}
 
 	public static void ShatDown(){
@@ -44,15 +42,13 @@ public class LightingControlSystem : MonoBehaviour {
 			HPBarUI.Dequeue ().color = Color.black;
 		}
 	}
-
-	public static IEnumerator TurningOn(UIType UI){
+	public void TurningOn(UIType UI){
 		if (UI == UIType.Missile) {
 			MissileIcons [Number (ref _missileOffNumber)].color = Color.white;
 		}
-		yield return null;
 	}
 
-	private static int Number(ref int number){
+	private int Number(ref int number){
 		number++;
 		if(number >= MissileIcons.Count){
 			number = 0;
