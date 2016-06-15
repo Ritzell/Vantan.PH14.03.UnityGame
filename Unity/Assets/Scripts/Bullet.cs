@@ -30,18 +30,12 @@ public class Bullet : MonoBehaviour
 			time += Time.deltaTime;
 			yield return null;
 		}
-		StartCoroutine (BreakBullet ());
+		Destroy (gameObject);
 		yield return null;
 	}
 
 	void OnTriggerEnter (Collider col)
 	{
-		StartCoroutine (BreakBullet ());
-	}
-
-	private IEnumerator BreakBullet ()
-	{
 		Destroy (gameObject);
-		yield return null;
 	}
 }

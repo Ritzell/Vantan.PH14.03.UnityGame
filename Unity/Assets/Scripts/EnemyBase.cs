@@ -17,6 +17,7 @@ public class EnemyBase : MonoBehaviour
 	private static List<EnemyAttack> Childs = new List<EnemyAttack> ();
 	private static int RestChildren = 0;
 	private static int HP = 6;
+	private static IEnumerator StateNotice;
 
 	public static int Rest {
 		set {
@@ -46,6 +47,7 @@ public class EnemyBase : MonoBehaviour
 //		StartCoroutine (ChangeTarget ());
 		//material.color = Color.gray;
 		StartCoroutine (Respiration ());
+		StateNotice = FindObjectOfType<EnemyBase> ().StateNotification ();
 		material.color = new Color (0.3f, 0.3f, 0.3f, 1);
 	}
 
@@ -61,12 +63,47 @@ public class EnemyBase : MonoBehaviour
 
 	void OnTriggerEnter (Collider Col)
 	{
-		HP--;
+		if (Col.gameObject.layer == (int)PlayerAttackPower.bulletLayer) {
+			HP -= (int)PlayerAttackPower.bullet;
+		} else if (Col.gameObject.layer == (int)PlayerAttackPower.missileLayer) {
+			HP -= (int)PlayerAttackPower.missile;
+		}
+		StateNotice.MoveNext ();
 		if (RestChildren <= 0 && HP == 0) {
 			GameObject.Find ("engine").GetComponent<AudioSource> ().Stop ();
 			StopAllCoroutines ();
 			StartCoroutine (GameManager.GameEnd (true));
 			//Destroy(gameObject);
+		}
+	}
+
+	private IEnumerator StateNotification(){
+		bool isPassing = false;
+		while (!isPassing) {
+			if (HP <= 500) {
+				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "の体力が著しく消耗しています。"));
+				isPassing = true;
+				yield return null;
+			}
+			yield return null;
+		}
+		isPassing = false;
+		while (!isPassing) {
+			if (HP <= 250) {
+				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "が非常に弱っています"));
+				isPassing = true;
+				yield return null;
+			}
+			yield return null;
+		}
+		isPassing = false;
+		while (!isPassing) {
+			if (HP <= 50) {
+				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "敵がもう少しで撃破できます。"));
+				isPassing = true;
+				yield return null;
+			}
+			yield return null;
 		}
 	}
 

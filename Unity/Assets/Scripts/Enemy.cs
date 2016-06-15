@@ -18,6 +18,7 @@ public class Enemy : MonoBehaviour
 	private Material MyMaterial;
 	private Color MaterialColor;
 	private Coroutine Breth;
+	private IEnumerator StateNotice;
 
 	/// <summary>
 	/// フレアによる回避はミサイルのスクリプトで行う
@@ -50,6 +51,8 @@ public class Enemy : MonoBehaviour
 		MaterialColor = MyMaterial.GetColor ("_EmissionColor");
 		EnemyBase.Rest = EnemyBase.Rest + 1;
 		Breth = StartCoroutine (Respiration ());
+		StateNotice = StateNotification();
+		CryBox.pitch = Random.Range (0.65f, 1.3f);
 	}
 
 	void OnTriggerStay (Collider Col)
@@ -62,11 +65,45 @@ public class Enemy : MonoBehaviour
 		} else if (Col.gameObject.layer == (int)PlayerAttackPower.missileLayer) {
 			HP -= (int)PlayerAttackPower.missile;
 		}
+		StateNotice.MoveNext ();
+		DiedJudgment ();
+	}
+	private void DiedJudgment(){
 		if (HP <= 0) {
 			isLife = false;
 			EnemyBase.Rest = EnemyBase.Rest - 1;
 			PlayerReticle.DestoroyLockOnTgt (gameObject);
 			StartCoroutine (Deth ());
+		}
+	}
+
+	private IEnumerator StateNotification(){
+		bool isPassing = false;
+		while (!isPassing) {
+			if (HP <= 500) {
+				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "の体力が著しく消耗しています。"));
+				isPassing = true;
+				yield return null;
+			}
+			yield return null;
+		}
+		isPassing = false;
+		while (!isPassing) {
+			if (HP <= 250) {
+				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "が非常に弱っています"));
+				isPassing = true;
+				yield return null;
+			}
+			yield return null;
+		}
+		isPassing = false;
+		while (!isPassing) {
+			if (HP <= 50) {
+				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "敵がもう少しで撃破できます。"));
+				isPassing = true;
+				yield return null;
+			}
+			yield return null;
 		}
 	}
 
@@ -106,7 +143,6 @@ public class Enemy : MonoBehaviour
 
 	private IEnumerator Deth ()
 	{
-		CryBox.pitch = Random.Range (0.65f, 1.3f);
 		CryBox.Play ();
 		StopCoroutine (Breth);
 		MyMaterial.EnableKeyword ("_EMISSION");

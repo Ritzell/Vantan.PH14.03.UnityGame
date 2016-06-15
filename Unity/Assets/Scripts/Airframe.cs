@@ -31,8 +31,8 @@ public class Airframe : MonoBehaviour
 
 	private void OnTriggerEnter (Collider Col)
 	{
-		Bombed ();
-		DiedJudgment (Col.gameObject);
+		//Bombed ();
+		//DiedJudgment (Col.gameObject);
 	}
 
 	private void Bombed(){
