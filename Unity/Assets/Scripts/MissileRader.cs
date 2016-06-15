@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
+
 public class MissileRader : MonoBehaviour {
 	private static List<Transform> addOutRangeMissile = new List<Transform> ();
 	public static List<Transform> AddOutRangeMissile{

@@ -14,7 +14,7 @@ public class Enemy : MonoBehaviour
 
 	//	private Material Emission;
 	private bool isLife = true;
-	private int HP = 4;
+	private float HP = 1000;
 	private Material MyMaterial;
 	private Color MaterialColor;
 	private Coroutine Breth;
@@ -49,7 +49,7 @@ public class Enemy : MonoBehaviour
 		ArmorMaterial.color = new Color (0.3f, 0.3f, 0.3f, 1);
 		MaterialColor = MyMaterial.GetColor ("_EmissionColor");
 		EnemyBase.Rest = EnemyBase.Rest + 1;
-		Breth = StartCoroutine (Breathing ());
+		Breth = StartCoroutine (Respiration ());
 	}
 
 	void OnTriggerStay (Collider Col)
@@ -57,7 +57,11 @@ public class Enemy : MonoBehaviour
 		if (!isLife) {
 			return;
 		}
-		HP--;
+		if (Col.gameObject.layer == (int)PlayerAttackPower.bulletLayer) {
+			HP -= (int)PlayerAttackPower.bullet;
+		} else if (Col.gameObject.layer == (int)PlayerAttackPower.missileLayer) {
+			HP -= (int)PlayerAttackPower.missile;
+		}
 		if (HP <= 0) {
 			isLife = false;
 			EnemyBase.Rest = EnemyBase.Rest - 1;
@@ -66,26 +70,38 @@ public class Enemy : MonoBehaviour
 		}
 	}
 
-	private IEnumerator Breathing ()
+	private IEnumerator Respiration ()
 	{
-		float Turning = (MaterialColor.r + MaterialColor.g + MaterialColor.b) / 3;
+		Material material;
+		material = gameObject.GetComponent<Renderer> ().material;
+		material.EnableKeyword ("_EMISSION");
+		Color MaterialMaxColor = material.GetColor ("_EmissionColor");
+		float Turning = (MaterialMaxColor.r + MaterialMaxColor.g + MaterialMaxColor.b) / 3;
 		while (true) {
 
-			while (0.05f < (MyMaterial.GetColor ("_EmissionColor").r + MyMaterial.GetColor ("_EmissionColor").g + MyMaterial.GetColor ("_EmissionColor").b) / 3) {
-				Color mColor = MyMaterial.GetColor ("_EmissionColor");
-				MyMaterial.SetColor ("_EmissionColor", new Color (mColor.r - (MaterialColor.r * (Time.deltaTime))
-					, mColor.g - (MaterialColor.g * (Time.deltaTime))
-					, mColor.b - (MaterialColor.b * (Time.deltaTime))));
+			while (0.05f < (material.GetColor ("_EmissionColor").r + material.GetColor ("_EmissionColor").g + material.GetColor ("_EmissionColor").b) / 3) {
+				Brethes (material, MaterialMaxColor);
 				yield return null;
 			}
-			while (Turning > (MyMaterial.GetColor ("_EmissionColor").r + MyMaterial.GetColor ("_EmissionColor").g + MyMaterial.GetColor ("_EmissionColor").b) / 3) {
-				Color mColor = MyMaterial.GetColor ("_EmissionColor");
-				MyMaterial.SetColor ("_EmissionColor", new Color (mColor.r + (MaterialColor.r * (Time.deltaTime))
-					, mColor.g + (MaterialColor.g * (Time.deltaTime))
-					, mColor.b + (MaterialColor.b * (Time.deltaTime))));
+			while (Turning > (material.GetColor ("_EmissionColor").r + material.GetColor ("_EmissionColor").g + material.GetColor ("_EmissionColor").b) / 3) {
+				Suck (material, MaterialMaxColor);
 				yield return null;
 			}
 		}
+	}
+
+	private void Brethes(Material material,Color MaxColor){
+		Color mColor = material.GetColor ("_EmissionColor");
+		material.SetColor ("_EmissionColor", new Color (mColor.r - (MaxColor.r * (Time.deltaTime))
+			, mColor.g - (MaxColor.g * (Time.deltaTime))
+			, mColor.b - (MaxColor.b * (Time.deltaTime))));
+	}
+
+	private void Suck(Material material,Color MaxColor){
+		Color mColor = material.GetColor ("_EmissionColor");
+		material.SetColor ("_EmissionColor", new Color (mColor.r + (MaxColor.r * (Time.deltaTime))
+			, mColor.g + (MaxColor.g * (Time.deltaTime))
+			, mColor.b + (MaxColor.b * (Time.deltaTime))));
 	}
 
 	private IEnumerator Deth ()
@@ -117,10 +133,10 @@ public class Enemy : MonoBehaviour
 	}
 
 	private IEnumerator ShakeBody(){
-		Vector3 DefaltPos = transform.position;
+		Vector3 DefaultPos = transform.position;
 		while (gameObject != null) {
 			Vector3 RandomRange = new Vector3 (Random.Range(-10,10),Random.Range(-10,10),Random.Range(-10,10));
-			transform.position = new Vector3 (DefaltPos.x + RandomRange.x,DefaltPos.y + RandomRange.y,DefaltPos.z + RandomRange.z);
+			transform.position = new Vector3 (DefaultPos.x + RandomRange.x,DefaultPos.y + RandomRange.y,DefaultPos.z + RandomRange.z);
 			yield return null;
 		}
 	}

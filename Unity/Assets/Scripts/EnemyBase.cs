@@ -45,7 +45,7 @@ public class EnemyBase : MonoBehaviour
 	{
 //		StartCoroutine (ChangeTarget ());
 		//material.color = Color.gray;
-		StartCoroutine (Breathing ());
+		StartCoroutine (Respiration ());
 		material.color = new Color (0.3f, 0.3f, 0.3f, 1);
 	}
 
@@ -70,7 +70,7 @@ public class EnemyBase : MonoBehaviour
 		}
 	}
 
-	private IEnumerator Breathing ()
+	private IEnumerator Respiration ()
 	{
 		Material material;
 		material = gameObject.GetComponent<Renderer> ().material;
@@ -80,20 +80,28 @@ public class EnemyBase : MonoBehaviour
 		while (true) {
 			
 			while (0.05f < (material.GetColor ("_EmissionColor").r + material.GetColor ("_EmissionColor").g + material.GetColor ("_EmissionColor").b) / 3) {
-				Color mColor = material.GetColor ("_EmissionColor");
-				material.SetColor ("_EmissionColor", new Color (mColor.r - (MaterialMaxColor.r * (Time.deltaTime))
-					, mColor.g - (MaterialMaxColor.g * (Time.deltaTime))
-					, mColor.b - (MaterialMaxColor.b * (Time.deltaTime))));
+				Brethes (material, MaterialMaxColor);
 				yield return null;
 			}
 			while (Turning > (material.GetColor ("_EmissionColor").r + material.GetColor ("_EmissionColor").g + material.GetColor ("_EmissionColor").b) / 3) {
-				Color mColor = material.GetColor ("_EmissionColor");
-				material.SetColor ("_EmissionColor", new Color (mColor.r + (MaterialMaxColor.r * (Time.deltaTime))
-					, mColor.g + (MaterialMaxColor.g * (Time.deltaTime))
-					, mColor.b + (MaterialMaxColor.b * (Time.deltaTime))));
+				Suck (material, MaterialMaxColor);
 				yield return null;
 			}
 		}
+	}
+
+	private void Brethes(Material material,Color MaxColor){
+		Color mColor = material.GetColor ("_EmissionColor");
+		material.SetColor ("_EmissionColor", new Color (mColor.r - (MaxColor.r * (Time.deltaTime))
+			, mColor.g - (MaxColor.g * (Time.deltaTime))
+			, mColor.b - (MaxColor.b * (Time.deltaTime))));
+	}
+
+	private void Suck(Material material,Color MaxColor){
+		Color mColor = material.GetColor ("_EmissionColor");
+		material.SetColor ("_EmissionColor", new Color (mColor.r + (MaxColor.r * (Time.deltaTime))
+			, mColor.g + (MaxColor.g * (Time.deltaTime))
+			, mColor.b + (MaxColor.b * (Time.deltaTime))));
 	}
 
 	public static IEnumerator ChangeTarget ()

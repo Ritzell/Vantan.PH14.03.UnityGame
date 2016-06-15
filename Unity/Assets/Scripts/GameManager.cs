@@ -9,7 +9,7 @@ using UnityStandardAssets.ImageEffects;
 public class GameManager : MonoBehaviour
 {
 	private static CameraSystem CameraS;
-	private static DateTime StartTime = DateTime.Now;
+	private static DateTime StartTime;
 	private static GameManager Manager;
 	private static MissileFactory Factory;
 
@@ -60,16 +60,18 @@ public class GameManager : MonoBehaviour
 
 	void Awake(){
 		DontDestroyOnLoad (GameObject.Find("GameManager"));
-		CameraS = Camera.main.gameObject.GetComponent<CameraSystem>();
-		Manager = GameObject.FindObjectOfType<GameManager>();
-		Factory = GameObject.FindObjectOfType<MissileFactory>();
+		CameraS = FindObjectOfType<CameraSystem>();
 	}
 
-	void Start ()
+	public void StartStage ()
 	{
 		QualitySettings.vSyncCount = 0; // VSyncをOFFにする
 		QualitySettings.antiAliasing = 0;
 		Camera.main.renderingPath = RenderingPath.Forward;
+		CameraS = FindObjectOfType<CameraSystem>();
+		Manager = GameObject.FindObjectOfType<GameManager>();
+		Factory = GameObject.FindObjectOfType<MissileFactory>();
+		StartTime = DateTime.Now;
 		StartCoroutine (Timer ());//タイマーを起動
 	}
 
@@ -122,7 +124,11 @@ public class GameManager : MonoBehaviour
 		RestTime = limitTime - elapsedTime;
 	}
 
-
+	public static IEnumerator FlashLoadScene(string SceneName){
+		yield return CameraS.StartCoroutine(CameraS.Flash(3f,false));
+		SceneManager.LoadSceneAsync (SceneName);
+		yield return null;
+	}
 
 	public static IEnumerator GameEnd(bool isWin){
 		StopGame ();
@@ -136,11 +142,8 @@ public class GameManager : MonoBehaviour
 	}
 
 	public IEnumerator StopSounds(){
-		foreach(AudioSource audio in GameObject.FindObjectsOfType<AudioSource>()){
+		foreach (AudioSource audio in FindObjectsOfType<AudioSource>()) {
 			audio.Stop ();
-//		foreach(GameObject missile in GameObject.FindGameObjectsWithTag("EnemyMissile")){
-//			missile.GetComponent<AudioSource> ().Stop ();
-//		}
 		}
 		yield return null;
 	}
@@ -170,9 +173,7 @@ public class GameManager : MonoBehaviour
 		yield return new WaitForSeconds (5*Time.timeScale);
 		while (true) {
 			if (isNext()) {
-				yield return CameraS.StartCoroutine(CameraS.Flash(3f,false));
-				SceneManager.LoadScene ("Result");
-				yield return null;
+				yield return Manager.StartCoroutine(FlashLoadScene ("Result"));
 				yield break;
 			}
 			yield return null;
@@ -182,12 +183,11 @@ public class GameManager : MonoBehaviour
 
 	public static IEnumerator Defeat ()
 	{
+		CameraS.StartCoroutine (CameraS.CameraOut ());
 		yield return new WaitForSeconds (5*Time.timeScale);
 		while (true) {
 			if (isNext()) {
-				yield return CameraS.StartCoroutine(CameraS.Flash(3f,false));
-				SceneManager.LoadScene ("Result");
-				yield return null;
+				yield return Manager.StartCoroutine(FlashLoadScene ("Result"));
 				yield break;
 			}
 			yield return null;

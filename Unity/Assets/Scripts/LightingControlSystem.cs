@@ -40,7 +40,7 @@ public class LightingControlSystem : MonoBehaviour {
 	}
 
 	public static void ShatDown(){
-		for(int i = 0; i <= HPBarUI.Count+1; i++){
+		while (HPBarUI.Count > 0) {
 			HPBarUI.Dequeue ().color = Color.black;
 		}
 	}

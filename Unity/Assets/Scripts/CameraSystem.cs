@@ -224,7 +224,6 @@ public class CameraSystem : MonoBehaviour
 		}
 		if(!isOut){
 			yield break;
-			yield return null;
 		}
 
 		while (CameraBloom.bloomThreshold < StartThreshold/3) {
@@ -234,6 +233,13 @@ public class CameraSystem : MonoBehaviour
 		}
 		CameraBloom.bloomThreshold = StartThreshold;
 		yield return null;
+	}
+
+	public IEnumerator CameraOut(){
+		while (true) {
+			transform.Translate (Vector3.back * (4f*(Time.deltaTime *( 1 / Time.timeScale))));
+			yield return null;
+		}
 	}
 
 	public static void MoveCamera (float value)

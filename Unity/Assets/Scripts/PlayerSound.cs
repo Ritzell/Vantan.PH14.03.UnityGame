@@ -21,6 +21,6 @@ public class PlayerSound : MonoBehaviour
 	{
 //		AudioBox.volume = 0.3f;
 //		AudioBox.pitch = 2;
-		AudioBox.Play ();
+		AudioBox.PlayOneShot(AudioBox.clip);
 	}
 }

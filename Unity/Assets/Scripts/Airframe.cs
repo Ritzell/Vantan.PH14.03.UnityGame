@@ -31,11 +31,19 @@ public class Airframe : MonoBehaviour
 
 	private void OnTriggerEnter (Collider Col)
 	{
-		HP -= 0;
+		Bombed ();
+		DiedJudgment (Col.gameObject);
+	}
+
+	private void Bombed(){
+		HP -= 1;
 		StartCoroutine (LightingControlSystem.TurningOff (UIType.HP));
 		StartCoroutine (CameraSystem.SwayCamera ());
 		PlayerSound.HitSound ();
-		if (HP <= 0 || Col.gameObject.layer == 10) {
+	}
+
+	private void DiedJudgment(GameObject Col){
+		if (HP <= 0 || Col.layer == 10) {
 			LightingControlSystem.ShatDown ();
 			Instantiate (Resources.Load ("prefabs/Explosion"), transform.position, Quaternion.identity);
 			StartCoroutine (Deth ());

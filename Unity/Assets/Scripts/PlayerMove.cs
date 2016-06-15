@@ -42,6 +42,7 @@ public class PlayerMove : MonoBehaviour
 
 	void Start(){
 		SpeedLineMaterial.SetColor ("_Color", new Color (1, 1, 1, 0));
+		FindObjectOfType<GameManager> ().StartStage ();
 	}
 
 	public void Manual ()
@@ -51,10 +52,10 @@ public class PlayerMove : MonoBehaviour
 		StartCoroutine (NotificationSystem.UpdateNotification ("操縦権を搭乗者に委託します"));
 		StartCoroutine (Move ());
 		StartCoroutine (ChangeSpeed ());
-		CameraSystem cameraSystem = GameObject.FindObjectOfType<CameraSystem> ();
+		CameraSystem cameraSystem = FindObjectOfType<CameraSystem> ();
 		cameraSystem.StartCoroutine(CameraSystem.CameraChangePosition());
 		cameraSystem.StartCoroutine(cameraSystem.CameraModeChange());
-		GameObject.FindObjectOfType<EnemyBase> ().StartCoroutine (EnemyBase.PlayerInArea ());
+		FindObjectOfType<EnemyBase> ().StartCoroutine (EnemyBase.PlayerInArea ());
 		gameObject.GetComponent<Attack> ().EnableAttack ();
 		Reticle.EnableReticle ();
 	}
