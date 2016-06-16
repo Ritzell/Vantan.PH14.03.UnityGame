@@ -133,6 +133,7 @@ public class Attack : MonoBehaviour
 	private bool isTrackingShoot ()
 	{
 		if (((Input.GetAxis ("LTrigger") == 1 || Input.GetKeyDown (KeyCode.V)) && _playerMissiles.Count >= 1)) {
+			GameManager.MissileCounter = +1;
 			return true;
 		} else {
 			return false;
@@ -147,7 +148,6 @@ public class Attack : MonoBehaviour
 			Reloading += Time.deltaTime;
 			if (Reloading >= missileDelay) {
 				if (isStraightMissileShoot ()) {
-					GameManager.MissileCounter = 1;
 					StartCoroutine (Missile (true).Straight (true));
 					Reloading = 0f;
 				} else if (isTrackingShoot () && ReticleSystem.LockOnTgt != null) {

@@ -48,7 +48,18 @@ public class Record : MonoBehaviour {
 	private static void ResultEntry(){
 		BattleIssue.text = isVictory ? VictoryEntry() : DefeatEntry();
 		TimeRecord.text = "プレイ時間 : " + GameManager.TimeCastToString(ElapsedTime);
-		MissileCount.text = "発射ミサイル数　: " + GameManager.MissileCounter.ToString ();
+		FindObjectOfType<Record>().StartCoroutine (MissileCounter (GameManager.MissileCounter));
+	}
+
+	private static IEnumerator MissileCounter(int Count){
+		float UpCounter = 0;
+		while (UpCounter < Count) {
+			UpCounter += Count * (2.5f*Time.deltaTime);
+			MissileCount.text = "発射ミサイル数　: " + (int)UpCounter;
+			yield return null;
+		}
+		MissileCount.text = "発射ミサイル数　: " + Count;
+		yield return null;
 	}
 
 	private static string VictoryEntry(){
