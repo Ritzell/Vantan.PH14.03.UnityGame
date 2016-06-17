@@ -6,5 +6,9 @@ public enum UIType{
 	
 	Missile,
 
-	HP
+	HP,
+
+	GunHit,
+
+	MissileHit
 }

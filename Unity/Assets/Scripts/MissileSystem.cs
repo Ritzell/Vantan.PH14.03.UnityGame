@@ -222,7 +222,6 @@ public class MissileSystem : MonoBehaviour
 	void OnTriggerEnter (Collider col)
 	{
 		if (transform.parent != null) {
-			Debug.Log ("a");
 			return;
 		}
 		StartCoroutine (BreakMissile ());

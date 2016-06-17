@@ -44,6 +44,8 @@ public class Attack : MonoBehaviour
 		_playerMissiles.Enqueue (GameObject.Find ("missileB"));
 		_playerMissiles.Enqueue (GameObject.Find ("missileC"));
 		_playerMissiles.Enqueue (GameObject.Find ("missileD"));
+		Bullet.GunHitImages =  GameObject.Find ("GunHitImage").GetComponent<Image> ();
+		Bullet.Lighting = FindObjectOfType<LightingControlSystem> ();
 		Reticle = GameObject.FindObjectOfType<ReticleSystem> ();
 		Frame = GameObject.FindObjectOfType<Airframe> ();
 	}
