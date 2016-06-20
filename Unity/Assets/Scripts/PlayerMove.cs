@@ -49,6 +49,7 @@ public class PlayerMove : MonoBehaviour
 	{
 		
 		gameObject.GetComponent<Animator>().Stop ();
+//		NotificationSystem.Announce = "操縦権を搭乗者に委託します";
 		StartCoroutine (NotificationSystem.UpdateNotification ("操縦権を搭乗者に委託します"));
 		StartCoroutine (Move ());
 		StartCoroutine (ChangeSpeed ());

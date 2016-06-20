@@ -82,6 +82,7 @@ public class Enemy : MonoBehaviour
 		bool isPassing = false;
 		while (!isPassing) {
 			if (HP <= 350) {
+//				NotificationSystem.Announce = gameObject.name + "の体力が著しく消耗しています。";
 				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "の体力が著しく消耗しています。"));
 				isPassing = true;
 				yield return null;
@@ -91,6 +92,7 @@ public class Enemy : MonoBehaviour
 		isPassing = false;
 		while (!isPassing) {
 			if (HP <= 175) {
+//				NotificationSystem.Announce = gameObject.name + "が弱っています";
 				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "が弱っています"));
 				isPassing = true;
 				yield return null;
@@ -100,6 +102,7 @@ public class Enemy : MonoBehaviour
 		isPassing = false;
 		while (!isPassing) {
 			if (HP <= 80) {
+//				NotificationSystem.Announce = gameObject.name + "がもう少しで撃破できます。";
 				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "がもう少しで撃破できます。"));
 				isPassing = true;
 				yield return null;
@@ -153,6 +156,7 @@ public class Enemy : MonoBehaviour
 		CameraS.StartCoroutine(CameraS.Flash(0.8f,true,0.35f,gameObject));
 		while (true) {
 			if (CryBox.isPlaying == false) {
+//				NotificationSystem.Announce = gameObject.name + "を撃破しました！";
 				Frame.StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "を撃破しました！"));
 				Destroy (gameObject);
 			}

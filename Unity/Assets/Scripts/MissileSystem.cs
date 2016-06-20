@@ -19,8 +19,8 @@ public class MissileSystem : MonoBehaviour
 	private float Speed;
 	private float LifeTime = 40;
 	private static Airframe AirFrame;
-	private LightingControlSystem LightingSystem;
-	private Attack PlayerAttackSystem;
+	private static LightingControlSystem LightingSystem;
+	private static Attack PlayerAttackSystem;
 	private Vector3 _startPos;
 
 	public Vector3 StartPos {
@@ -46,24 +46,25 @@ public class MissileSystem : MonoBehaviour
 	private static ReticleSystem Reticle;
 	private Coroutine selfBrake;
 
-	void Awake ()
+	void Awake()
 	{
 		
 		AirFrame = GameObject.FindObjectOfType<Airframe> ();
-		AudioS = gameObject.GetComponent<AudioSource> ();
-		GameManager.EnemyMissiles = 1;
 		Factory = GameObject.FindObjectOfType<MissileFactory> ();
 		Reticle = GameObject.FindObjectOfType<ReticleSystem> ();
 		LightingSystem = FindObjectOfType<LightingControlSystem> ();
 		PlayerAttackSystem = FindObjectOfType<Attack> ();
+		AudioS = gameObject.GetComponent<AudioSource> ();
 	}
 
 	void Start ()
 	{
+
 		if (gameObject.layer == 12) {
 			AudioS.volume = 0.5f;
 			AudioS.spatialBlend = 1;
 			AudioS.maxDistance = 250f;
+			GameManager.EnemyMissiles = 1;
 			AudioS.clip = AudioClip3;
 			AudioS.loop = true;
 			AudioS.Play ();
@@ -74,6 +75,7 @@ public class MissileSystem : MonoBehaviour
 			Speed = 850;
 			AudioS.clip = AudioClip1;
 		}
+
 		StartPos = transform.localPosition;
 		StartRot = transform.localRotation;
 	}
@@ -219,12 +221,17 @@ public class MissileSystem : MonoBehaviour
 		yield return null;
 	}
 
-	void OnTriggerEnter (Collider col)
+	private bool isDeth = false;
+	void OnTriggerStay (Collider col)
 	{
-		if (transform.parent != null) {
+		if (transform.parent != null || isDeth) {
 			return;
 		}
 		StartCoroutine (BreakMissile ());
+		if (gameObject.layer == 8 && (col.gameObject.layer == 11 || col.gameObject.layer == 15)) {
+			GameObject.Find("MissileNotification").GetComponent<NotificationSystem>().StartCoroutine(NotificationSystem.UpdateMissileNotification ());
+		}
+		isDeth = true;
 	}
 
 	private IEnumerator SelfBreak ()
@@ -237,6 +244,13 @@ public class MissileSystem : MonoBehaviour
 	private IEnumerator BreakMissile ()
 	{
 		StopAllCoroutines ();
+		if (gameObject.layer == 12) {
+			ReticleSystem.RemoveMissiles.Add (gameObject);
+			try {
+				ReticleSystem.MultiMissileLockOn.Remove (gameObject);
+			} catch {
+			}
+		}
 		Instantiate (Resources.Load ("prefabs/Explosion"), transform.position, Quaternion.identity);
 		MissileRader.DestroyMissile (gameObject.transform);
 		GameManager.EnemyMissiles = -1;
@@ -246,13 +260,7 @@ public class MissileSystem : MonoBehaviour
 
 	private IEnumerator Deth ()
 	{
-		if (gameObject.layer == 12) {
-			ReticleSystem.RemoveMissiles.Add (gameObject);
-			try {
-				ReticleSystem.MultiMissileLockOn.Remove (gameObject);
-			} catch {
-			}
-		}
+		
 		yield return new WaitForSeconds (0.5f);
 		StopAllCoroutines ();
 		Destroy (gameObject);

@@ -5,62 +5,104 @@ using System.Collections.Generic;
 
 public class NotificationSystem : MonoBehaviour {
 	private static int MaxSentences = 5;
-	private static float ScreenRatio;
-	private static GameObject Notification;
+	private static float ScreenRatioX;
+	private static float ScreenRatioY;
+	private static Transform AnnounceNotification;
+	private static Transform MissileNotification;
 	private static NotificationSystem NotiSystem;
 	private static List<RectTransform> Sentences = new List<RectTransform> ();
+	private static List<RectTransform> MissileSentences = new List<RectTransform> ();
 	// Use this for initialization
 	void Awake () {
-		ScreenRatio = (float)Screen.height / 332;
-		Notification = gameObject;
+		ScreenRatioY = (float)Screen.height / 332;
+		ScreenRatioX = (float)Screen.width / 588;
+		AnnounceNotification = GameObject.Find("Notification").transform;
+		MissileNotification = GameObject.Find("MissileNotification").transform;
 		NotiSystem = gameObject.GetComponent<NotificationSystem>();
 	}
 
 	void Start(){
-//		StartCoroutine (test ());
+	}
+
+	public enum NotificationType{
+		Announce,
+		Missile
 	}
 
 	private IEnumerator test(){
 		int i = 0;
 		while (true) {
 			i++;
-			yield return StartCoroutine (UpdateNotification("羊が"+i+"匹"));
+			Debug.Log ("aaaa");
+			StartCoroutine (UpdateMissileNotification());
 			yield return new WaitForSeconds (1f);
 			yield return null;
 		}
 	}
 
 	public static IEnumerator UpdateNotification(string text){
-		GameObject TextBox = NewTextBox ();
-		yield return NotiSystem.StartCoroutine (MoveUpSentences());
-		yield return NotiSystem.StartCoroutine (TextBoxStartUp(TextBox));
-		yield return NotiSystem.StartCoroutine(NotificationSystem.FadeInText(TextBox.GetComponent<Text> (),text));
+		GameObject TextBox = NewTextBox (AnnounceNotification);
+		yield return NotiSystem.StartCoroutine (MoveUpSentences(true,NotificationType.Announce));
+		yield return NotiSystem.StartCoroutine (TextBoxStartUp(TextBox,NotificationType.Announce));
+		yield return NotiSystem.StartCoroutine(NotiSystem.FadeInText(TextBox.GetComponent<Text> (),text));
+		yield return null;
+	}
+	public static IEnumerator UpdateMissileNotification(){
+		GameObject TextBox = NewTextBox (MissileNotification);
+		yield return NotiSystem.StartCoroutine (MoveUpSentences(false,NotificationType.Missile));
+		yield return NotiSystem.StartCoroutine (TextBoxStartUp(TextBox,NotificationType.Missile));
+		EntrySentence ("Hit!", TextBox.GetComponent<Text> ());
+		yield return NotiSystem.StartCoroutine(NotiSystem.FadeOutText(TextBox.GetComponent<Text> (),1f));
 		yield return null;
 	}
 
-	private static GameObject NewTextBox(){
+	private static GameObject NewTextBox(Transform Notification){
 		GameObject TextBox = new GameObject ("Text");
 		TextBox.transform.parent = Notification.transform;
 		TextBox.AddComponent<Text> ();
 		return TextBox;
 	}
 
-	public static IEnumerator FadeInText(Text TextBox,string text){
+	public IEnumerator FadeInText(Text TextBox,string text){
 		TextBox.text = text;
 		while(TextBox.color.a < 1){
 			TextBox.color = new Color (TextBox.color.r,TextBox.color.g,TextBox.color.b,TextBox.color.a + (Time.deltaTime/0.1f));
 				yield return null;
 		}
 	}
-
-	public static IEnumerator MoveUpSentences(){
-		MoveTrashSentence ();
-		if (Sentences.Count != 0) {
-			Sentences [Sentences.Count - 1].GetComponent<Text> ().color = Color.white;
+	public IEnumerator FadeOutText(Text TextBox,float delay){
+		yield return new WaitForSeconds (delay);
+		while (TextBox.color.a > 0) {
+			TextBox.color = new Color (TextBox.color.r,TextBox.color.g,TextBox.color.b,TextBox.color.a - Time.deltaTime);
+			yield return null;
 		}
+		RectTransform TextTransform = TextBox.GetComponent<RectTransform> ();
+		if(Sentences.Contains(TextTransform)){
+			Sentences.Remove(TextTransform);
+		} else if(MissileSentences.Contains(TextTransform)){
+			MissileSentences.Remove(TextTransform);
+		}
+		Destroy (TextBox.gameObject);
+		yield return null;
+	}
+
+	public static IEnumerator MoveUpSentences(bool isEnableTrash,NotificationType type){//List<RectTransform> TextList){
+		List<RectTransform> TextList = new List<RectTransform>();
+		if (type == NotificationType.Announce) {
+			TextList = Sentences;
+		} else {
+			TextList = MissileSentences;
+		}
+		if (isEnableTrash) {
+			MoveTrashSentence ();
+			if (TextList.Count != 0) {
+				TextList [TextList.Count - 1].GetComponent<Text> ().color = Color.white;
+			}
+		}
+		
 		for (float time = 0f; time < 0.1f; time += Time.deltaTime) {
-			foreach (RectTransform Sentence in Sentences) {
-				Sentence.Translate (0, (ScreenRatio * 10) * (Time.deltaTime / 0.1f), 0);
+			foreach (RectTransform text in TextList) {
+				text.Translate (0, (ScreenRatioY * (isEnableTrash ? 10 : 25)) * (Time.deltaTime / 0.1f), 0);
 			}
 			yield return null;
 		}
@@ -74,19 +116,27 @@ public class NotificationSystem : MonoBehaviour {
 		}
 	}
 
-	public static IEnumerator TextBoxStartUp(GameObject TextBox){
+
+
+	public static IEnumerator TextBoxStartUp(GameObject TextBox,NotificationType type){
+		bool isAnnounce = type == NotificationType.Announce ? true : false;
+
 		var TextRect = TextBox.GetComponent<RectTransform> ();
 		var TextComponent = TextBox.GetComponent<Text> ();
-		TextRect.pivot = new Vector2 (1,1);
+		TextRect.pivot = isAnnounce ? new Vector2 (1,1) : new Vector2 (0.5f,0.5f);
 		TextRect.transform.localPosition = new Vector3 (0,0,0);
-		TextRect.sizeDelta = new Vector2 (((float)Screen.width/(float)565)*300,ScreenRatio * 20);
-		TextRect.anchorMax = new Vector2 (1,0);
-		TextRect.anchorMin = new Vector2 (1,0);
-		TextComponent.alignment = TextAnchor.MiddleRight;
+		TextRect.sizeDelta = isAnnounce ? new Vector2 (ScreenRatioX*300,ScreenRatioY * 20) : new Vector2 (ScreenRatioX*300,ScreenRatioY * 28);
+		TextRect.anchorMax = isAnnounce ? new Vector2 (1,0) : new Vector2 (0.5f,0);
+		TextRect.anchorMin = TextRect.anchorMax;
+		TextComponent.alignment = isAnnounce ? TextAnchor.MiddleRight : TextAnchor.MiddleCenter;
 		TextComponent.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
-		TextComponent.fontSize = (int)(ScreenRatio * 10);
-		TextComponent.color = new Color (1,0.92f,0.16f,0);
-		Sentences.Add (TextBox.GetComponent<RectTransform>());
+		TextComponent.fontSize = isAnnounce ? (int)(ScreenRatioY * 10) : (int)(ScreenRatioY * 25);
+		TextComponent.color = isAnnounce ? new Color (1,0.92f,0.16f,0) : new Color (1,0f,0f,1f) ;
+		if (isAnnounce) {
+			Sentences.Add (TextBox.GetComponent<RectTransform> ());
+		} else {
+			MissileSentences.Add (TextBox.GetComponent<RectTransform> ());
+		}
 		yield return null;
 	}
 
