@@ -131,7 +131,7 @@ public class NotificationSystem : MonoBehaviour {
 		TextComponent.alignment = isAnnounce ? TextAnchor.MiddleRight : TextAnchor.MiddleCenter;
 		TextComponent.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
 		TextComponent.fontSize = isAnnounce ? (int)(ScreenRatioY * 10) : (int)(ScreenRatioY * 25);
-		TextComponent.color = isAnnounce ? new Color (1,0.92f,0.16f,0) : new Color (1,0f,0f,1f) ;
+		TextComponent.color = isAnnounce ? new Color (1,0.92f,0.16f,0) : new Color (1,0f,0f,0.8f) ;
 		if (isAnnounce) {
 			Sentences.Add (TextBox.GetComponent<RectTransform> ());
 		} else {
