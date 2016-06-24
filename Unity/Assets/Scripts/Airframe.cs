@@ -46,7 +46,7 @@ public class Airframe : MonoBehaviour
 	}
 
 	private void DiedJudgment(GameObject Col){
-		if (HP <= 0 || Col.layer == 10 || Col.layer == 15 || Col.layer == 11) {
+		if (HP <= 0 || Col.layer == 10 || Col.layer == (int)Layers.EnemyArmor || Col.layer == (int)Layers.Enemy) {
 			LightingControlSystem.ShatDown ();
 			Instantiate (Resources.Load ("prefabs/Explosion"), transform.position, Quaternion.identity);
 			StartCoroutine (Deth ());

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -48,7 +49,7 @@ public class MissileSystem : MonoBehaviour
 
 	void Awake()
 	{
-		
+
 		AirFrame = GameObject.FindObjectOfType<Airframe> ();
 		Factory = GameObject.FindObjectOfType<MissileFactory> ();
 		Reticle = GameObject.FindObjectOfType<ReticleSystem> ();
@@ -260,11 +261,10 @@ public class MissileSystem : MonoBehaviour
 
 	private IEnumerator Deth ()
 	{
-		
+
 		yield return new WaitForSeconds (0.5f);
 		StopAllCoroutines ();
 		Destroy (gameObject);
 		yield return null;
 	}
 }
-

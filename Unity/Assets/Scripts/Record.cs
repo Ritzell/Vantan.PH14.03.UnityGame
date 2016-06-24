@@ -11,6 +11,9 @@ public class Record : MonoBehaviour {
 	private static Text Rank;
 	private static TimeSpan ElapsedTime;
 
+	[SerializeField]
+	private Image BackGroundImage;
+
 	private static bool isVictory;
 	public static bool IsVictory{
 		set{
@@ -25,7 +28,7 @@ public class Record : MonoBehaviour {
 		MissileCount = GameObject.Find ("MissileCount").GetComponent<Text>();
 		Rank = GameObject.Find ("RankText").GetComponent<Text> ();
 	}
-	
+
 	// Update is called once per frame
 	void Start () {
 		Time.timeScale = 1;
@@ -34,9 +37,15 @@ public class Record : MonoBehaviour {
 		ResultEntry ();
 	}
 
+	[SerializeField]
+	private Sprite DefeatImage;
+	private void ChangeImage(){
+		BackGroundImage.sprite = DefeatImage;
+	}
+
 	private IEnumerator NextScene(){
 		while(true){
-			if (Input.GetKeyDown (KeyCode.Space)) {
+			if (Input.GetKeyDown (KeyCode.Space) || Input.GetKey (KeyCode.JoystickButton9)) {
 				SceneManager.LoadScene ("title");
 				GameObject.Find ("GameManager").GetComponent<AudioSource> ().Stop ();
 				Destroy (GameObject.Find ("GameManager"));
@@ -71,6 +80,7 @@ public class Record : MonoBehaviour {
 	private static string DefeatEntry(){
 		BattleIssue.color = Color.blue;
 		Rank.text = EvaluationRank (false);
+		FindObjectOfType<Record> ().ChangeImage ();
 		return "Defeat";
 	}
 

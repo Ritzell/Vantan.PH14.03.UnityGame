@@ -19,10 +19,10 @@ public class CameraSystem : MonoBehaviour
 	public  static bool LookBehind {
 		set{
 			if (value) {
-//				MyCamera.GetComponent<CameraSystem>().StopAllCoroutines ();
-//				Color color = ReticleSystem.UIImage.color;
-//				Debug.Log ("a");
-//				ReticleSystem.UIImage.color = new Vector4 (color.r, color.g, color.b, 1);
+				//				MyCamera.GetComponent<CameraSystem>().StopAllCoroutines ();
+				//				Color color = ReticleSystem.UIImage.color;
+				//				Debug.Log ("a");
+				//				ReticleSystem.UIImage.color = new Vector4 (color.r, color.g, color.b, 1);
 			} else {
 			}
 			_lookBehind = value;

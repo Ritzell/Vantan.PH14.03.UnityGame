@@ -16,7 +16,7 @@ public class EnemyBase : MonoBehaviour
 	private static List<Transform> Towers = new List<Transform> ();
 	private static List<EnemyAttack> Childs = new List<EnemyAttack> ();
 	private static int RestChildren = 0;
-	private static int HP = 2000;
+	private static int HP = 600;
 	private static IEnumerator StateNotice;
 
 	public static int Rest {
@@ -70,7 +70,7 @@ public class EnemyBase : MonoBehaviour
 			HP -= (int)PlayerAttackPower.missile;
 		}
 		StateNotice.MoveNext ();
-		if (RestChildren <= 0 && HP == 0) {
+		if (RestChildren <= 0 && HP <= 0) {
 			GameObject.Find ("engine").GetComponent<AudioSource> ().Stop ();
 			StopAllCoroutines ();
 			StartCoroutine (GameManager.GameEnd (true));
@@ -81,7 +81,7 @@ public class EnemyBase : MonoBehaviour
 	private IEnumerator StateNotification(){
 		bool isPassing = false;
 		while (!isPassing) {
-			if (HP <= 500) {
+			if (HP <= 300) {
 //				NotificationSystem.Announce = gameObject.name + "の体力が著しく消耗しています。";
 				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "の体力が著しく消耗しています。"));
 				isPassing = true;
@@ -91,7 +91,7 @@ public class EnemyBase : MonoBehaviour
 		}
 		isPassing = false;
 		while (!isPassing) {
-			if (HP <= 250) {
+			if (HP <= 150) {
 //				NotificationSystem.Announce = gameObject.name + "が非常に弱っています";
 
 				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "が非常に弱っています"));
@@ -102,7 +102,7 @@ public class EnemyBase : MonoBehaviour
 		}
 		isPassing = false;
 		while (!isPassing) {
-			if (HP <= 50) {
+			if (HP <= 75) {
 //				NotificationSystem.Announce = gameObject.name +"敵がもう少しで撃破できます。";
 
 				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "敵がもう少しで撃破できます。"));

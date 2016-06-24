@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PlayerMove : MonoBehaviour
 {
@@ -9,6 +10,10 @@ public class PlayerMove : MonoBehaviour
 	private Material SpeedLineMaterial;
 	[SerializeField]
 	private float SpeedLineThickness = 0.75f;
+	[SerializeField]
+	private   List<ParticleSystem> Burner  = new List<ParticleSystem>();
+	[SerializeField]
+	private  List<ParticleSystem> Glow = new List<ParticleSystem>();
 
 	private static float speed = 300f;
 	private static Transform AirFrame;
@@ -18,10 +23,8 @@ public class PlayerMove : MonoBehaviour
 	private const float MinSpeed = 200f;
 	private const float MaxSpeed = 690f;
 	private const float Keep = 0;
-	private static ParticleSystem Burner;
-	private static ParticleSystem Glow;
-	private static ParticleSystem.EmissionModule em;
-	private static ParticleSystem.MinMaxCurve rate;
+	private static List<ParticleSystem.EmissionModule> em = new List<ParticleSystem.EmissionModule>();
+	private static List<ParticleSystem.MinMaxCurve> rate = new List<ParticleSystem.MinMaxCurve>();
 	private static EngineSound EngineS;
 
 	public static float Speed{
@@ -31,10 +34,11 @@ public class PlayerMove : MonoBehaviour
 	}
 		
 	void Awake(){
-		Glow = GameObject.Find ("Glow").GetComponent<ParticleSystem> ();
-		Burner = GameObject.Find ("Afterburner").GetComponent<ParticleSystem> ();
-		em = Glow.emission;
-		rate = Glow.emission.rate;
+//		Glow = GameObject.Find ("Glow").GetComponent<ParticleSystem> ();
+//		Burner = GameObject.Find ("Afterburner").GetComponent<ParticleSystem> ();
+		Glow.ForEach(glow => em.Add(glow.emission));
+		Glow.ForEach (glow => rate.Add (glow.emission.rate));
+//		rate[0] = Glow[0].emission.rate;
 		EngineS = GameObject.FindObjectOfType<EngineSound> ();
 		AirFrame = GameObject.Find ("eurofighter").transform;
 		DefaltRotation = AirFrame.localRotation;
@@ -151,18 +155,24 @@ public class PlayerMove : MonoBehaviour
 
 	private void HighPower ()//ParticleSystem Burner, ParticleSystem Glow, ParticleSystem.EmissionModule em, ParticleSystem.MinMaxCurve rate)
 	{
-		Burner.startSpeed = 25;
-		Glow.startSpeed = 25;
-		rate.constantMax = 450f;
-		em.rate = rate;
+		foreach (ParticleSystem burner in Burner) {
+			burner.startSpeed = 25;
+			burner.startSize = 1.4f;
+		}
+		Glow.ForEach(glow => glow.startSpeed = 25);//Glow.startSpeed = 25;
+		rate.ForEach(rt => rt.constantMax = 450);//rate.constantMax = 450f;
+		em.ForEach(e => e.rate = rate[0]);//em.rate = rate;
 	}
 
 	private void LowPower ()//ParticleSystem Burner, ParticleSystem Glow, ParticleSystem.EmissionModule em, ParticleSystem.MinMaxCurve rate)
 	{
-		Burner.startSpeed = 4;
-		Glow.startSpeed = 4;
-		rate.constantMax = 100f;
-		em.rate = rate;
+		foreach (ParticleSystem burner in Burner) {
+			burner.startSpeed = 4;
+			burner.startSize = 0.7f;
+		}
+		Glow.ForEach(glow => glow.startSpeed = 4);
+		rate.ForEach(rt => rt.constantMax = 100);
+		em.ForEach(e => e.rate = rate[0]);
 	}
 
 	private void Rotation(Vector3 AddRot) {

@@ -6,12 +6,7 @@ public class Bullet : MonoBehaviour
 {
 	private float Speed = 800f;
 	public static LightingControlSystem Lighting;// = FindObjectOfType<LightingControlSystem> ();
-	private static Image GunHitImage;
-	public static Image GunHitImages{
-		set{
-			GunHitImage = value;
-		}
-	}
+
 
 	public IEnumerator Shot ()
 	{
@@ -42,7 +37,7 @@ public class Bullet : MonoBehaviour
 		
 	void OnTriggerStay (Collider col)
 	{
-		if (col.gameObject.layer == 11 || col.gameObject.layer == 12) {
+		if (col.gameObject.layer == (int)Layers.Enemy || col.gameObject.layer == (int)Layers.EnemyMissile) {
 			if (stopCoroutine != null) {
 				Lighting.StopCoroutine (stopCoroutine);
 			}

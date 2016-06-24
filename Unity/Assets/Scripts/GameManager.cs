@@ -195,7 +195,7 @@ public class GameManager : MonoBehaviour
 	}
 
 	private static bool isNext(){
-		return Input.GetKeyDown (KeyCode.Space);
+		return Input.GetKeyDown (KeyCode.Space) || Input.GetKey (KeyCode.JoystickButton9);
 	}
 
 	private static void StopGame(){

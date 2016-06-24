@@ -13,7 +13,10 @@ public class Muzzle : MonoBehaviour
 	// Update is called once per frame
 	public IEnumerator Ignition ()
 	{
+		try{
 		StartCoroutine (transform.FindChild ("bullet").GetComponent<Bullet> ().Shot ());
+		}catch{
+		}
 		AudioBox.PlayOneShot (AudioBox.clip);
 		yield return null;
 	}

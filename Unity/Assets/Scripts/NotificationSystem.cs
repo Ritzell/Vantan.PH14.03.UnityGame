@@ -33,7 +33,6 @@ public class NotificationSystem : MonoBehaviour {
 		int i = 0;
 		while (true) {
 			i++;
-			Debug.Log ("aaaa");
 			StartCoroutine (UpdateMissileNotification());
 			yield return new WaitForSeconds (1f);
 			yield return null;
@@ -47,12 +46,13 @@ public class NotificationSystem : MonoBehaviour {
 		yield return NotiSystem.StartCoroutine(NotiSystem.FadeInText(TextBox.GetComponent<Text> (),text));
 		yield return null;
 	}
+
 	public static IEnumerator UpdateMissileNotification(){
 		GameObject TextBox = NewTextBox (MissileNotification);
 		yield return NotiSystem.StartCoroutine (MoveUpSentences(false,NotificationType.Missile));
 		yield return NotiSystem.StartCoroutine (TextBoxStartUp(TextBox,NotificationType.Missile));
 		EntrySentence ("Hit!", TextBox.GetComponent<Text> ());
-		yield return NotiSystem.StartCoroutine(NotiSystem.FadeOutText(TextBox.GetComponent<Text> (),1f));
+		yield return NotiSystem.StartCoroutine(NotiSystem.FadeOutText(TextBox.GetComponent<Text> (),1f,1f));
 		yield return null;
 	}
 
@@ -63,17 +63,17 @@ public class NotificationSystem : MonoBehaviour {
 		return TextBox;
 	}
 
-	public IEnumerator FadeInText(Text TextBox,string text){
+	private IEnumerator FadeInText(Text TextBox,string text){
 		TextBox.text = text;
 		while(TextBox.color.a < 1){
 			TextBox.color = new Color (TextBox.color.r,TextBox.color.g,TextBox.color.b,TextBox.color.a + (Time.deltaTime/0.1f));
 				yield return null;
 		}
 	}
-	public IEnumerator FadeOutText(Text TextBox,float delay){
-		yield return new WaitForSeconds (delay);
+	private IEnumerator FadeOutText(Text TextBox,float duration,float delay){
+		yield return new WaitForSeconds (duration);
 		while (TextBox.color.a > 0) {
-			TextBox.color = new Color (TextBox.color.r,TextBox.color.g,TextBox.color.b,TextBox.color.a - Time.deltaTime);
+			TextBox.color = new Color (TextBox.color.r,TextBox.color.g,TextBox.color.b,TextBox.color.a - (Time.deltaTime * delay));
 			yield return null;
 		}
 		RectTransform TextTransform = TextBox.GetComponent<RectTransform> ();
@@ -86,7 +86,7 @@ public class NotificationSystem : MonoBehaviour {
 		yield return null;
 	}
 
-	public static IEnumerator MoveUpSentences(bool isEnableTrash,NotificationType type){//List<RectTransform> TextList){
+	private static IEnumerator MoveUpSentences(bool isEnableTrash,NotificationType type){//List<RectTransform> TextList){
 		List<RectTransform> TextList = new List<RectTransform>();
 		if (type == NotificationType.Announce) {
 			TextList = Sentences;
@@ -118,7 +118,7 @@ public class NotificationSystem : MonoBehaviour {
 
 
 
-	public static IEnumerator TextBoxStartUp(GameObject TextBox,NotificationType type){
+	private static IEnumerator TextBoxStartUp(GameObject TextBox,NotificationType type){
 		bool isAnnounce = type == NotificationType.Announce ? true : false;
 
 		var TextRect = TextBox.GetComponent<RectTransform> ();

@@ -14,7 +14,7 @@ public class Enemy : MonoBehaviour
 
 	//	private Material Emission;
 	private bool isLife = true;
-	private float HP = 700;
+	private float HP = 600;
 	private Material MyMaterial;
 	private Color MaterialColor;
 	private Coroutine Breth;
@@ -81,7 +81,7 @@ public class Enemy : MonoBehaviour
 	private IEnumerator StateNotification(){
 		bool isPassing = false;
 		while (!isPassing) {
-			if (HP <= 350) {
+			if (HP <= 300) {
 //				NotificationSystem.Announce = gameObject.name + "の体力が著しく消耗しています。";
 				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "の体力が著しく消耗しています。"));
 				isPassing = true;
@@ -91,7 +91,7 @@ public class Enemy : MonoBehaviour
 		}
 		isPassing = false;
 		while (!isPassing) {
-			if (HP <= 175) {
+			if (HP <= 150) {
 //				NotificationSystem.Announce = gameObject.name + "が弱っています";
 				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "が弱っています"));
 				isPassing = true;
@@ -101,7 +101,7 @@ public class Enemy : MonoBehaviour
 		}
 		isPassing = false;
 		while (!isPassing) {
-			if (HP <= 80) {
+			if (HP <= 75) {
 //				NotificationSystem.Announce = gameObject.name + "がもう少しで撃破できます。";
 				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "がもう少しで撃破できます。"));
 				isPassing = true;

@@ -113,7 +113,7 @@ public class ReticleSystem : MonoBehaviour
 	{
 		
 		RaycastHit Hit;
-		const int LayerMask = 1 << 11 | 1 << 12;
+		const int LayerMask = 1 << (int)Layers.Enemy | 1 << (int)Layers.EnemyMissile | 1 << (int)Layers.EnemyArmor;
 		 
 		while (!GameManager.GameOver) {
 			if (CameraSystem.FreeMove) {
