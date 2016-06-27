@@ -35,10 +35,12 @@ public class Record : MonoBehaviour {
 		ElapsedTime =  new TimeSpan (0, 10, 0) - GameManager.RestTime;
 		StartCoroutine (NextScene ());
 		ResultEntry ();
+		FindObjectOfType<CameraSetting> ().OnScene (Scenes.Result);
 	}
 
 	[SerializeField]
 	private Sprite DefeatImage;
+
 	private void ChangeImage(){
 		BackGroundImage.sprite = DefeatImage;
 	}
@@ -46,6 +48,7 @@ public class Record : MonoBehaviour {
 	private IEnumerator NextScene(){
 		while(true){
 			if (Input.GetKeyDown (KeyCode.Space) || Input.GetKey (KeyCode.JoystickButton9)) {
+				Destroy(GameObject.Find("Main Camera"));
 				SceneManager.LoadScene ("title");
 				GameObject.Find ("GameManager").GetComponent<AudioSource> ().Stop ();
 				Destroy (GameObject.Find ("GameManager"));
@@ -80,7 +83,7 @@ public class Record : MonoBehaviour {
 	private static string DefeatEntry(){
 		BattleIssue.color = Color.blue;
 		Rank.text = EvaluationRank (false);
-		FindObjectOfType<Record> ().ChangeImage ();
+//		FindObjectOfType<Record> ().ChangeImage ();
 		return "Defeat";
 	}
 

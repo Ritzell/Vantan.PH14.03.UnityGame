@@ -8,6 +8,7 @@ using UnityStandardAssets.ImageEffects;
 
 public class GameManager : MonoBehaviour
 {
+
 	private static CameraSystem CameraS;
 	private static DateTime StartTime;
 	private static GameManager Manager;
@@ -16,6 +17,9 @@ public class GameManager : MonoBehaviour
 
 	private static bool gameOver = false;
 	public static bool GameOver {
+		set{
+			gameOver = value;
+		}
 		get {
 			return gameOver;
 		}
@@ -72,6 +76,7 @@ public class GameManager : MonoBehaviour
 		Manager = GameObject.FindObjectOfType<GameManager>();
 		Factory = GameObject.FindObjectOfType<MissileFactory>();
 		StartTime = DateTime.Now;
+//		CameraSetting.StartUp ();
 		StartCoroutine (Timer ());//タイマーを起動
 	}
 
@@ -125,7 +130,11 @@ public class GameManager : MonoBehaviour
 	}
 
 	public static IEnumerator FlashLoadScene(string SceneName){
-		yield return CameraS.StartCoroutine(CameraS.Flash(3f,false));
+		bool isOut = false;
+		CameraS.StartCoroutine(CameraS.Flash(3f,true,1,GameObject.Find("Canvas"),fadeout => isOut = fadeout));
+		while (!isOut) {
+			yield return null;
+		}
 		SceneManager.LoadSceneAsync (SceneName);
 		yield return null;
 	}
@@ -187,6 +196,7 @@ public class GameManager : MonoBehaviour
 		yield return new WaitForSeconds (5*Time.timeScale);
 		while (true) {
 			if (isNext()) {
+				FindObjectOfType<CameraSystem> ().StopCoroutine ("CameraOut");
 				yield return Manager.StartCoroutine(FlashLoadScene ("Result"));
 				yield break;
 			}

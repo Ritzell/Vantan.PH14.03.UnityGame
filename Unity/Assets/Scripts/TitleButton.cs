@@ -9,11 +9,13 @@ public class TitleButton : MonoBehaviour {
 	void Start(){
 		CameraS = FindObjectOfType<CameraSystem> ();
 		QualitySettings.antiAliasing = 3;
+		FindObjectOfType<CameraSetting> ().OnScene (Scenes.Title);
 //		Camera.main.renderingPath = RenderingPath.DeferredShading;
 	}
 
 	public void OnClick(){
 		if (gameObject.name == "StartButton") {
+			GameManager.GameOver = false;
 			StartCoroutine (GameManager.FlashLoadScene ("stage"));
 		} else if (gameObject.name == "ArsenalButton") {
 			StartCoroutine (GameManager.FlashLoadScene ("Customize"));

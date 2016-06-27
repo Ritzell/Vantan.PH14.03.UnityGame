@@ -7,6 +7,8 @@ public class ArsenalScene : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		StartCoroutine (SceneTransition ());
+		FindObjectOfType<CameraSetting> ().OnScene (Scenes.Customize);
+
 	}
 	
 	private IEnumerator SceneTransition(){

@@ -2,8 +2,15 @@
 using System.Collections;
 
 public class ArsenalCamera : MonoBehaviour {
-	[SerializeField]
-	private GameObject Fighter;
+//	[SerializeField]
+	private GameObject _fighter;
+	public GameObject Fighter{
+		set{
+			_fighter = value;
+		}get{
+			return _fighter;
+		}
+	}
 	// Use this for initialization
 	void Start () {
 		StartCoroutine (RotateAroundCamera());

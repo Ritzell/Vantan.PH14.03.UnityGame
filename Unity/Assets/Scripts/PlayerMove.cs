@@ -34,11 +34,8 @@ public class PlayerMove : MonoBehaviour
 	}
 		
 	void Awake(){
-//		Glow = GameObject.Find ("Glow").GetComponent<ParticleSystem> ();
-//		Burner = GameObject.Find ("Afterburner").GetComponent<ParticleSystem> ();
 		Glow.ForEach(glow => em.Add(glow.emission));
 		Glow.ForEach (glow => rate.Add (glow.emission.rate));
-//		rate[0] = Glow[0].emission.rate;
 		EngineS = GameObject.FindObjectOfType<EngineSound> ();
 		AirFrame = GameObject.Find ("eurofighter").transform;
 		DefaltRotation = AirFrame.localRotation;
@@ -47,22 +44,23 @@ public class PlayerMove : MonoBehaviour
 	void Start(){
 		SpeedLineMaterial.SetColor ("_Color", new Color (1, 1, 1, 0));
 		FindObjectOfType<GameManager> ().StartStage ();
+		FindObjectOfType<CameraSetting> ().OnScene (Scenes.Stage);
 	}
 
 	public void Manual ()
 	{
 		
 		gameObject.GetComponent<Animator>().Stop ();
-//		NotificationSystem.Announce = "操縦権を搭乗者に委託します";
-		StartCoroutine (NotificationSystem.UpdateNotification ("操縦権を搭乗者に委託します"));
-		StartCoroutine (Move ());
-		StartCoroutine (ChangeSpeed ());
 		CameraSystem cameraSystem = FindObjectOfType<CameraSystem> ();
 		cameraSystem.StartCoroutine(CameraSystem.CameraChangePosition());
 		cameraSystem.StartCoroutine(cameraSystem.CameraModeChange());
+		cameraSystem.SetUp ();
 		FindObjectOfType<EnemyBase> ().StartCoroutine (EnemyBase.PlayerInArea ());
 		gameObject.GetComponent<Attack> ().EnableAttack ();
 		Reticle.EnableReticle ();
+		StartCoroutine (Move ());
+		StartCoroutine (ChangeSpeed ());
+		StartCoroutine (NotificationSystem.UpdateNotification ("操縦権を搭乗者に委託します"));
 	}
 
 	public IEnumerator FadeInSpeedLine(){
@@ -153,18 +151,18 @@ public class PlayerMove : MonoBehaviour
 		}
 	}
 
-	private void HighPower ()//ParticleSystem Burner, ParticleSystem Glow, ParticleSystem.EmissionModule em, ParticleSystem.MinMaxCurve rate)
+	private void HighPower ()
 	{
 		foreach (ParticleSystem burner in Burner) {
 			burner.startSpeed = 25;
 			burner.startSize = 1.4f;
 		}
-		Glow.ForEach(glow => glow.startSpeed = 25);//Glow.startSpeed = 25;
-		rate.ForEach(rt => rt.constantMax = 450);//rate.constantMax = 450f;
-		em.ForEach(e => e.rate = rate[0]);//em.rate = rate;
+		Glow.ForEach(glow => glow.startSpeed = 25);
+		rate.ForEach(rt => rt.constantMax = 450);
+		em.ForEach(e => e.rate = rate[0]);
 	}
 
-	private void LowPower ()//ParticleSystem Burner, ParticleSystem Glow, ParticleSystem.EmissionModule em, ParticleSystem.MinMaxCurve rate)
+	private void LowPower ()
 	{
 		foreach (ParticleSystem burner in Burner) {
 			burner.startSpeed = 4;

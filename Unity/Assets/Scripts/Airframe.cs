@@ -39,7 +39,7 @@ public class Airframe : MonoBehaviour
 	}
 
 	private void Bombed(){
-		//HP -= 1;
+		HP -= 1;
 		LightingSystem.TurningOff (UIType.HP);
 		StartCoroutine (CameraSystem.SwayCamera ());
 		PlayerSound.HitSound ();
@@ -99,6 +99,7 @@ public class Airframe : MonoBehaviour
 		if (GameManager.GameOver) {
 			yield break;
 		}
+		GameObject.Find ("Main Camera").transform.parent = null;
 		Destroy (gameObject);
 		yield return StartCoroutine (GameManager.GameEnd (false));
 	}
