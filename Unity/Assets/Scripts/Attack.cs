@@ -195,4 +195,8 @@ public class Attack : MonoBehaviour
 	{
 		return (Input.GetKey (KeyCode.JoystickButton12) || Input.GetKey (KeyCode.F));
 	}
+
+	void OnDestroy(){
+		PlayerMissiles.Clear ();
+	}
 }

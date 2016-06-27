@@ -108,4 +108,16 @@ public class MissileRader : MonoBehaviour {
 		MissileUI.GetComponent<MapMissilePosition> ().StartCoroutine (MissileUI.GetComponent<MapMissilePosition> ().UpdatePosition (Missile));
 		return MissileUI;
 	}
+
+	void OnDestroy(){
+		ListsClear ();
+		StopAllCoroutines ();
+	}
+
+	private void ListsClear(){
+		addInRangeMissile.Clear ();
+		InRangeMissiles.Clear ();
+		OutRangeMissiles.Clear ();
+		AddOutRangeMissile.Clear ();
+	}
 }

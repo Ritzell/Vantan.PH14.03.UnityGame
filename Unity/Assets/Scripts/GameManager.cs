@@ -76,7 +76,6 @@ public class GameManager : MonoBehaviour
 		Manager = GameObject.FindObjectOfType<GameManager>();
 		Factory = GameObject.FindObjectOfType<MissileFactory>();
 		StartTime = DateTime.Now;
-//		CameraSetting.StartUp ();
 		StartCoroutine (Timer ());//タイマーを起動
 	}
 

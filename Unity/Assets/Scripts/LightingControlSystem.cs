@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class LightingControlSystem : MonoBehaviour
 {
 	private static List<Image> MissileIcons = new List<Image> ();
-	private static Queue<Image> HPBarUI = new Queue<Image> ();
+	private static Queue<Image> HPBarIcons = new Queue<Image> ();
 	private static Image GunHitImage;
 	private static RectTransform GunHitImageTransform;
 	private static int _missileNumber = -1;
@@ -22,18 +22,18 @@ public class LightingControlSystem : MonoBehaviour
 //	}
 
 	// Use this for initialization
-	void Start ()
+	void Awake ()
 	{
 		MissileIcons.Add (GameObject.Find ("MissileIconA").GetComponent<Image> ());
 		MissileIcons.Add (GameObject.Find ("MissileIconB").GetComponent<Image> ());
 		MissileIcons.Add (GameObject.Find ("MissileIconC").GetComponent<Image> ());
 		MissileIcons.Add (GameObject.Find ("MissileIconD").GetComponent<Image> ());
 
-		HPBarUI.Enqueue (GameObject.Find ("HPBarA").GetComponent<Image> ());
-		HPBarUI.Enqueue (GameObject.Find ("HPBarB").GetComponent<Image> ());
-		HPBarUI.Enqueue (GameObject.Find ("HPBarC").GetComponent<Image> ());
-		HPBarUI.Enqueue (GameObject.Find ("HPBarD").GetComponent<Image> ());
-		HPBarUI.Enqueue (GameObject.Find ("HPBarE").GetComponent<Image> ());
+		HPBarIcons.Enqueue (GameObject.Find ("HPBarA").GetComponent<Image> ());
+		HPBarIcons.Enqueue (GameObject.Find ("HPBarB").GetComponent<Image> ());
+		HPBarIcons.Enqueue (GameObject.Find ("HPBarC").GetComponent<Image> ());
+		HPBarIcons.Enqueue (GameObject.Find ("HPBarD").GetComponent<Image> ());
+		HPBarIcons.Enqueue (GameObject.Find ("HPBarE").GetComponent<Image> ());
 		GunHitImage = GameObject.Find ("GunHitImage").GetComponent<Image> ();
 		GunHitImageTransform = GunHitImage.GetComponent<RectTransform>();
 	}
@@ -43,9 +43,9 @@ public class LightingControlSystem : MonoBehaviour
 		if (UI == UIType.Missile) {
 			MissileIcons [Number (ref _missileNumber)].color = Color.gray;
 		} else if (UI == UIType.HP) {
-			HPBarUI.Dequeue ().color = Color.black;
-			if (HPBarUI.Count == 2) {
-				foreach (Image HPBar in HPBarUI) {
+			HPBarIcons.Dequeue ().color = Color.black;
+			if (HPBarIcons.Count == 2) {
+				foreach (Image HPBar in HPBarIcons) {
 					HPBar.color = Color.red;
 				}
 			}
@@ -77,8 +77,8 @@ public class LightingControlSystem : MonoBehaviour
 
 	public static void ShatDown ()
 	{
-		while (HPBarUI.Count > 0) {
-			HPBarUI.Dequeue ().color = Color.black;
+		while (HPBarIcons.Count > 0) {
+			HPBarIcons.Dequeue ().color = Color.black;
 		}
 	}
 
@@ -96,5 +96,10 @@ public class LightingControlSystem : MonoBehaviour
 			number = 0;
 		}
 		return number;
+	}
+
+	void OnDestroy(){
+		MissileIcons.Clear ();
+		HPBarIcons.Clear ();
 	}
 }

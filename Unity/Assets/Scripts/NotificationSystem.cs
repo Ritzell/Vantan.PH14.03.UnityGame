@@ -21,9 +21,6 @@ public class NotificationSystem : MonoBehaviour {
 		NotiSystem = gameObject.GetComponent<NotificationSystem>();
 	}
 
-	void Start(){
-	}
-
 	public enum NotificationType{
 		Announce,
 		Missile
@@ -117,6 +114,20 @@ public class NotificationSystem : MonoBehaviour {
 	}
 
 
+	private static void MoveTrashSentence(bool isAll){
+		if (isAll) {
+			Sentences.Clear ();
+			return;
+		} else {
+			if(Sentences.Count > MaxSentences){
+				Destroy(Sentences[0].gameObject);
+				Sentences.RemoveAt(0);
+			}
+		}
+	}
+
+
+
 
 	private static IEnumerator TextBoxStartUp(GameObject TextBox,NotificationType type){
 		bool isAnnounce = type == NotificationType.Announce ? true : false;
@@ -142,5 +153,11 @@ public class NotificationSystem : MonoBehaviour {
 
 	private static void EntrySentence(string text,Text NewSentence){
 		NewSentence.text = text;
+	}
+
+
+	void OnDestroy(){
+		StopAllCoroutines ();
+		MoveTrashSentence (true);
 	}
 }
