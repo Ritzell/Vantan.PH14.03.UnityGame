@@ -11,6 +11,9 @@ public class Record : MonoBehaviour {
 	private static Text Rank;
 	private static TimeSpan ElapsedTime;
 
+
+	[SerializeField]
+	private RenderTexture target;
 	[SerializeField]
 	private Image BackGroundImage;
 
