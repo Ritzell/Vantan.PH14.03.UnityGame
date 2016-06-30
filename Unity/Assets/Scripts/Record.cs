@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using System;
+using System.IO;
 using UnityEngine.SceneManagement;
 
 public class Record : MonoBehaviour {
@@ -45,7 +46,16 @@ public class Record : MonoBehaviour {
 	private Sprite DefeatImage;
 
 	private void ChangeImage(){
-		BackGroundImage.sprite = GameManager.backGroundSprite;//Sprite.Create(ImageCamera.ResultTexture,new Rect(0, 0, Screen.width, Screen.height),Vector2.zero);
+		if (Directory.Exists (ImageCamera.ImagePath)) {
+			byte[] bytes = File.ReadAllBytes (ImageCamera.ImagePath);
+			Texture2D ResultTexture = new Texture2D (Screen.width, Screen.height);
+			ResultTexture.LoadImage (bytes);
+			BackGroundImage.sprite = Sprite.Create (ResultTexture, new Rect (0, 0, Screen.width, Screen.height), Vector2.zero);
+			return;
+		} else {
+			//画像がなければ画像を変えない
+			return;
+		}
 	}
 
 	private IEnumerator NextScene(){
@@ -54,6 +64,10 @@ public class Record : MonoBehaviour {
 				Destroy(GameObject.Find("Main Camera"));
 				SceneManager.LoadScene ("title");
 				GameObject.Find ("GameManager").GetComponent<AudioSource> ().Stop ();
+				if (Directory.Exists(ImageCamera.ImagePath))
+				{
+					File.Delete(ImageCamera.ImagePath) ;
+				}
 				Destroy (GameObject.Find ("GameManager"));
 			}
 			yield return null;

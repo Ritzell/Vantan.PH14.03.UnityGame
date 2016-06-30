@@ -25,15 +25,6 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
-	private static Sprite _backGroundSprite;
-	public static Sprite backGroundSprite{
-		set{
-			_backGroundSprite = value;
-		}get{
-			return _backGroundSprite;
-		}
-	}
-
 	private static int MissileCount;
 	public static int MissileCounter {
 		set {
