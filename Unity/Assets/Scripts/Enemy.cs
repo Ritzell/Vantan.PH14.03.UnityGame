@@ -9,12 +9,12 @@ public class Enemy : MonoBehaviour
 	private AudioSource CryBox;
 	[SerializeField]
 	private Material ArmorMaterial;
-	[SerializeField]
 	private CameraSystem CameraS;
 
 	//	private Material Emission;
 	private bool isLife = true;
 	private float HP = 600;
+	private float MaxHP;
 	private Material MyMaterial;
 	private Color MaterialColor;
 	private Coroutine Breth;
@@ -42,11 +42,13 @@ public class Enemy : MonoBehaviour
 		Frame = GameObject.Find ("eurofighter").GetComponent<Airframe> ();
 		Tgt = GameObject.Find ("eurofighter");
 		MyMaterial = gameObject.GetComponent<Renderer> ().material;
+		CameraS = GameObject.Find ("Main Camera").GetComponent<CameraSystem>();
 
 	}
 
 	void Start ()
 	{
+		MaxHP = HP;
 		ArmorMaterial.color = new Color (0.3f, 0.3f, 0.3f, 1);
 		MaterialColor = MyMaterial.GetColor ("_EmissionColor");
 		EnemyBase.Rest = EnemyBase.Rest + 1;
@@ -81,7 +83,7 @@ public class Enemy : MonoBehaviour
 	private IEnumerator StateNotification(){
 		bool isPassing = false;
 		while (!isPassing) {
-			if (HP <= 300) {
+			if (HP <= MaxHP/2) {
 //				NotificationSystem.Announce = gameObject.name + "の体力が著しく消耗しています。";
 				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "の体力が著しく消耗しています。"));
 				isPassing = true;
@@ -91,7 +93,7 @@ public class Enemy : MonoBehaviour
 		}
 		isPassing = false;
 		while (!isPassing) {
-			if (HP <= 150) {
+			if (HP <= MaxHP/4) {
 //				NotificationSystem.Announce = gameObject.name + "が弱っています";
 				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "が弱っています"));
 				isPassing = true;
@@ -101,7 +103,7 @@ public class Enemy : MonoBehaviour
 		}
 		isPassing = false;
 		while (!isPassing) {
-			if (HP <= 75) {
+			if (HP <= MaxHP/8) {
 //				NotificationSystem.Announce = gameObject.name + "がもう少しで撃破できます。";
 				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "がもう少しで撃破できます。"));
 				isPassing = true;

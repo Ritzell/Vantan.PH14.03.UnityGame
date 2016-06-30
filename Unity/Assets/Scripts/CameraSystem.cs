@@ -67,6 +67,7 @@ public class CameraSystem : MonoBehaviour
 		AirPlain = GameObject.Find ("eurofighter");
 		CameraBloom = gameObject.GetComponent<Bloom> ();
 		StartThreshold = CameraBloom.bloomThreshold;
+//		StartCoroutine (Caputure ());
 
 	}
 
@@ -175,14 +176,12 @@ public class CameraSystem : MonoBehaviour
 //	yield return StartCoroutine(Async(r => result = r));
 	public IEnumerator Flash(float FlashPower,bool isOut){
 		while (CameraBloom.bloomThreshold > 0) {
-			CameraBloom.bloomThreshold -= Time.deltaTime * (int)(1 / Time.timeScale);
-			CameraBloom.bloomIntensity += Time.deltaTime * FlashPower * (int)(1 / Time.timeScale);
+			FlashIn (FlashPower, 1);
 			yield return null;
 		}
 		if(isOut){
 			while (CameraBloom.bloomThreshold < StartThreshold) {
-				CameraBloom.bloomThreshold += Time.deltaTime * (int)(1 / Time.timeScale);
-				CameraBloom.bloomIntensity -= Time.deltaTime * FlashPower * (int)(1 / Time.timeScale);
+				FlashOut (FlashPower, 1);
 				yield return null;
 			}
 		}
@@ -191,15 +190,13 @@ public class CameraSystem : MonoBehaviour
 
 	public IEnumerator Flash(float FlashPower,bool isOut, Action<bool> FadeOut){
 		while (CameraBloom.bloomThreshold > 0) {
-			CameraBloom.bloomThreshold -= Time.deltaTime * (int)(1 / Time.timeScale);
-			CameraBloom.bloomIntensity += Time.deltaTime * FlashPower * (int)(1 / Time.timeScale);
+			FlashIn (FlashPower, 1);
 			yield return null;
 		}
 		if(isOut){
 			FadeOut (true);
 			while (CameraBloom.bloomThreshold < StartThreshold) {
-				CameraBloom.bloomThreshold += Time.deltaTime * (int)(1 / Time.timeScale);
-				CameraBloom.bloomIntensity -= Time.deltaTime * FlashPower * (int)(1 / Time.timeScale);
+				FlashOut (FlashPower,1);
 				yield return null;
 			}
 		}
@@ -208,14 +205,12 @@ public class CameraSystem : MonoBehaviour
 
 	public IEnumerator Flash(float FlashPower,bool isOut,float FlashSpeed){
 		while (CameraBloom.bloomThreshold > 0) {
-			CameraBloom.bloomThreshold -= Time.deltaTime * (int)(1 / Time.timeScale) * FlashSpeed;
-			CameraBloom.bloomIntensity += Time.deltaTime * FlashPower * (int)(1 / Time.timeScale) * FlashSpeed;
+			FlashIn (FlashPower, FlashSpeed);
 			yield return null;
 		}
 		if(isOut){
 			while (CameraBloom.bloomThreshold < StartThreshold) {
-				CameraBloom.bloomThreshold += Time.deltaTime * (int)(1 / Time.timeScale)*FlashSpeed;
-				CameraBloom.bloomIntensity -= Time.deltaTime * FlashPower * (int)(1 / Time.timeScale)*FlashSpeed;
+				FlashIn (FlashPower, FlashSpeed);
 				yield return null;
 			}
 		}
@@ -224,8 +219,7 @@ public class CameraSystem : MonoBehaviour
 
 	public IEnumerator Flash(float FlashPower,bool isOut,float FlashSpeed,GameObject sync){
 		while (CameraBloom.bloomThreshold > 0) {
-			CameraBloom.bloomThreshold -= Time.deltaTime * (int)(1 / Time.timeScale) * FlashSpeed;
-			CameraBloom.bloomIntensity += Time.deltaTime * FlashPower * (int)(1 / Time.timeScale) * FlashSpeed;
+			FlashIn (FlashPower, FlashSpeed);
 			yield return null;
 		}
 		if(!isOut){
@@ -236,8 +230,7 @@ public class CameraSystem : MonoBehaviour
 		}
 
 		while (CameraBloom.bloomThreshold < StartThreshold/3) {
-			CameraBloom.bloomThreshold += Time.deltaTime * (int)(1 / Time.timeScale) * FlashSpeed;
-			CameraBloom.bloomIntensity -= Time.deltaTime * FlashPower * (int)(1 / Time.timeScale) * FlashSpeed;
+			FlashOut (FlashPower, FlashSpeed);
 			yield return null;
 		}
 		CameraBloom.bloomThreshold = StartThreshold;
@@ -246,8 +239,7 @@ public class CameraSystem : MonoBehaviour
 
 	public IEnumerator Flash(float FlashPower,bool isOut,float FlashSpeed,GameObject sync,Action<bool> FadeOut){
 		while (CameraBloom.bloomThreshold > 0) {
-			CameraBloom.bloomThreshold -= Time.deltaTime * (int)(1 / Time.timeScale) * FlashSpeed;
-			CameraBloom.bloomIntensity += Time.deltaTime * FlashPower * (int)(1 / Time.timeScale) * FlashSpeed;
+			FlashIn (FlashPower, FlashSpeed);
 			yield return null;
 		}
 		if (!isOut) {
@@ -255,16 +247,24 @@ public class CameraSystem : MonoBehaviour
 		}
 		FadeOut (true);
 		while(isOut && sync != null){
-			Debug.Log (sync);
 			yield return null;
 		}
 		while (CameraBloom.bloomThreshold < StartThreshold/3) {
-			CameraBloom.bloomThreshold += Time.deltaTime * (int)(1 / Time.timeScale) * FlashSpeed;
-			CameraBloom.bloomIntensity -= Time.deltaTime * FlashPower * (int)(1 / Time.timeScale) * FlashSpeed;
+			FlashOut (FlashPower, FlashSpeed);
 			yield return null;
 		}
 		CameraBloom.bloomThreshold = StartThreshold;
 		yield return null;
+	}
+
+	private void FlashIn(float FlashPower, float FlashSpeed){
+		CameraBloom.bloomThreshold -= Time.deltaTime * (int)(1 / Time.timeScale) * FlashSpeed;
+		CameraBloom.bloomIntensity += Time.deltaTime * FlashPower * (int)(1 / Time.timeScale) * FlashSpeed;
+	}
+
+	private void FlashOut(float FlashPower, float FlashSpeed){
+		CameraBloom.bloomThreshold += Time.deltaTime * (int)(1 / Time.timeScale) * FlashSpeed;
+		CameraBloom.bloomIntensity -= Time.deltaTime * FlashPower * (int)(1 / Time.timeScale) * FlashSpeed;
 	}
 
 	public IEnumerator CameraOut(){

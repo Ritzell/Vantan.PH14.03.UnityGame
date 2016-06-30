@@ -25,6 +25,15 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
+	private static Sprite _backGroundSprite;
+	public static Sprite backGroundSprite{
+		set{
+			_backGroundSprite = value;
+		}get{
+			return _backGroundSprite;
+		}
+	}
+
 	private static int MissileCount;
 	public static int MissileCounter {
 		set {
@@ -134,6 +143,7 @@ public class GameManager : MonoBehaviour
 		while (!isOut) {
 			yield return null;
 		}
+//		Record.backGroundSprite = Sprite.Create(ImageCamera.ResultTexture,new Rect(0, 0, Screen.width, Screen.height),Vector2.zero);
 		SceneManager.LoadSceneAsync (SceneName);
 		yield return null;
 	}

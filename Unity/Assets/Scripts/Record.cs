@@ -42,7 +42,7 @@ public class Record : MonoBehaviour {
 	private Sprite DefeatImage;
 
 	private void ChangeImage(){
-		BackGroundImage.sprite = DefeatImage;
+		BackGroundImage.sprite = GameManager.backGroundSprite;//Sprite.Create(ImageCamera.ResultTexture,new Rect(0, 0, Screen.width, Screen.height),Vector2.zero);
 	}
 
 	private IEnumerator NextScene(){
@@ -83,7 +83,7 @@ public class Record : MonoBehaviour {
 	private static string DefeatEntry(){
 		BattleIssue.color = Color.blue;
 		Rank.text = EvaluationRank (false);
-//		FindObjectOfType<Record> ().ChangeImage ();
+		FindObjectOfType<Record> ().ChangeImage ();
 		return "Defeat";
 	}
 

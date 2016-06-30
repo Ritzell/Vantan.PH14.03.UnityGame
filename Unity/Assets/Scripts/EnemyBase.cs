@@ -82,7 +82,6 @@ public class EnemyBase : MonoBehaviour
 		bool isPassing = false;
 		while (!isPassing) {
 			if (HP <= 300) {
-//				NotificationSystem.Announce = gameObject.name + "の体力が著しく消耗しています。";
 				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "の体力が著しく消耗しています。"));
 				isPassing = true;
 				yield return null;
@@ -92,8 +91,6 @@ public class EnemyBase : MonoBehaviour
 		isPassing = false;
 		while (!isPassing) {
 			if (HP <= 150) {
-//				NotificationSystem.Announce = gameObject.name + "が非常に弱っています";
-
 				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "が非常に弱っています"));
 				isPassing = true;
 				yield return null;
@@ -103,8 +100,6 @@ public class EnemyBase : MonoBehaviour
 		isPassing = false;
 		while (!isPassing) {
 			if (HP <= 75) {
-//				NotificationSystem.Announce = gameObject.name +"敵がもう少しで撃破できます。";
-
 				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "敵がもう少しで撃破できます。"));
 				isPassing = true;
 				yield return null;

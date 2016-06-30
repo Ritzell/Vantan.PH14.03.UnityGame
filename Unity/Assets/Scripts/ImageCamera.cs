@@ -1,7 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.IO;
+using UnityEngine.UI;
+using System;
 
 public class ImageCamera : MonoBehaviour {
+	[SerializeField]
+	private RenderTexture target;
+	[SerializeField]
+	private Image newSprite;
+
+	private Camera RenderCamera;
 
 	private static Texture2D _resultTexture;
 	public static Texture2D ResultTexture{
@@ -11,15 +20,57 @@ public class ImageCamera : MonoBehaviour {
 			return _resultTexture;
 		}
 	}
+
+	void Awake(){
+		RenderCamera = gameObject.GetComponent<Camera> ();
+		DontDestroyOnLoad (target);
+		DontDestroyOnLoad (ResultTexture);
+	}
+
+	void Start(){
+//		StartCoroutine (Capture ());
+	}
+
+	private IEnumerator Capture(){
+		while (!GameManager.GameOver) {
+			if (Input.GetKeyDown (KeyCode.Escape)) {
+				yield return StartCoroutine(CaptureResultImage ());
+			}
+			yield return null;
+		}
+	}
+
+	private static IntPtr ptr;
+	public static IntPtr Ptr{
+		set{
+			ptr = value;
+		}get{
+			return ptr;
+		}
+	}
 		
-	public IEnumerator CaptureResultImage(RenderTexture target,Camera RenderCamera){
+	public IEnumerator CaptureResultImage(){
 		RenderTexture.active = target;
-		RenderCamera.Render ();
+		RenderCamera.enabled = true;
 		yield return new WaitForEndOfFrame ();
-		var renderTex = new Texture2D (target.width, target.height, TextureFormat.ARGB32, false);
-		renderTex.ReadPixels (new Rect(0, 0, target.width, target.height), 0, 0);
-		renderTex.Apply();
-		ResultTexture = renderTex;
+		yield return new WaitForSeconds (0.1f);
+		yield return new WaitForEndOfFrame ();
+		Texture2D tex2d = new Texture2D (1024, 1024, TextureFormat.ARGB32, false);
+		tex2d.ReadPixels (new Rect(0, 0, target.width, target.height), 0, 0);
+		tex2d.Apply ();
+		ResultTexture = tex2d;
+		Ptr = target.GetNativeTexturePtr();
+		ResultTexture.UpdateExternalTexture (ImageCamera.Ptr);
+		ResultTexture.Apply ();
+		newSprite.sprite = Sprite.Create(ResultTexture,new Rect(0, 0, 1024, 1024),Vector2.zero);
+		GameManager.backGroundSprite = Sprite.Create(ResultTexture,new Rect(0, 0, 1024, 1024),Vector2.zero);
+//		Texture2D externalTexture = Texture2D.CreateExternalTexture (1024, 1024, TextureFormat.ARGB32, false, false, ptr);
+//		Ptr = externalTexture.GetNativeTexturePtr ();
+//		tex2d.UpdateExternalTexture (externalTexture.GetNativeTexturePtr ());
+//		tex2d.Apply();
+		RenderCamera.enabled = false;
+//		byte[] pngData = ResultTexture.EncodeToPNG ();
+//		File.WriteAllBytes (Application.dataPath + "/../tmp.png", pngData);
 		yield return null;
 	}
 }
