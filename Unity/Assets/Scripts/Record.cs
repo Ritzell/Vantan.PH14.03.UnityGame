@@ -46,7 +46,7 @@ public class Record : MonoBehaviour {
 	private Sprite DefeatImage;
 
 	private void ChangeImage(){
-		if (Directory.Exists (ImageCamera.ImagePath)) {
+		if (File.Exists (ImageCamera.ImagePath)) {
 			byte[] bytes = File.ReadAllBytes (ImageCamera.ImagePath);
 			Texture2D ResultTexture = new Texture2D (Screen.width, Screen.height);
 			ResultTexture.LoadImage (bytes);
@@ -64,7 +64,7 @@ public class Record : MonoBehaviour {
 				Destroy(GameObject.Find("Main Camera"));
 				SceneManager.LoadScene ("title");
 				GameObject.Find ("GameManager").GetComponent<AudioSource> ().Stop ();
-				if (Directory.Exists(ImageCamera.ImagePath))
+				if (File.Exists(ImageCamera.ImagePath))
 				{
 					File.Delete(ImageCamera.ImagePath) ;
 				}

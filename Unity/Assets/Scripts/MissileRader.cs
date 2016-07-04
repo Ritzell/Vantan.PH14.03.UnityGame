@@ -50,6 +50,7 @@ public class MissileRader : MonoBehaviour {
 					if (Mathf.Abs (Vector3.Distance (outRangeMissiles [i].position, Player.position)) <= 2000) {
 						ToInRange (outRangeMissiles [i]);
 					}
+				yield return null;
 			}
 			yield return null;
 		}

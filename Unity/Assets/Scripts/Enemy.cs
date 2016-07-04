@@ -54,7 +54,7 @@ public class Enemy : MonoBehaviour
 		EnemyBase.Rest = EnemyBase.Rest + 1;
 		Breth = StartCoroutine (Respiration ());
 		StateNotice = StateNotification();
-		CryBox.pitch = Random.Range (0.65f, 1.3f);
+		CryBox.pitch = 2.5f;
 	}
 
 	void OnTriggerEnter (Collider Col)
@@ -65,6 +65,7 @@ public class Enemy : MonoBehaviour
 		if (Col.gameObject.layer == (int)PlayerAttackPower.bulletLayer) {
 			HP -= (int)PlayerAttackPower.bullet;
 		} else if (Col.gameObject.layer == (int)PlayerAttackPower.missileLayer) {
+			CryBox.Play ();
 			HP -= (int)PlayerAttackPower.missile;
 		}
 //		Debug.Log (HP);
@@ -149,6 +150,7 @@ public class Enemy : MonoBehaviour
 
 	private IEnumerator Deth ()
 	{
+		CryBox.pitch = Random.Range (0.65f, 1.3f);
 		CryBox.Play ();
 		StopCoroutine (Breth);
 		MyMaterial.EnableKeyword ("_EMISSION");
@@ -156,6 +158,7 @@ public class Enemy : MonoBehaviour
 		StartCoroutine (StateChange (CryBox));
 		StartCoroutine (ShakeBody());
 		CameraS.StartCoroutine(CameraS.Flash(0.8f,true,0.35f,gameObject));
+
 		while (true) {
 			if (CryBox.isPlaying == false) {
 //				NotificationSystem.Announce = gameObject.name + "を撃破しました！";

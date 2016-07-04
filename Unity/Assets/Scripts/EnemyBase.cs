@@ -29,12 +29,12 @@ public class EnemyBase : MonoBehaviour
 
 	void Awake ()
 	{
-		Towers.Add (GameObject.Find ("TowerA").transform);
-		Towers.Add (GameObject.Find ("TowerB").transform);
-		Towers.Add (GameObject.Find ("TowerC").transform);
-		Towers.Add (GameObject.Find ("TowerD").transform);
-		Towers.Add (GameObject.Find ("TowerE").transform);
-		Towers.Add (GameObject.Find ("TowerF").transform);
+//		Towers.Add (GameObject.Find ("TowerA").transform);
+//		Towers.Add (GameObject.Find ("TowerB").transform);
+//		Towers.Add (GameObject.Find ("TowerC").transform);
+//		Towers.Add (GameObject.Find ("TowerD").transform);
+//		Towers.Add (GameObject.Find ("TowerE").transform);
+//		Towers.Add (GameObject.Find ("TowerF").transform);
 
 		Childs.Add (GameObject.Find ("ChildEnemyA").GetComponent<EnemyAttack> ());
 		Childs.Add (GameObject.Find ("ChildEnemyB").GetComponent<EnemyAttack> ());

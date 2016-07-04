@@ -112,12 +112,12 @@ public class MissileSystem : MonoBehaviour
 	{
 		ShootReady (isReload);
 		while (tgt != null) {
-			try {
-				StartCoroutine (GetAimingPlayer (tgt));
-				StartCoroutine (MoveForward ());
-			} catch {
-			}
-			yield return null;
+			yield return StartCoroutine (Tracking (tgt));
+//			try {
+////				yield return StartCoroutine(Tracking
+//			} catch {
+//			}
+//			yield return null;
 		}
 		while (gameObject != null) {
 			StartCoroutine (MoveForward ());
@@ -128,15 +128,14 @@ public class MissileSystem : MonoBehaviour
 	public IEnumerator TrackingForPlayer (Transform tgt)
 	{
 		selfBrake = StartCoroutine (SelfBreak ());
+		Vector3 RandomError = new Vector3 (Random.Range (RandomRange.x, RandomRange.y), Random.Range (RandomRange.x, RandomRange.y), Random.Range (RandomRange.x, RandomRange.y));
+		while (tgt != null && Distance (tgt) >= ChangeModeDistance) {
+			yield return StartCoroutine (Tracking (tgt, RandomError));
+		}
+		RefreshSelfBreak ();
+		StartCoroutine(ImageCamera.CaptureResultImage ());
 		while (true) {
-			Vector3 RandomError = new Vector3 (Random.Range (RandomRange.x, RandomRange.y), Random.Range (RandomRange.x, RandomRange.y), Random.Range (RandomRange.x, RandomRange.y));
-			while (tgt != null && Distance (tgt) >= ChangeModeDistance) {
-				yield return StartCoroutine (ErrorTracking (tgt, RandomError));
-			}
-			RefreshSelfBreak ();
-			while (true) {
-				yield return StartCoroutine (MoveForward ());
-			}
+			yield return StartCoroutine (MoveForward ());
 		}
 	}
 
@@ -176,9 +175,15 @@ public class MissileSystem : MonoBehaviour
 		yield return null;
 	}
 
-	private IEnumerator ErrorTracking (Transform tgt, Vector3 Random3)
+	private IEnumerator Tracking (Transform tgt)
 	{
-		transform.LookAt (tgt.transform.position + Random3);
+		transform.LookAt (tgt.transform.position);
+		yield return StartCoroutine (MoveForward ());
+	}
+
+	private IEnumerator Tracking (Transform tgt, Vector3 error)
+	{
+		transform.LookAt (tgt.transform.position + error);
 		yield return StartCoroutine (MoveForward ());
 	}
 
@@ -206,16 +211,6 @@ public class MissileSystem : MonoBehaviour
 		transform.FindChild ("Afterburner").gameObject.SetActive (true);
 	}
 
-	private IEnumerator GetAimingPlayer (Transform tgt)
-	{
-		try {
-			Vector3 TgtPos = new Vector3 (tgt.transform.position.x, tgt.transform.position.y, tgt.transform.position.z);
-			transform.LookAt (TgtPos);
-		} catch {
-		}
-		yield return null;
-	}
-
 	private IEnumerator MoveForward ()
 	{
 		transform.Translate (Vector3.forward * Time.deltaTime * Speed);
@@ -228,22 +223,25 @@ public class MissileSystem : MonoBehaviour
 		if (transform.parent != null || isDeth) {
 			return;
 		}
-		StartCoroutine (BreakMissile ());
+//		StartCoroutine (BreakMissile ());
 		if (gameObject.layer == 8 && (col.gameObject.layer == 11 || col.gameObject.layer == 15)) {
 			GameObject.Find("MissileNotification").GetComponent<NotificationSystem>().StartCoroutine(NotificationSystem.UpdateMissileNotification ());
 		}
 		isDeth = true;
+		Instantiate (Resources.Load ("prefabs/Explosion"), transform.position, Quaternion.identity);
+		Destroy (gameObject);
 	}
 
 	private IEnumerator SelfBreak ()
 	{
 		yield return new WaitForSeconds (LifeTime);
-		StartCoroutine (BreakMissile ());
+		Instantiate (Resources.Load ("prefabs/Explosion"), transform.position, Quaternion.identity);
+		Destroy (gameObject);
+//		StartCoroutine (BreakMissile ());
 		yield return null;
 	}
 
-	private IEnumerator BreakMissile ()
-	{
+	void OnDestroy(){
 		StopAllCoroutines ();
 		if (gameObject.layer == 12) {
 			ReticleSystem.RemoveMissiles.Add (gameObject);
@@ -252,19 +250,35 @@ public class MissileSystem : MonoBehaviour
 			} catch {
 			}
 		}
-		Instantiate (Resources.Load ("prefabs/Explosion"), transform.position, Quaternion.identity);
 		MissileRader.DestroyMissile (gameObject.transform);
 		GameManager.EnemyMissiles = -1;
-		StartCoroutine (Deth ());
-		yield return null;
 	}
 
-	private IEnumerator Deth ()
-	{
 
-		yield return new WaitForSeconds (0.5f);
-		StopAllCoroutines ();
-		Destroy (gameObject);
-		yield return null;
-	}
+
+//	private IEnumerator BreakMissile ()
+//	{
+//		StopAllCoroutines ();
+//		if (gameObject.layer == 12) {
+//			ReticleSystem.RemoveMissiles.Add (gameObject);
+//			try {
+//				ReticleSystem.MultiMissileLockOn.Remove (gameObject);
+//			} catch {
+//			}
+//		}
+//		Instantiate (Resources.Load ("prefabs/Explosion"), transform.position, Quaternion.identity);
+//		MissileRader.DestroyMissile (gameObject.transform);
+//		GameManager.EnemyMissiles = -1;
+//		StartCoroutine (Deth ());
+//		yield return null;
+//	}
+//
+//	private IEnumerator Deth ()
+//	{
+//
+//		yield return new WaitForSeconds (0.5f);
+//		StopAllCoroutines ();
+//		Destroy (gameObject);
+//		yield return null;
+//	}
 }

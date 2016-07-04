@@ -4,9 +4,9 @@ using System.IO;
 
 public class ImageCamera : MonoBehaviour {
 
-	private Camera _renderCamera;
-    private Texture2D _outputTexture;
-    private RenderTexture _target;
+	private static Camera _renderCamera;
+    private static Texture2D _outputTexture;
+    private static RenderTexture _target;
     private static string _path;
 	public static string ImagePath{
 		set{
@@ -36,11 +36,11 @@ public class ImageCamera : MonoBehaviour {
 		}
 	}
 		
-	public IEnumerator CaptureResultImage(){
+	public static IEnumerator CaptureResultImage(){
+		Debug.Log ("Capution");
 		RenderTexture.active = _target;
 		_renderCamera.enabled = true;
         _renderCamera.targetTexture = _target;
-        
         _renderCamera.Render();
         _outputTexture = new Texture2D(_target.width, _target.height, TextureFormat.ARGB32, false);
         _outputTexture.ReadPixels(new Rect(0, 0, _target.width, _target.height), 0, 0);
