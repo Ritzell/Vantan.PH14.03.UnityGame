@@ -25,8 +25,12 @@ public class MapMissilePosition : MonoBehaviour
 	{
 		name = Missile.name + "Point";
 		_Tgt = Missile;
-		while (!GameManager.GameOver && Missile.gameObject != null) {
+		while (!GameManager.GameOver) {
+			try{
 			transform.position = new Vector3 (((Missile.position.x - Player.position.x) * 0.025f) + Rader.position.x, ((Missile.position.y - Player.position.y) * 0.025f) + Rader.position.x, 0);
+			}catch{
+				Destroy (gameObject);
+			}
 			yield return null;
 		}
 	}

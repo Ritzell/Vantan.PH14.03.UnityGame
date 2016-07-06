@@ -53,6 +53,7 @@ public class Record : MonoBehaviour {
 			BackGroundImage.sprite = Sprite.Create (ResultTexture, new Rect (0, 0, Screen.width, Screen.height), Vector2.zero);
 			return;
 		} else {
+			Debug.Log ("a");
 			//画像がなければ画像を変えない
 			return;
 		}

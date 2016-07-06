@@ -71,23 +71,28 @@ public class Airframe : MonoBehaviour
 	/// 障害物の接近を検知、報告する
 	/// </summary>
 	/// <returns>The warning.</returns>
-	private static Coroutine alert;
+	private static Coroutine AlertCotouine;
 
+	private static bool _isAlert = false;
+	public static bool isAlert{
+		get{
+			return _isAlert;
+		}
+	}
 	private IEnumerator ObstacleWarning ()
 	{
 		RaycastHit hit;
-		var isAlert = false;
 		while (true) {
 			Ray ray = new Ray (transform.position, transform.forward);
-			if (!isAlert && Physics.Raycast (ray, out hit, 1500, 1 << 10)) {
-				alert = StartCoroutine (Alert ());
-				isAlert = true;
+			if (!_isAlert && Physics.Raycast (ray, out hit, 1500, 1 << 10)) {
+				AlertCotouine = StartCoroutine (Alert ());
+				_isAlert = true;
 				yield return null;
-			} else if (isAlert && !Physics.Raycast (ray, out hit, 1000, 1 << 10)) {
+			} else if (_isAlert && !Physics.Raycast (ray, out hit, 1000, 1 << 10)) {
 				AlertAudio.Stop ();
 				AlertUI.color = new Color (1, 1, 1, 0);
-				StopCoroutine (alert);
-				isAlert = false;
+				StopCoroutine (AlertCotouine);
+				_isAlert = false;
 				yield return null;
 			}
 			yield return null;

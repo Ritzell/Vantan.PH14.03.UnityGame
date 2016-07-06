@@ -133,7 +133,7 @@ public class MissileSystem : MonoBehaviour
 			yield return StartCoroutine (Tracking (tgt, RandomError));
 		}
 		RefreshSelfBreak ();
-		StartCoroutine(ImageCamera.CaptureResultImage ());
+//		FindObjectOfType<ImageCamera> ().StartCoroutine (ImageCamera.CaptureResultImage ());
 		while (true) {
 			yield return StartCoroutine (MoveForward ());
 		}
@@ -220,7 +220,7 @@ public class MissileSystem : MonoBehaviour
 	private bool isDeth = false;
 	void OnTriggerStay (Collider col)
 	{
-		if (transform.parent != null || isDeth) {
+		if (transform.parent != null || isDeth || col.gameObject.layer == 16) {
 			return;
 		}
 //		StartCoroutine (BreakMissile ());
