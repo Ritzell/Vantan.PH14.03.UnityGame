@@ -25,26 +25,11 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
-	private static int MissileCount;
-	public static int MissileCounter {
-		set {
-			MissileCount += value;
-		}get {
-			return MissileCount;
-		}
-	}
+    public static int MissileCount { get; set; }
 
-	private static int _enemyMissiles = 0;
-	public static int EnemyMissiles {
-		set {
-			_enemyMissiles += value;
-		}get {
-			return _enemyMissiles;
-		}
-	}
+    public static int EnemyMissiles { get; set; }
 
-
-	private static TimeSpan restTime;
+    private static TimeSpan restTime;
 
 	/// <summary>
 	/// 時間が0を下回るとscene移行するプロパティ

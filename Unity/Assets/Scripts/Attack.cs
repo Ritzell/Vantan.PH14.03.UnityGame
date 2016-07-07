@@ -134,7 +134,7 @@ public class Attack : MonoBehaviour
 	private bool isTrackingShoot ()
 	{
 		if (((Input.GetAxis ("LTrigger") == 1 || Input.GetKeyDown (KeyCode.V)) && _playerMissiles.Count >= 1)) {
-			GameManager.MissileCounter = +1;
+			GameManager.MissileCount += 1;
 			return true;
 		} else {
 			return false;
@@ -163,7 +163,7 @@ public class Attack : MonoBehaviour
 	private bool isStraightMissileShoot ()
 	{
 		if ((Input.GetAxis ("RTrigger") == 1 || Input.GetKeyDown (KeyCode.C)) && _playerMissiles.Count >= 1) {
-			GameManager.MissileCounter = +1;
+			GameManager.MissileCount += 1;
 			return true;
 		} else {
 			return false;

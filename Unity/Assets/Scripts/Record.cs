@@ -76,7 +76,7 @@ public class Record : MonoBehaviour {
 	private static void ResultEntry(){
 		BattleIssue.text = isVictory ? VictoryEntry() : DefeatEntry();
 		TimeRecord.text = "プレイ時間 : " + GameManager.TimeCastToString(ElapsedTime);
-		FindObjectOfType<Record>().StartCoroutine (MissileCounter (GameManager.MissileCounter));
+		FindObjectOfType<Record>().StartCoroutine (MissileCounter (GameManager.MissileCount));
 	}
 
 	private static IEnumerator MissileCounter(int Count){
