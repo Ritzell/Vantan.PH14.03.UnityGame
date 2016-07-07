@@ -38,7 +38,7 @@ public class MultipleReticle : MonoBehaviour
 
 	private IEnumerator ReticleMoveToTgt ()
 	{
-		while (!GameManager.GameOver && _lockOnTgt != null) {
+		while (!GameManager.IsGameOver && _lockOnTgt != null) {
 			Reticle.position = RectTransformUtility.WorldToScreenPoint (Camera.main, _lockOnTgt.transform.position);
 			yield return null;
 		}
@@ -47,7 +47,7 @@ public class MultipleReticle : MonoBehaviour
 
 	private IEnumerator LockOnCanceler ()
 	{
-		while (_lockOnTgt != null && !GameManager.GameOver) {
+		while (_lockOnTgt != null && !GameManager.IsGameOver) {
 			if (ReticleIsOutOfScreen ()) {
 				ForciblyRelaseLock(false);
 				yield return null;

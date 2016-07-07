@@ -31,7 +31,7 @@ public class TitleButton : MonoBehaviour {
 
 	private static void ClickEvent(Buttons Button,TitleButton origin,GameObject SettingWindow){
 		if (Button == Buttons.Start) {
-			GameManager.GameOver = false;
+			GameManager.ResetGame();
 			origin.StartCoroutine (GameManager.FlashLoadScene ("stage"));
 		} else if (Button == Buttons.Cusomize) {
 			origin.StartCoroutine (GameManager.FlashLoadScene ("Customize"));

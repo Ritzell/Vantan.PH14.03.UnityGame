@@ -37,14 +37,14 @@ public class MissileRader : MonoBehaviour {
 	}
 
 	private IEnumerator RotateRader(){
-		while(!GameManager.GameOver){
+		while(!GameManager.IsGameOver){
 			transform.rotation = new Quaternion (0,0,Player.localRotation.y,transform.rotation.w);
 			yield return null;
 		}
 	}
 
 	private IEnumerator OutRaderMissileDistance(){
-		while (!GameManager.GameOver) {
+		while (!GameManager.IsGameOver) {
 			MissileAddList(true);
 			for(int i = 0; i <= outRangeMissiles.Count-1; i++){
 					if (Mathf.Abs (Vector3.Distance (outRangeMissiles [i].position, Player.position)) <= 2000) {
@@ -58,7 +58,7 @@ public class MissileRader : MonoBehaviour {
 
 	private IEnumerator InRaderMissileDistance(){
 		Vector2 RaderPos = new Vector2 (transform.position.x, transform.position.y);
-		while(!GameManager.GameOver){
+		while(!GameManager.IsGameOver){
 			MissileAddList(false);
 			for(int i = 0; i <= _inRangeMissiles.Count-1; i++){
 				float	distance = Mathf.Abs (Vector2.Distance (new Vector2 (_inRangeMissiles [i].position.x, _inRangeMissiles [i].position.y), RaderPos));

@@ -65,7 +65,7 @@ public class MissileSystem : MonoBehaviour
 			AudioS.volume = 0.5f;
 			AudioS.spatialBlend = 1;
 			AudioS.maxDistance = 250f;
-			GameManager.EnemyMissiles = 1;
+			GameManager.EnemyMissiles += 1;
 			AudioS.clip = AudioClip3;
 			AudioS.loop = true;
 			AudioS.Play ();
@@ -250,7 +250,7 @@ public class MissileSystem : MonoBehaviour
 			}
 		}
 		MissileRader.DestroyMissile (gameObject.transform);
-		GameManager.EnemyMissiles = -1;
+		GameManager.EnemyMissiles -= 1;
 	}
 
 

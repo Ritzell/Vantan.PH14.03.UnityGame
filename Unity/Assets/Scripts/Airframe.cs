@@ -100,11 +100,11 @@ public class Airframe : MonoBehaviour
 
 	private IEnumerator Deth ()
 	{
-		if (GameManager.GameOver) {
+		if (GameManager.IsGameOver) {
 			yield break;
 		}
 		GameObject.Find ("Main Camera").transform.parent = null;
 		Destroy (gameObject);
-		yield return StartCoroutine (GameManager.GameEnd (false));
+		yield return StartCoroutine (GameManager.FinishGame (false));
 	}
 }

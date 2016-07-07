@@ -73,7 +73,7 @@ public class EnemyBase : MonoBehaviour
 		if (RestChildren <= 0 && HP <= 0) {
 			GameObject.Find ("engine").GetComponent<AudioSource> ().Stop ();
 			StopAllCoroutines ();
-			StartCoroutine (GameManager.GameEnd (true));
+			StartCoroutine (GameManager.FinishGame (true));
 			//Destroy(gameObject);
 		}
 	}

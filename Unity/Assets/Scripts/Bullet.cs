@@ -12,7 +12,7 @@ public class Bullet : MonoBehaviour
 	{
 		transform.parent = null;
 		StartCoroutine (TimeLimit ());
-		while (!GameManager.GameOver) {
+		while (!GameManager.IsGameOver) {
 			try {
 				MoveForward ();
 			} catch {
