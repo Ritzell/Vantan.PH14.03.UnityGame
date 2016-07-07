@@ -5,8 +5,20 @@ using UnityEngine.SceneManagement;
 public class TitleButton : MonoBehaviour {
 
 	public static CameraSystem CameraS;
+	[SerializeField]
+	private GameObject SettingWindow;
+
+	public enum Buttons {
+		Start,
+		Cusomize,
+		Setting,
+		End
+	}
+
+	public Buttons buttons;
 
 	void Start(){
+		SettingWindow.SetActive (false);
 		CameraS = FindObjectOfType<CameraSystem> ();
 		QualitySettings.antiAliasing = 3;
 		FindObjectOfType<CameraSetting> ().OnScene (Scenes.Title);
@@ -14,15 +26,32 @@ public class TitleButton : MonoBehaviour {
 	}
 
 	public void OnClick(){
-		if (gameObject.name == "StartButton") {
+		ClickEvent (buttons, gameObject.GetComponent<TitleButton> (), SettingWindow);
+	}
+
+	private static void ClickEvent(Buttons Button,TitleButton origin,GameObject SettingWindow){
+		if (Button == Buttons.Start) {
 			GameManager.GameOver = false;
-			StartCoroutine (GameManager.FlashLoadScene ("stage"));
-		} else if (gameObject.name == "ArsenalButton") {
-			StartCoroutine (GameManager.FlashLoadScene ("Customize"));
-		} else if (gameObject.name == "EndButton") {
+			origin.StartCoroutine (GameManager.FlashLoadScene ("stage"));
+		} else if (Button == Buttons.Cusomize) {
+			origin.StartCoroutine (GameManager.FlashLoadScene ("Customize"));
+		} else if (Button == Buttons.Setting) {
+			SettingWindow.SetActive(true);
+			origin.StartCoroutine (CloseSettingWindow (SettingWindow));
+		}else if (Button == Buttons.End) {
 			Application.Quit ();
 		}
 	}
+
+	private static IEnumerator CloseSettingWindow(GameObject SettingWindow){
+		while (SettingWindow.activeSelf) {
+			if (Input.GetKeyDown (KeyCode.Escape)) {
+				SettingWindow.SetActive (false);
+			}
+			yield return null;
+		}
+	}
+
 
 //	private IEnumerator FlashLoadScene(string SceneName){
 //		yield return StartCoroutine(CameraS.Flash(1,false,1));

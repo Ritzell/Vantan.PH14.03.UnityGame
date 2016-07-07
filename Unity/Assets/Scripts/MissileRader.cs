@@ -94,10 +94,13 @@ public class MissileRader : MonoBehaviour {
 		
 	public static void DestroyMissile(Transform Missile){
 		GameObject MissilePoint = GameObject.Find (Missile.name + "Point");
+		try{
 		if(OutRangeMissiles.Contains(Missile)){
 			OutRangeMissiles.Remove (Missile);
 		}else if(_inRangeMissiles.Contains(MissilePoint.transform)){
 				_inRangeMissiles.Remove (MissilePoint.transform);
+		}
+		}catch{
 		}
 		Destroy (MissilePoint);
 	}

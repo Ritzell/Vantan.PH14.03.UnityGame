@@ -21,7 +21,6 @@ public class Airframe : MonoBehaviour
 
 	void Start ()
 	{
-//		NotificationSystem.Announce = "戦闘を開始します";
 		StartCoroutine (NotificationSystem.UpdateNotification ("戦闘を開始します"));
 		StartCoroutine (ObstacleWarning ());
 	}
