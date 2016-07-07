@@ -25,10 +25,10 @@ public class ImageCamera : MonoBehaviour {
         _target = new RenderTexture(Screen.width, Screen.height, 16, RenderTextureFormat.ARGB32);
         _path = Path.Combine(Path.GetTempPath(), "Captured.png");
     }
-//	void Start()
-//    {
+	void Start()
+    {
 //        StartCoroutine (Capture ());
-//	}
+	}
 
 //	private IEnumerator Capture(){
 //		while (!GameManager.GameOver) {
@@ -58,8 +58,8 @@ public class ImageCamera : MonoBehaviour {
 		float Min = 360;
 		foreach(Transform CapturePosition in FindObjectOfType<ImageCamera>().CapturePositions){
 			float[] angle = GetAim (CenterPos, CapturePosition.position);
-			if(90f-(angle[0]+angle[1]) < Min){
-				Min = 90f - (angle [0] + angle [1]);
+			if(90f-Mathf.Abs(angle[0]+angle[1]) < Min){
+				Min = 90f - Mathf.Abs(angle [0] + angle [1]);
 				CameraPos = CapturePosition.position;
 			}
 		}
@@ -73,7 +73,7 @@ public class ImageCamera : MonoBehaviour {
 		float dxTop = p2.x - p1.x;
 		float dz = p2.z - p1.z;
 		float radTop = Mathf.Atan2(dz, dxTop);
-		return new float[]{rad * Mathf.Rad2Deg,radTop * Mathf.Rad2Deg};
+		return new float[]{Mathf.Abs(rad * Mathf.Rad2Deg),Mathf.Abs(radTop * Mathf.Rad2Deg)};
 	}
 
 		

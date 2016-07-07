@@ -25,7 +25,6 @@ public class Record : MonoBehaviour {
 		}
 	}
 
-	// Use this for initialization
 	void Awake () {
 		BattleIssue = GameObject.Find ("BattleIssue").GetComponent<Text>();
 		TimeRecord = GameObject.Find ("TimeRecord").GetComponent<Text>();
@@ -33,7 +32,6 @@ public class Record : MonoBehaviour {
 		Rank = GameObject.Find ("RankText").GetComponent<Text> ();
 	}
 
-	// Update is called once per frame
 	void Start () {
 		Time.timeScale = 1;
 		ElapsedTime =  new TimeSpan (0, 10, 0) - GameManager.RestTime;
@@ -53,7 +51,7 @@ public class Record : MonoBehaviour {
 			BackGroundImage.sprite = Sprite.Create (ResultTexture, new Rect (0, 0, Screen.width, Screen.height), Vector2.zero);
 			return;
 		} else {
-			Debug.Log ("a");
+			Debug.Log ("画像の変更に失敗しました");
 			//画像がなければ画像を変えない
 			return;
 		}

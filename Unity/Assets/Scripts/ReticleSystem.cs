@@ -340,7 +340,6 @@ public class ReticleSystem : MonoBehaviour
 
 	private void MultipleLockOnSetting(GameObject Missile){
 		MultiMissileLockOn.Add (Missile);
-//		Missiles.Remove (Missile);
 		var newReticle = Instantiate (MultipleReticleObject);
 		newReticle.GetComponent<MultipleReticle> ().LockOn = Missile;
 		AudioBox.pitch = 1;

@@ -133,7 +133,6 @@ public class MissileSystem : MonoBehaviour
 			yield return StartCoroutine (Tracking (tgt, RandomError));
 		}
 		RefreshSelfBreak ();
-//		FindObjectOfType<ImageCamera> ().StartCoroutine (ImageCamera.CaptureResultImage ());
 		while (true) {
 			yield return StartCoroutine (MoveForward ());
 		}
