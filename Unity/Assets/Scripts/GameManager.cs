@@ -8,51 +8,47 @@ using UnityStandardAssets.ImageEffects;
 
 public class GameManager : MonoBehaviour
 {
-
 	private static CameraSystem CameraS;
 	private static DateTime StartTime;
 	private static GameManager Manager;
 	private static MissileFactory Factory;
 
 
-	private static bool gameOver = false;
-	public static bool GameOver {
-		set{
-			gameOver = value;
-		}
-		get {
-			return gameOver;
-		}
-	}
+	public static bool GameOver { get; private set; }
 
-    public static int MissileCount { get; set; }
+	public static int MissileCount { get; set; }
 
-    public static int EnemyMissiles { get; set; }
+	public static int EnemyMissiles { get; set; }
 
-    private static TimeSpan restTime;
+	private static TimeSpan restTime;
 
 	/// <summary>
 	/// 時間が0を下回るとscene移行するプロパティ
 	/// </summary>
-	public static TimeSpan RestTime {
-		set {
+	public static TimeSpan RestTime
+	{
+		set
+		{
 			restTime = value;
-			if (restTime.Minutes + restTime.Seconds <= 0) {
-				Manager.StartCoroutine(GameEnd (false));
+			if (restTime.Minutes + restTime.Seconds <= 0)
+			{
+				Manager.StartCoroutine(FinishGame(false));
 			}
 		}
-		get {
+		get
+		{
 			return restTime;
 		}
 	}
 
 
-	void Awake(){
-		DontDestroyOnLoad (GameObject.Find("GameManager"));
+	void Awake()
+	{
+		DontDestroyOnLoad(GameObject.Find("GameManager"));
 		CameraS = FindObjectOfType<CameraSystem>();
 	}
 
-	public void StartStage ()
+	public void StartStage()
 	{
 		QualitySettings.vSyncCount = 0; // VSyncをOFFにする
 		QualitySettings.antiAliasing = 0;
@@ -61,25 +57,26 @@ public class GameManager : MonoBehaviour
 		Manager = GameObject.FindObjectOfType<GameManager>();
 		Factory = GameObject.FindObjectOfType<MissileFactory>();
 		StartTime = DateTime.Now;
-		StartCoroutine (Timer ());//タイマーを起動
+		StartCoroutine(Timer());//タイマーを起動
 	}
 
-	public IEnumerator ReloadMissile (Vector3 StartPos, Quaternion StartRot)
+	public IEnumerator ReloadMissile(Vector3 StartPos, Quaternion StartRot)
 	{
-		yield return new WaitForSeconds (3f);
-		Attack.PlayerMissiles.Enqueue (Factory.NewPlayerMissile (StartPos, StartRot,true));
+		yield return new WaitForSeconds(3f);
+		Attack.PlayerMissiles.Enqueue(Factory.NewPlayerMissile(StartPos, StartRot, true));
 		yield return null;
 	}
 
 	/// <summary>
 	/// 制限時間の設定と残り時間を計算するメソッドの実行
 	/// </summary>
-	private IEnumerator Timer ()
+	private IEnumerator Timer()
 	{
-		Text Timetext = GameObject.Find ("Timer").GetComponent<Text> ();
-		TimeSpan LimitTime = new TimeSpan (00, 10, 00);
-		while (!gameOver) {
-			StartCoroutine (DisplayTime (Timetext, LimitTime));
+		Text Timetext = GameObject.Find("Timer").GetComponent<Text>();
+		TimeSpan LimitTime = new TimeSpan(00, 10, 00);
+		while (!GameOver)
+		{
+			StartCoroutine(DisplayTime(Timetext, LimitTime));
 			yield return null;
 		}
 	}
@@ -87,9 +84,9 @@ public class GameManager : MonoBehaviour
 	/// <summary>
 	/// 残り時間をString型に変換
 	/// </summary>
-	public static string TimeCastToString (TimeSpan Time)
+	public static string TimeCastToString(TimeSpan Time)
 	{
-		return Time.Minutes.ToString ("D2") + ":" + Time.Seconds.ToString ("D2");//timeString;
+		return Time.Minutes.ToString("D2") + ":" + Time.Seconds.ToString("D2");//timeString;
 	}
 
 	/// <summary>
@@ -97,104 +94,128 @@ public class GameManager : MonoBehaviour
 	/// </summary>
 	/// <param name="Timetext">Timetext.</param>
 	/// <param name="limitTime">Limit time.</param>
-	private static IEnumerator DisplayTime (Text Timetext, TimeSpan limitTime)
+	private static IEnumerator DisplayTime(Text Timetext, TimeSpan limitTime)
 	{
-		TimeCalculation (limitTime);
-		Timetext.text = TimeCastToString (RestTime);
+		TimeCalculation(limitTime);
+		Timetext.text = TimeCastToString(RestTime);
 		yield return null;
 	}
 
 	/// <summary>
 	/// 残り時間を計算
 	/// </summary>
-	private static void TimeCalculation (TimeSpan limitTime)
+	private static void TimeCalculation(TimeSpan limitTime)
 	{
 		TimeSpan elapsedTime = (TimeSpan)(DateTime.Now - StartTime);
 		RestTime = limitTime - elapsedTime;
 	}
 
-	public static IEnumerator FlashLoadScene(string SceneName){
+	public static IEnumerator FlashLoadScene(string SceneName)
+	{
 		bool isOut = false;
-		CameraS.StartCoroutine(CameraS.Flash(3f,true,1,GameObject.Find("Canvas"),fadeout => isOut = fadeout));
-		while (!isOut) {
+		CameraS.StartCoroutine(CameraS.Flash(3f, true, 1, GameObject.Find("Canvas"), fadeout => isOut = fadeout));
+		while (!isOut)
+		{
 			yield return null;
 		}
-//		Record.backGroundSprite = Sprite.Create(ImageCamera.ResultTexture,new Rect(0, 0, Screen.width, Screen.height),Vector2.zero);
-		SceneManager.LoadSceneAsync (SceneName);
+		//		Record.backGroundSprite = Sprite.Create(ImageCamera.ResultTexture,new Rect(0, 0, Screen.width, Screen.height),Vector2.zero);
+		SceneManager.LoadSceneAsync(SceneName);
 		yield return null;
 	}
 
-	public static IEnumerator GameEnd(bool isWin){
-		StopGame ();
-		AudioSource AudioBox =  Manager.GetComponent<AudioSource> ();
+	/// <summary>
+	/// ゲームをリセットして初期状態（タイトル画面）に戻る。
+	/// </summary>
+	public static void ResetGame()
+	{
+		GameOver = false;
+		// TODO: ゲームの初期化。
+	}
+
+	public static IEnumerator FinishGame(bool isWin)
+	{
+		StopGame();
+		AudioSource AudioBox = Manager.GetComponent<AudioSource>();
 		Record.IsVictory = isWin;
-		Manager.StartCoroutine (Manager.StopSounds());
-		Manager.StartCoroutine (isWin ? Victory () : Defeat());
-		Manager.StartCoroutine (ChangeMusic(AudioBox,isWin));
+		Manager.StartCoroutine(Manager.StopSounds());
+		Manager.StartCoroutine(isWin ? Victory() : Defeat());
+		Manager.StartCoroutine(ChangeMusic(AudioBox, isWin));
 		yield return null;
 
 	}
 
-	public IEnumerator StopSounds(){
-		foreach (AudioSource audio in FindObjectsOfType<AudioSource>()) {
-			audio.Stop ();
+	public IEnumerator StopSounds()
+	{
+		foreach (AudioSource audio in FindObjectsOfType<AudioSource>())
+		{
+			audio.Stop();
 		}
 		yield return null;
 	}
 
-	private static IEnumerator ChangeMusic(AudioSource AudioBox,bool isWin){
+	private static IEnumerator ChangeMusic(AudioSource AudioBox, bool isWin)
+	{
 		int TimeSpeed = (int)(1 / Time.timeScale);
 
-		while (AudioBox.volume > 0) {
-			AudioBox.volume -= 0.05f*(Time.deltaTime*TimeSpeed);
+		while (AudioBox.volume > 0)
+		{
+			AudioBox.volume -= 0.05f * (Time.deltaTime * TimeSpeed);
 			yield return null;
 		}
-		AudioBox.Stop ();
+		AudioBox.Stop();
 		yield return null;
-		NewMusicSet (AudioBox,isWin);
-		StageResultText.DisplayResult (isWin);
+		NewMusicSet(AudioBox, isWin);
+		StageResultText.DisplayResult(isWin);
 		yield return null;
 	}
 
-	private static void NewMusicSet(AudioSource AudioBox,bool isWin){
-		AudioBox.clip = (AudioClip)(Resources.Load (isWin ? "Sounds/FromTheNewWorld" : "Sounds/Sarabande"));
+	private static void NewMusicSet(AudioSource AudioBox, bool isWin)
+	{
+		AudioBox.clip = (AudioClip)(Resources.Load(isWin ? "Sounds/FromTheNewWorld" : "Sounds/Sarabande"));
 		AudioBox.volume = isWin ? 0.65f : 0.5f;
 		AudioBox.loop = false;
-		AudioBox.Play ();
+		AudioBox.Play();
 	}
 
-	public static IEnumerator Victory(){
-		yield return new WaitForSeconds (5*Time.timeScale);
-		while (true) {
-			if (isNext()) {
-				yield return Manager.StartCoroutine(FlashLoadScene ("Result"));
-				yield break;
-			}
-			yield return null;
-		}
-
-	}
-
-	public static IEnumerator Defeat ()
+	public static IEnumerator Victory()
 	{
-		CameraS.StartCoroutine (CameraS.CameraOut ());
-		yield return new WaitForSeconds (5*Time.timeScale);
-		while (true) {
-			if (isNext()) {
-				FindObjectOfType<CameraSystem> ().StopCoroutine ("CameraOut");
-				yield return Manager.StartCoroutine(FlashLoadScene ("Result"));
+		yield return new WaitForSeconds(5 * Time.timeScale);
+		while (true)
+		{
+			if (isNext())
+			{
+				yield return Manager.StartCoroutine(FlashLoadScene("Result"));
+				yield break;
+			}
+			yield return null;
+		}
+
+	}
+
+	public static IEnumerator Defeat()
+	{
+		CameraS.StartCoroutine(CameraS.CameraOut());
+		yield return new WaitForSeconds(5 * Time.timeScale);
+		while (true)
+		{
+			if (isNext())
+			{
+				FindObjectOfType<CameraSystem>().StopCoroutine("CameraOut");
+				yield return Manager.StartCoroutine(FlashLoadScene("Result"));
 				yield break;
 			}
 			yield return null;
 		}
 	}
 
-	private static bool isNext(){
-		return Input.GetKeyDown (KeyCode.Space) || Input.GetKey (KeyCode.JoystickButton9);
+	private static bool isNext()
+	{
+		return Input.GetKeyDown(KeyCode.Space) || Input.GetKey(KeyCode.JoystickButton9);
 	}
 
-	private static void StopGame(){
-		gameOver = true;
+	private static void StopGame()
+	{
+		GameOver = true;
 		Time.timeScale = 0.015f;
 	}
 }

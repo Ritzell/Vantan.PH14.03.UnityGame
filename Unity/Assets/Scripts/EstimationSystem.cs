@@ -19,7 +19,7 @@ public class EstimationSystem : MonoBehaviour
 	private IEnumerator CountMissile ()
 	{
 		float time = 0f;
-		while (!GameManager.GameOver) {
+		while (!GameManager.IsGameOver) {
 			time += Time.deltaTime;
 			if (time >= 1) {
 				//StartCoroutine (SiftMissile ());

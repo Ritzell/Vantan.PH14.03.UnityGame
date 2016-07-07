@@ -49,7 +49,7 @@ public class EnemyAttack : MonoBehaviour
 	public IEnumerator Attack ()
 	{
 		float delay = 2f;
-		while (!GameManager.GameOver ) {
+		while (!GameManager.IsGameOver ) {
 			yield return new WaitForSeconds (delay);
 			while (!isShoot()) {
 				yield return null;

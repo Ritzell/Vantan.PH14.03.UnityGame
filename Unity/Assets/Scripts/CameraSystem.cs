@@ -81,7 +81,7 @@ public class CameraSystem : MonoBehaviour
 
 	public IEnumerator CameraModeChange ()
 	{
-		while (!GameManager.GameOver) {
+		while (!GameManager.IsGameOver) {
 			if (Input.GetKeyDown (KeyCode.JoystickButton6)) {
 				FreeMove = !FreeMove;
 				StartCoroutine (CameraFreeMove ());
@@ -92,7 +92,7 @@ public class CameraSystem : MonoBehaviour
 
 	private IEnumerator CameraFreeMove ()
 	{
-		while (!GameManager.GameOver && freemove) {
+		while (!GameManager.IsGameOver && freemove) {
 			CameraMove (InputController ());
 			yield return null;
 		}
@@ -111,7 +111,7 @@ public class CameraSystem : MonoBehaviour
 
 	public static IEnumerator CameraChangePosition ()
 	{
-		while (!GameManager.GameOver) {
+		while (!GameManager.IsGameOver) {
 			if (isChange ()) {
 				if (FreeMove) {
 					FreeMove = false;
@@ -162,7 +162,7 @@ public class CameraSystem : MonoBehaviour
 		float SwayTime = 0;
 		Vector3 NormalPos = new Vector3 (0, 15, -50);//MyCamera.transform.localPosition;
 
-		while (SwayTime < 0.4f && !GameManager.GameOver) {
+		while (SwayTime < 0.4f && !GameManager.IsGameOver) {
 			SwayTime += Time.deltaTime;
 
 			Vector3 Amplitude = new Vector3 (UnityEngine.Random.Range (-5, 5), UnityEngine.Random.Range (-5, 5), 0);

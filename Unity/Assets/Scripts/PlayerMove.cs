@@ -49,7 +49,6 @@ public class PlayerMove : MonoBehaviour
 
 	public void Manual ()
 	{
-		
 		gameObject.GetComponent<Animator>().Stop ();
 		CameraSystem cameraSystem = FindObjectOfType<CameraSystem> ();
 		cameraSystem.StartCoroutine(CameraSystem.CameraChangePosition());
@@ -73,7 +72,7 @@ public class PlayerMove : MonoBehaviour
 
 	private IEnumerator Move ()
 	{
-		while (!GameManager.GameOver) {
+		while (!GameManager.IsGameOver) {
 			Rotation(InputController());
 			MoveForward ();
 			yield return null;
@@ -99,7 +98,7 @@ public class PlayerMove : MonoBehaviour
 	/// <returns>The speed.</returns>
 	private IEnumerator ChangeSpeed ()
 	{
-		while (!GameManager.GameOver) {
+		while (!GameManager.IsGameOver) {
 			if (isKeyDown()) {
 				if (isAccele()) {
 					FuelInjector(Accele);

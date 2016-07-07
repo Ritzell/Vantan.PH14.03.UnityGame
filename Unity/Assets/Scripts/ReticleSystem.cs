@@ -101,7 +101,7 @@ public class ReticleSystem : MonoBehaviour
 
 	private IEnumerator ReticleMoveInput ()
 	{
-		while (!GameManager.GameOver) {
+		while (!GameManager.IsGameOver) {
 			ReticleController (new Vector3 (Input.GetAxis ("3thAxis"), Input.GetAxis ("4thAxis"), 0));
 			yield return null;
 		}
@@ -115,7 +115,7 @@ public class ReticleSystem : MonoBehaviour
 		RaycastHit Hit;
 		const int LayerMask = 1 << (int)Layers.Enemy | 1 << (int)Layers.EnemyMissile | 1 << (int)Layers.EnemyArmor;
 		 
-		while (!GameManager.GameOver) {
+		while (!GameManager.IsGameOver) {
 			if (CameraSystem.FreeMove) {
 				yield return null;
 				continue;
@@ -139,7 +139,7 @@ public class ReticleSystem : MonoBehaviour
 	/// <returns>The lock input.</returns>
 	private IEnumerator ReleaseLockInput ()
 	{
-		while (!GameManager.GameOver) {
+		while (!GameManager.IsGameOver) {
 			if (Attack.isCancel()) {
 				LockOnTgt = null;
 			}
@@ -150,7 +150,7 @@ public class ReticleSystem : MonoBehaviour
 	private IEnumerator ReticleMoveToTgt ()
 	{
 		StartCoroutine (ForciblyRelaseLock ());
-		while (!GameManager.GameOver) {
+		while (!GameManager.IsGameOver) {
 			var ray = Camera.main.ScreenPointToRay (new Vector3 (transform.position.x, transform.position.y, 0.0f));
 			StartCoroutine (Gun.MuzzuleLookTgt (ray.GetPoint (4000)));
 			UITransform.position = RectTransformUtility.WorldToScreenPoint (Camera.main, lockOnTgt.transform.position);
@@ -160,7 +160,7 @@ public class ReticleSystem : MonoBehaviour
 
 	private IEnumerator ForciblyRelaseLock ()
 	{
-		while (lockOnTgt != null && !GameManager.GameOver) {
+		while (lockOnTgt != null && !GameManager.IsGameOver) {
 			if (ReticleIsOutOfScreen ()) {
 				LockOnTgt = null;
 				yield return null;
@@ -312,7 +312,7 @@ public class ReticleSystem : MonoBehaviour
 	/// <returns>The lock on system.</returns>
 	private IEnumerator MultipleLockOnSystem ()
 	{
-		while (!GameManager.GameOver) {
+		while (!GameManager.IsGameOver) {
 			yield return StartCoroutine (RemoveMissile());
 			foreach (GameObject Missile in Missiles) {
 				Vector3 ScreenMissilePos;
@@ -357,7 +357,7 @@ public class ReticleSystem : MonoBehaviour
 
 	private IEnumerator ReticleScaleUp ()
 	{
-		while (!GameManager.GameOver) {
+		while (!GameManager.IsGameOver) {
 			float time = Time.deltaTime / 3;
 			UITransform.localScale = new Vector3 (UITransform.localScale.x + time, UITransform.localScale.y + time, 0);
 			yield return null;
@@ -366,7 +366,7 @@ public class ReticleSystem : MonoBehaviour
 
 	private IEnumerator ReticleScaleDown ()
 	{
-		while (!GameManager.GameOver && UITransform.localScale.x > 0.2f) {
+		while (!GameManager.IsGameOver && UITransform.localScale.x > 0.2f) {
 			float time = Time.deltaTime*5;///1000;
 			UITransform.localScale = new Vector3 (Mathf.Clamp (UITransform.localScale.x - time, 0.18f, 100), Mathf.Clamp (UITransform.localScale.y - time, 0.18f, 100), 0);
 			yield return null;

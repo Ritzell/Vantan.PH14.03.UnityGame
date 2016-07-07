@@ -65,7 +65,7 @@ public class Attack : MonoBehaviour
 	public IEnumerator MultipleMissileInterceptSystem ()
 	{
 
-		while (!GameManager.GameOver) {
+		while (!GameManager.IsGameOver) {
 			Reloading += Time.deltaTime;
 			if (Reloading >= MMIDelay) {
 				if (!MMIisReady) {
@@ -145,7 +145,7 @@ public class Attack : MonoBehaviour
 	{
 		float Reloading = 0.0f;
 
-		while (!GameManager.GameOver) {
+		while (!GameManager.IsGameOver) {
 			Reloading += Time.deltaTime;
 			if (Reloading >= missileDelay) {
 				if (isStraightMissileShoot ()) {
@@ -174,7 +174,7 @@ public class Attack : MonoBehaviour
 	public IEnumerator GunShoot ()
 	{
 		float Reloading = 0.0f;
-		while (!GameManager.GameOver) {
+		while (!GameManager.IsGameOver) {
 			Reloading += Time.deltaTime;
 			if (Reloading >= gunDelay) {
 				if (isGunShot ()) {
