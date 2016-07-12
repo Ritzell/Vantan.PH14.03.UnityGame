@@ -60,14 +60,13 @@ public class Record : MonoBehaviour {
 	private IEnumerator NextScene(){
 		while(true){
 			if (Input.GetKeyDown (KeyCode.Space) || Input.GetKey (KeyCode.JoystickButton9)) {
-				Destroy(GameObject.Find("Main Camera"));
-				SceneManager.LoadScene ("title");
+				GameManager.ResetGame ();
+				FindObjectOfType<GameManager>().StartCoroutine(GameManager.FlashLoadScene ("title"));
 				GameObject.Find ("GameManager").GetComponent<AudioSource> ().Stop ();
 				if (File.Exists(ImageCamera.ImagePath))
 				{
-					File.Delete(ImageCamera.ImagePath) ;
+					File.Delete(ImageCamera.ImagePath);
 				}
-				Destroy (GameObject.Find ("GameManager"));
 			}
 			yield return null;
 		}
