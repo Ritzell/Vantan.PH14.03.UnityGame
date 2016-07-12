@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
 		Factory = GameObject.FindObjectOfType<MissileFactory> ();
 		StartTime = DateTime.Now;
 		StartCoroutine (Timer ());//タイマーを起動
-//		StartCoroutine(EscapeGame());
+		StartCoroutine(EscapeGame());
 	}
 
 	public IEnumerator ReloadMissile (Vector3 StartPos, Quaternion StartRot)
@@ -114,12 +114,14 @@ public class GameManager : MonoBehaviour
 
 	public static IEnumerator FlashLoadScene (string SceneName)
 	{
-		Debug.Log (SceneName);
 		bool isOut = false;
 		CameraS.StartCoroutine (CameraS.Flash (3f, true, 1, GameObject.Find ("Canvas"), fadeout => isOut = fadeout));
 		while (!isOut) {
+			Debug.Log (isOut);
 			yield return null;
 		}
+		Debug.Log (isOut);
+		yield return null;
 		SceneManager.LoadSceneAsync (SceneName);
 		yield return null;
 	}
@@ -127,9 +129,8 @@ public class GameManager : MonoBehaviour
 	private IEnumerator EscapeGame(){
 		while(!GameManager.IsGameOver){
 			if (Input.GetKeyDown (KeyCode.Escape)) {
-				Debug.Log ("reset");
-				ResetGame ();
-				FindObjectOfType<GameManager>().StartCoroutine(FlashLoadScene ("title"));
+//				ResetGame ();
+				gameObject.GetComponent<GameManager>().StartCoroutine(GameManager.FlashLoadScene ("title"));
 			}
 			yield return null;
 		}
