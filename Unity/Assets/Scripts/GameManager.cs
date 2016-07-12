@@ -117,10 +117,8 @@ public class GameManager : MonoBehaviour
 		bool isOut = false;
 		CameraS.StartCoroutine (CameraS.Flash (3f, true, 1, GameObject.Find ("Canvas"), fadeout => isOut = fadeout));
 		while (!isOut) {
-			Debug.Log (isOut);
 			yield return null;
 		}
-		Debug.Log (isOut);
 		yield return null;
 		SceneManager.LoadSceneAsync (SceneName);
 		yield return null;
@@ -129,8 +127,8 @@ public class GameManager : MonoBehaviour
 	private IEnumerator EscapeGame(){
 		while(!GameManager.IsGameOver){
 			if (Input.GetKeyDown (KeyCode.Escape)) {
-//				ResetGame ();
-				gameObject.GetComponent<GameManager>().StartCoroutine(GameManager.FlashLoadScene ("title"));
+				ResetGame ();
+				CameraS.StartCoroutine(GameManager.FlashLoadScene ("title"));
 			}
 			yield return null;
 		}
