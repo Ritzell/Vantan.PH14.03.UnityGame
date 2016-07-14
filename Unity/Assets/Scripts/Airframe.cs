@@ -98,6 +98,8 @@ public class Airframe : MonoBehaviour
 		}
 	}
 
+	public static bool isLife { private set; get; }
+
 	private IEnumerator Deth ()
 	{
 //		if (GameManager.IsGameOver) {
@@ -105,6 +107,7 @@ public class Airframe : MonoBehaviour
 //		}
 		GameObject.Find ("Main Camera").transform.parent = null;
 		Destroy (gameObject);
+		isLife = false;
 		yield return StartCoroutine (GameManager.FinishGame (false));
 	}
 }

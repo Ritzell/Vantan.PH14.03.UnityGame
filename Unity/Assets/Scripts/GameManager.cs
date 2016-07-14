@@ -16,13 +16,10 @@ public class GameManager : MonoBehaviour
 
 
 	public static bool IsGameOver { get; private set; }
-
 	public static int MissileCount { get; set; }
-
-	public static int EnemyMissiles { get; set; }
+	public static int EnemyMIssilesCount { get; set; }
 
 	private static TimeSpan restTime;
-
 	/// <summary>
 	/// 時間が0を下回るとscene移行するプロパティ
 	/// </summary>
@@ -124,6 +121,7 @@ public class GameManager : MonoBehaviour
 		yield return null;
 	}
 
+	//ゲームを途中で終了
 	private IEnumerator EscapeGame(){
 		while(!GameManager.IsGameOver){
 			if (Input.GetKeyDown (KeyCode.Escape)) {
@@ -142,10 +140,17 @@ public class GameManager : MonoBehaviour
 	public static void ResetGame ()
 	{
 		IsGameOver = false;
+		MissileCount = 0;
+		EnemyMIssilesCount = 0;
 		Destroy (GameObject.Find ("GameManager"));
 		// TODO: ゲームの初期化。
 	}
 
+	/// <summary>
+	/// ゲームを終了してリザルト画面に移る
+	/// </summary>
+	/// <returns>The game.</returns>
+	/// <param name="isWin">If set to <c>true</c> is window.</param>
 	public static IEnumerator FinishGame (bool isWin)
 	{
 		StopGame ();
@@ -158,6 +163,10 @@ public class GameManager : MonoBehaviour
 
 	}
 
+	/// <summary>
+	/// すべてのサウンドを停止させる
+	/// </summary>
+	/// <returns>The sounds.</returns>
 	public IEnumerator StopSounds ()
 	{
 		foreach (AudioSource audio in FindObjectsOfType<AudioSource>()) {

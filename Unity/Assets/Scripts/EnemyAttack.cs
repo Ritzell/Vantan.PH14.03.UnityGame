@@ -60,7 +60,7 @@ public class EnemyAttack : MonoBehaviour
 	}
 
 	private bool isShoot(){
-		return GameManager.EnemyMissiles <= 80;
+		return GameManager.EnemyMIssilesCount <= 80;
 	}
 
 	public void ChooseAction ()
