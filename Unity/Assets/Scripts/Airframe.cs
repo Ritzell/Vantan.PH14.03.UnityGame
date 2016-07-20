@@ -17,11 +17,14 @@ public class Airframe : MonoBehaviour
 	{
 		Manager = GameObject.Find ("GameManager").GetComponent<GameManager> ();
 		LightingSystem = FindObjectOfType<LightingControlSystem> ();
+		isLife = true;
 	}
 
 	void Start ()
 	{
 		StartCoroutine (NotificationSystem.UpdateNotification ("戦闘を開始します"));
+		DamageEffectImage = GameObject.Find ("DamageEffectImage").GetComponent<Image>();
+		//		DamageEffectImage.color = new Color(DamageEffectImage.color.r,DamageEffectImage.color.g,DamageEffectImage.color.b,1);
 		StartCoroutine (ObstacleWarning ());
 	}
 
@@ -37,10 +40,28 @@ public class Airframe : MonoBehaviour
 		DiedJudgment (Col.gameObject);
 	}
 
+	private static Image DamageEffectImage;
+	private static IEnumerator DamageEffect(){
+		Sprite[] sprites = Resources.LoadAll<Sprite>("Images/HoneyCombMask");
+		DamageEffectImage.color = new Color(214,0,0,DamageEffectImage.color.a);
+		for (int i = 0; i < sprites.Length; i++) {
+			DamageEffectImage.sprite = sprites [i];
+			while (i == sprites.Length / 2 && !FirstAid) {
+				yield return null;
+			}
+			yield return new WaitForSeconds (0.045f);
+		}
+		DamageEffectImage.color = new Color(80,106,255,DamageEffectImage.color.a);
+		yield return null;
+	}
+
+	private static bool FirstAid = false;
 	private void Bombed(){
+		FirstAid = false;
 		HP -= 1;
 		LightingSystem.TurningOff (UIType.HP);
-		StartCoroutine (CameraSystem.SwayCamera ());
+		StartCoroutine (CameraSystem.SwayCamera (b => FirstAid = b));
+		StartCoroutine (DamageEffect ());
 		PlayerSound.HitSound ();
 	}
 

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class TitleButton : MonoBehaviour {
 
@@ -41,6 +42,8 @@ public class TitleButton : MonoBehaviour {
 			Application.Quit ();
 		}
 	}
+//	[SerializeField]
+
 
 	private static IEnumerator CloseSettingWindow(GameObject SettingWindow){
 		while (SettingWindow.activeSelf) {

@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityStandardAssets.ImageEffects;
+using UnityEngine.UI;
 
 public class CameraSystem : MonoBehaviour
 {
@@ -71,12 +72,32 @@ public class CameraSystem : MonoBehaviour
 
 	}
 
+	void Start(){
+		DamageEffectImage = GameObject.Find ("DamageEffectImage").GetComponent<Image>();
+//		DamageEffectImage.color = new Color(DamageEffectImage.color.r,DamageEffectImage.color.g,DamageEffectImage.color.b,1);
+//		StartCoroutine (DamageEffect ());
+	}
+
+	private static Image DamageEffectImage;
+	private static IEnumerator DamageEffect(){
+		Sprite[] sprites = Resources.LoadAll<Sprite>("Images/HoneyCombMask");
+		while (true) {
+			for (int i = 0; i < sprites.Length; i++) {
+				DamageEffectImage.sprite = sprites [i];
+				yield return new WaitForSeconds (0.045f);
+			}
+		}
+	}
+
 	public void SetUp ()
 	{
 		LookFrontPos = MyCamera.transform.localPosition;
 		LookBehindPos = new Vector3 (0,  LookFrontPos.y-9.2f, LookFrontPos.z+80.5f);//GameObject.Find ("CameraPos1").transform.localPosition;
 		CameraZErrorRange.y = LookFrontPos.z + 0.1f;
 		CameraZErrorRange.x = LookFrontPos.z - 0.1f;
+		DamageEffectImage = GameObject.Find ("DamageEffectImage").GetComponent<Image>();
+		//		DamageEffectImage.color = new Color(DamageEffectImage.color.r,DamageEffectImage.color.g,DamageEffectImage.color.b,1);
+//		StartCoroutine (DamageEffect ());
 	}
 
 	public IEnumerator CameraModeChange ()
@@ -157,11 +178,11 @@ public class CameraSystem : MonoBehaviour
 		yield return null;
 	}
 
-	public static IEnumerator SwayCamera ()
+	public static IEnumerator SwayCamera (Action<bool> FirstAid)
 	{
+		FirstAid(false);
 		float SwayTime = 0;
-		Vector3 NormalPos = new Vector3 (0, 15, -50);//MyCamera.transform.localPosition;
-
+		Vector3 NormalPos = new Vector3 (0, 15, -50);
 		while (SwayTime < 0.4f && !GameManager.IsGameOver) {
 			SwayTime += Time.deltaTime;
 
@@ -171,9 +192,9 @@ public class CameraSystem : MonoBehaviour
 			yield return null;
 		}
 		MyCamera.transform.localPosition = LookBehind ? LookBehindPos : NormalPos;
+		FirstAid (true);
 		yield return null;
 	}
-//	yield return StartCoroutine(Async(r => result = r));
 	public IEnumerator Flash(float FlashPower,bool isOut){
 		while (CameraBloom.bloomThreshold > 0) {
 			FlashIn (FlashPower, 1);

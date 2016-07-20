@@ -10,14 +10,15 @@ using System;
 //	}
 //}
 
-public class GameSetting : MonoBehaviour {
+public class QualitySetting : MonoBehaviour {
 	//valueで選択肢を得る
 	//QualitySettings.antiAliasing = 0;
 	private static bool RunOutPut = false;
 
 	void Start(){
 		if (!RunOutPut) {
-			GameObject.Find("Main Camera").GetComponent<CameraSystem>().StartCoroutine (OutPut());
+//			GameObject.Find("Main Camera").GetComponent<CameraSystem>().StartCoroutine (SettingActive());
+			GameObject.Find("Main Camera").GetComponent<CameraSystem>().StartCoroutine (SettingOutPut());
 			RunOutPut = true;
 		}
 	}
@@ -34,14 +35,17 @@ public class GameSetting : MonoBehaviour {
 		Shadow,
 		CameraFar,
 		DisplayObjects,
+		Vsync,
 		HDR,
 		RenderingPath,
-		GlassDrow,
-		TreeDrow,
-		TerrainPixelError
+		DrowTree,
+		DrowGlass
+//		GlassDrow,
+//		TreeDrow,
+//		TerrainPixelError
 	}
 
-	private static IEnumerator OutPut(){
+	private static IEnumerator SettingOutPut(){
 		while (true) {
 			if (Input.GetKeyDown (KeyCode.M)) {
 				foreach (int i in Dates) {
@@ -52,33 +56,31 @@ public class GameSetting : MonoBehaviour {
 		}
 	}
 
-	static int displayObjectsTest = 0;
-
 	private static IEnumerator SettingActive(){
 		Camera camera = FindObjectOfType<CameraSystem> ().GetComponent<Camera> ();
 		while (true) {
 			if (Input.GetKeyDown (KeyCode.Space)) {
-				QualitySettings.antiAliasing = Dates [(int)DateNumber.AntiAliasing];
-				camera.farClipPlane = Dates [(int)DateNumber.CameraFar];
-				camera.hdr = Dates [(int)DateNumber.CameraFar] == 1 ? true : false;
-
-				switch (Dates [(int)DateNumber.RenderingPath]) {
-				case 0:
-					camera.renderingPath = UnityEngine.RenderingPath.VertexLit;
-					break;
-				case 1:
-					camera.renderingPath = UnityEngine.RenderingPath.Forward;
-					break;
-				case 2:
-					camera.renderingPath = UnityEngine.RenderingPath.DeferredLighting;
-					break;
+				QualitySettings.SetQualityLevel (Dates [(int)DateNumber.RenderingPath]);//RenderingPath
+				QualitySettings.antiAliasing = Dates [(int)DateNumber.AntiAliasing];//AntiAliasing
+				QualitySettings.vSyncCount = Dates [(int)DateNumber.Vsync];//vsync
+				foreach (Light light in FindObjectsOfType<Light>()) {//shadow
+					switch(Dates[(int)DateNumber.Shadow]){
+						case 0:
+						light.shadows = LightShadows.None;
+						break;
+						case 1:
+						light.shadows = LightShadows.Hard;
+						break;
+						case 2:
+						light.shadows = LightShadows.Soft;
+						break;
+					}
 				}
-					
-				displayObjectsTest = Dates [(int)DateNumber.DisplayObjects];
-//				QualityLevel.
-//				QualitySettings.
-				yield return null;
+				FindObjectOfType<Terrain> ().drawTreesAndFoliage = Dates [(int)DateNumber.DrowTree] == 0 ? true : false;//Draw
+				camera.hdr = Dates [(int)DateNumber.HDR] == 0 ? true : false;//Draw
+
 			}
+			yield return null;
 		}
 	}
 
@@ -92,9 +94,7 @@ public class GameSetting : MonoBehaviour {
 	{
 		Debug.Log (result);
 		Dates [(int)DateNumber.Shadow] = result;
-
 	}
-
 
 	public void CameraFar(int result){
 		Dates [(int)DateNumber.CameraFar] = result;
@@ -111,8 +111,29 @@ public class GameSetting : MonoBehaviour {
 		Debug.Log (result);
 	}
 
+	public void Vsync(int result){
+		Dates [(int)DateNumber.Vsync] = result;
+		Debug.Log (result);
+	}
+
 	public void HDR(int result){
 		Dates [(int)DateNumber.HDR] = result;
 		Debug.Log (result);
+	}
+
+	public void RenderingPath(int result){
+		Dates [(int)DateNumber.RenderingPath] = result;
+		Debug.Log (result);
+	}
+
+
+	public void DrowTree(bool isDrow){
+		Debug.Log (isDrow);
+		Dates [(int)DateNumber.DrowTree] = isDrow ? 0 : 1;
+	}
+
+	public void DrowGlass(bool isDrow){
+		Debug.Log (isDrow);
+		Dates [(int)DateNumber.DrowGlass] = isDrow ? 0 : 1;
 	}
 }
