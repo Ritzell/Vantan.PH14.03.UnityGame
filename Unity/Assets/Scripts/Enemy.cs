@@ -9,9 +9,9 @@ public class Enemy : MonoBehaviour
 	private AudioSource CryBox;
 	[SerializeField]
 	private Material ArmorMaterial;
+	[SerializeField]
+	private GameManager Manager;
 	private CameraSystem CameraS;
-
-	//	private Material Emission;
 	private bool isLife = true;
 	private float HP = 600;
 	private float MaxHP;
@@ -23,26 +23,16 @@ public class Enemy : MonoBehaviour
 	/// <summary>
 	/// フレアによる回避はミサイルのスクリプトで行う
 	/// </summary>
-	private static GameObject tgt;
-	public static GameObject Tgt {
-		set {
-			tgt = value;
-		}
-		get {
-			return tgt;
-		}
-	}
 
 	private static ReticleSystem PlayerReticle;
-	private static Airframe Frame;
 
 	void Awake ()
 	{
 		PlayerReticle = GameObject.Find ("ReticleImage").GetComponent<ReticleSystem> ();
-		Frame = GameObject.Find ("eurofighter").GetComponent<Airframe> ();
-		Tgt = GameObject.Find ("eurofighter");
+
 		MyMaterial = gameObject.GetComponent<Renderer> ().material;
 		CameraS = GameObject.Find ("Main Camera").GetComponent<CameraSystem>();
+		Manager = FindObjectOfType<GameManager> ();
 
 	}
 
@@ -55,7 +45,9 @@ public class Enemy : MonoBehaviour
 		Breth = StartCoroutine (Respiration ());
 		StateNotice = StateNotification();
 		CryBox.pitch = 2.5f;
+		StartCoroutine (Move ());
 	}
+		
 
 	void OnTriggerEnter (Collider Col)
 	{
@@ -68,10 +60,22 @@ public class Enemy : MonoBehaviour
 			CryBox.Play ();
 			HP -= (int)PlayerAttackPower.missile;
 		}
-//		Debug.Log (HP);
 		StateNotice.MoveNext ();
 		DiedJudgment ();
 	}
+		
+	private IEnumerator Move(){
+		float Area = 4000;
+		float MoveSpeed = 40;
+		while (!GameManager.IsGameOver && Airframe.isLife) {
+			if(Manager.AbsDistance(Airframe.AirFramePosition,gameObject.transform.position) < Area){
+				float angle = Manager.GetDegree (Airframe.AirFramePosition.x, transform.position.x, Airframe.AirFramePosition.y, transform.position.y);
+				transform.Translate (new Vector3 (angle, 0, 0) * (MoveSpeed *Time.deltaTime) );
+			}
+			yield return null;
+		}
+	}
+		
 	private void DiedJudgment(){
 		if (HP <= 0) {
 			isLife = false;
@@ -95,7 +99,6 @@ public class Enemy : MonoBehaviour
 		isPassing = false;
 		while (!isPassing) {
 			if (HP <= MaxHP/4) {
-//				NotificationSystem.Announce = gameObject.name + "が弱っています";
 				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "が弱っています"));
 				isPassing = true;
 				yield return null;
@@ -105,7 +108,6 @@ public class Enemy : MonoBehaviour
 		isPassing = false;
 		while (!isPassing) {
 			if (HP <= MaxHP/8) {
-//				NotificationSystem.Announce = gameObject.name + "がもう少しで撃破できます。";
 				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "がもう少しで撃破できます。"));
 				isPassing = true;
 				yield return null;
@@ -150,6 +152,8 @@ public class Enemy : MonoBehaviour
 
 	private IEnumerator Deth ()
 	{
+		Airframe Frame = Airframe.AirFrame.GetComponent<Airframe> ();
+
 		CryBox.pitch = Random.Range (0.65f, 1.3f);
 		CryBox.Play ();
 		StopCoroutine (Breth);

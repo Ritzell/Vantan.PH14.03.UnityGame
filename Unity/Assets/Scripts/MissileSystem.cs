@@ -126,9 +126,10 @@ public class MissileSystem : MonoBehaviour
 
 	public IEnumerator TrackingForPlayer (Transform tgt)
 	{
+		GameManager Manager = FindObjectOfType<GameManager> ();
 		selfBrake = StartCoroutine (SelfBreak ());
 		Vector3 RandomError = new Vector3 (Random.Range (RandomRange.x, RandomRange.y), Random.Range (RandomRange.x, RandomRange.y), Random.Range (RandomRange.x, RandomRange.y));
-		while (Airframe.isLife  && Distance (tgt) >= ChangeModeDistance) {
+		while (Airframe.isLife  && Manager.AbsDistance (tgt.position,transform.position) >= ChangeModeDistance) {
 			yield return StartCoroutine (Tracking (tgt, RandomError));
 		}
 		RefreshSelfBreak ();
@@ -190,11 +191,6 @@ public class MissileSystem : MonoBehaviour
 		StopCoroutine (selfBrake);
 		LifeTime = 10;
 		StartCoroutine (SelfBreak ());
-	}
-
-	private float Distance (Transform tgt)
-	{
-		return Mathf.Abs (Vector3.Distance (tgt.position, transform.position));
 	}
 
 	private void ShootReady (bool isReload)

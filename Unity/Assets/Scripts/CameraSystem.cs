@@ -13,7 +13,6 @@ public class CameraSystem : MonoBehaviour
 	private static Vector2 CameraZErrorRange = new Vector2(0,0);
 	private static Vector3 LookBehindPos;
 	private static Vector3 LookFrontPos;
-	private static GameObject AirPlain;
 	private static Bloom CameraBloom;
 	private static float StartThreshold;
 
@@ -65,39 +64,17 @@ public class CameraSystem : MonoBehaviour
 	{
 		MyCamera = GameObject.Find ("Main Camera");
 		DontDestroyOnLoad (MyCamera);
-		AirPlain = GameObject.Find ("eurofighter");
 		CameraBloom = gameObject.GetComponent<Bloom> ();
 		StartThreshold = CameraBloom.bloomThreshold;
 //		StartCoroutine (Caputure ());
 
 	}
-
-	void Start(){
-		DamageEffectImage = GameObject.Find ("DamageEffectImage").GetComponent<Image>();
-//		DamageEffectImage.color = new Color(DamageEffectImage.color.r,DamageEffectImage.color.g,DamageEffectImage.color.b,1);
-//		StartCoroutine (DamageEffect ());
-	}
-
-	private static Image DamageEffectImage;
-	private static IEnumerator DamageEffect(){
-		Sprite[] sprites = Resources.LoadAll<Sprite>("Images/HoneyCombMask");
-		while (true) {
-			for (int i = 0; i < sprites.Length; i++) {
-				DamageEffectImage.sprite = sprites [i];
-				yield return new WaitForSeconds (0.045f);
-			}
-		}
-	}
-
 	public void SetUp ()
 	{
 		LookFrontPos = MyCamera.transform.localPosition;
-		LookBehindPos = new Vector3 (0,  LookFrontPos.y-9.2f, LookFrontPos.z+80.5f);//GameObject.Find ("CameraPos1").transform.localPosition;
+		LookBehindPos = new Vector3 (0,  LookFrontPos.y-9.2f, LookFrontPos.z+80.5f);
 		CameraZErrorRange.y = LookFrontPos.z + 0.1f;
 		CameraZErrorRange.x = LookFrontPos.z - 0.1f;
-		DamageEffectImage = GameObject.Find ("DamageEffectImage").GetComponent<Image>();
-		//		DamageEffectImage.color = new Color(DamageEffectImage.color.r,DamageEffectImage.color.g,DamageEffectImage.color.b,1);
-//		StartCoroutine (DamageEffect ());
 	}
 
 	public IEnumerator CameraModeChange ()
@@ -126,8 +103,8 @@ public class CameraSystem : MonoBehaviour
 
 	private void CameraMove (Vector2 Move)
 	{
-		transform.RotateAround (AirPlain.transform.position, Vector3.up, Move.x * 2);
-		transform.RotateAround (AirPlain.transform.position, Vector3.left, Move.y * 2);
+		transform.RotateAround (Airframe.AirFramePosition, Vector3.up, Move.x * 2);
+		transform.RotateAround (Airframe.AirFramePosition, Vector3.left, Move.y * 2);
 	}
 
 	public static IEnumerator CameraChangePosition ()

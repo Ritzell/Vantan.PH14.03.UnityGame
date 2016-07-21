@@ -96,20 +96,12 @@ public class Attack : MonoBehaviour
 
 	private bool isBoot (float Reloading)
 	{
-		if ((Input.GetKeyDown (KeyCode.JoystickButton18) || Input.GetKeyDown (KeyCode.Space))) {
-			return true;
-		} else {
-			return false;
-		}
+		return (Input.GetKeyDown (KeyCode.JoystickButton18) || Input.GetKeyDown (KeyCode.Space));
 	}
 
 	private bool isEnd (float Reloading)
 	{
-		if ((Input.GetKeyUp (KeyCode.JoystickButton18) || Input.GetKeyUp (KeyCode.Space))) {
-			return true;
-		} else {
-			return false;
-		}
+		return (Input.GetKeyUp (KeyCode.JoystickButton18) || Input.GetKeyUp (KeyCode.Space));
 	}
 
 	private void LockOrReset (float Reloading)
@@ -123,12 +115,7 @@ public class Attack : MonoBehaviour
 
 	public static bool isCancel ()
 	{
-		if ((Input.GetKeyUp (KeyCode.JoystickButton16) || Input.GetKeyUp (KeyCode.Alpha3))) {
-			
-			return true;
-		} else {
-			return false;
-		}
+		return (Input.GetKeyUp (KeyCode.JoystickButton16) || Input.GetKeyUp (KeyCode.Alpha3));
 	}
 
 	private bool isTrackingShoot ()

@@ -16,7 +16,6 @@ public class PlayerMove : MonoBehaviour
 	private  List<ParticleSystem> Glow = new List<ParticleSystem>();
 
 	private static float speed = 300f;
-	private static Transform AirFrame;
 	private static Quaternion DefaltRotation;
 	private const short Accele = +1;
 	private const short Decele = -1;
@@ -37,14 +36,13 @@ public class PlayerMove : MonoBehaviour
 		Glow.ForEach(glow => em.Add(glow.emission));
 		Glow.ForEach (glow => rate.Add (glow.emission.rate));
 		EngineS = GameObject.FindObjectOfType<EngineSound> ();
-		AirFrame = GameObject.Find ("eurofighter").transform;
-		DefaltRotation = AirFrame.localRotation;
 	}
 
 	void Start(){
 		SpeedLineMaterial.SetColor ("_Color", new Color (1, 1, 1, 0));
 		FindObjectOfType<GameManager> ().StartStage ();
 		FindObjectOfType<CameraSetting> ().OnScene (Scenes.Stage);
+		DefaltRotation = Airframe.AirFrame.transform.localRotation;
 	}
 
 	public void Manual ()
@@ -174,7 +172,7 @@ public class PlayerMove : MonoBehaviour
 
 	private void Rotation(Vector3 AddRot) {
 		transform.Rotate (AddRot.x / 1.5f, 0f, AddRot.z * 2f);
-		AirFrame.localRotation = new Quaternion (DefaltRotation.x + AddRot.x/50,DefaltRotation.y,DefaltRotation.z,DefaltRotation.w);
+		Airframe.AirFrame.transform.localRotation = new Quaternion (DefaltRotation.x + AddRot.x/50,DefaltRotation.y,DefaltRotation.z,DefaltRotation.w);
 	}
 	private Vector3 InputController(){
 		return new Vector3 (Input.GetAxis ("Vertical") * 3, 0, Input.GetAxis ("Horizontal") * 2);

@@ -146,8 +146,8 @@ public class EnemyBase : MonoBehaviour
 	{
 		while (true) {
 			yield return new WaitForSeconds (3000);
-			Childs [0].Target = Towers [TowerA];
-			Childs [1].Target = Towers [TowerA];
+//			Childs [0].Target = Towers [TowerA];
+//			Childs [1].Target = Towers [TowerA];
 			Debug.Log ("攻撃対象が変更されました");
 		}
 

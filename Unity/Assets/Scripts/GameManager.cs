@@ -47,6 +47,19 @@ public class GameManager : MonoBehaviour
 //		StartCoroutine(EscapeGame());
 	}
 
+	public float GetDegree(float x1, float x2, float y1, float y2){
+		float radian = Mathf.Atan2 (y1 - y2, x1 - x2);
+		return radian * Mathf.Rad2Deg;
+	}
+
+	public float AbsDistance(Vector3 p1, Vector3 p2){
+		return Mathf.Abs (Vector3.Distance (p1, p2));
+	}
+
+	public float AbsDistance(Vector2 p1, Vector2 p2){
+		return Mathf.Abs (Vector2.Distance (p1, p2));
+	}
+
 	public void StartStage ()
 	{
 		QualitySettings.vSyncCount = 0; // VSyncをOFFにする

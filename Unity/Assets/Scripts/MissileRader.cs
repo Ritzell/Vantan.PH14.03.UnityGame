@@ -25,12 +25,13 @@ public class MissileRader : MonoBehaviour {
 		}
 	}
 
-	[SerializeField]
-	private Transform Player;
+	private GameManager Manager;
+
 	[SerializeField]
 	private GameObject PointOb;
 
 	void Start () {
+		Manager = FindObjectOfType<GameManager> ();
 		StartCoroutine (OutRaderMissileDistance());
 		StartCoroutine (InRaderMissileDistance ());
 		StartCoroutine (RotateRader());
@@ -38,7 +39,7 @@ public class MissileRader : MonoBehaviour {
 
 	private IEnumerator RotateRader(){
 		while(!GameManager.IsGameOver){
-			transform.rotation = new Quaternion (0,0,Player.localRotation.y,transform.rotation.w);
+			transform.rotation = new Quaternion (0,0,Airframe.AirFrame.transform.localRotation.y,transform.rotation.w);
 			yield return null;
 		}
 	}
@@ -47,7 +48,7 @@ public class MissileRader : MonoBehaviour {
 		while (!GameManager.IsGameOver) {
 			MissileAddList(true);
 			for(int i = 0; i <= outRangeMissiles.Count-1; i++){
-					if (Mathf.Abs (Vector3.Distance (outRangeMissiles [i].position, Player.position)) <= 2000) {
+				if (Manager.AbsDistance(outRangeMissiles[i].position,Airframe.AirFramePosition) <= 2000) {
 						ToInRange (outRangeMissiles [i]);
 					}
 				yield return null;
@@ -58,10 +59,11 @@ public class MissileRader : MonoBehaviour {
 
 	private IEnumerator InRaderMissileDistance(){
 		Vector2 RaderPos = new Vector2 (transform.position.x, transform.position.y);
+		GameManager Manager = FindObjectOfType<GameManager> ();
 		while(!GameManager.IsGameOver){
 			MissileAddList(false);
 			for(int i = 0; i <= _inRangeMissiles.Count-1; i++){
-				float	distance = Mathf.Abs (Vector2.Distance (new Vector2 (_inRangeMissiles [i].position.x, _inRangeMissiles [i].position.y), RaderPos));
+				float distance  = Manager.AbsDistance (new Vector2 (_inRangeMissiles [i].position.x, _inRangeMissiles [i].position.y), RaderPos);
 				if (distance > RaderPos.x) {
 					ToOutRange (_inRangeMissiles [i]);
 				}

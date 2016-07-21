@@ -12,19 +12,27 @@ public class Airframe : MonoBehaviour
 	[SerializeField]
 	private AudioSource AlertAudio;
 
+	public static Vector3 AirFramePosition{ 
+		get{
+			
+			return  AirFrame.transform.position;
+		}
+	}
+	public static GameObject AirFrame { get;private set;}
+
 
 	void Awake ()
 	{
 		Manager = GameObject.Find ("GameManager").GetComponent<GameManager> ();
 		LightingSystem = FindObjectOfType<LightingControlSystem> ();
 		isLife = true;
+		AirFrame = gameObject;
 	}
 
 	void Start ()
 	{
 		StartCoroutine (NotificationSystem.UpdateNotification ("戦闘を開始します"));
 		DamageEffectImage = GameObject.Find ("DamageEffectImage").GetComponent<Image>();
-		//		DamageEffectImage.color = new Color(DamageEffectImage.color.r,DamageEffectImage.color.g,DamageEffectImage.color.b,1);
 		StartCoroutine (ObstacleWarning ());
 	}
 
@@ -68,7 +76,7 @@ public class Airframe : MonoBehaviour
 	private void DiedJudgment(GameObject Col){
 		if (HP <= 0 || Col.layer == 10 || Col.layer == (int)Layers.EnemyArmor || Col.layer == (int)Layers.Enemy) {
 			LightingControlSystem.ShatDown ();
-			Instantiate (Resources.Load ("prefabs/Explosion"), transform.position, Quaternion.identity);
+			Instantiate (Resources.Load ("prefabs/Explosion"), AirFramePosition, Quaternion.identity);
 			StartCoroutine (Deth ());
 		}
 	}

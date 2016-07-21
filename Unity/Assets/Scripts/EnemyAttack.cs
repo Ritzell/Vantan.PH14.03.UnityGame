@@ -14,23 +14,15 @@ public class EnemyAttack : MonoBehaviour
 	private IEnumerator Straight;
 	private Transform Player;
 
-	private Transform _target;
-	public Transform Target {
-		set {
-			_target = value;
-		}get {
-			return _target;
-		}
-	}
+	public Transform Target { get; private set; }
 
 	void Awake ()
 	{
-		Target = GameObject.Find ("eurofighter").transform;
 		Factory = GameObject.Find ("GameManager").GetComponent<MissileFactory> ();
-
 	}
 
 	public void Start(){
+		Target = Airframe.AirFrame.transform;
 //		StartCoroutine (Attack ());
 //		StartCoroutine (SpecialAttack ());
 //		Target = Player;
