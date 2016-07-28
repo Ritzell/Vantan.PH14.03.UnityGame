@@ -57,7 +57,8 @@ public class Airframe : MonoBehaviour
 			while (i == sprites.Length / 2 && !FirstAid) {
 				yield return null;
 			}
-			yield return new WaitForSeconds (0.045f);
+//			yield return new WaitForSeconds (0.00f);
+			yield return null;
 		}
 		DamageEffectImage.color = new Color(80,106,255,DamageEffectImage.color.a);
 		yield return null;

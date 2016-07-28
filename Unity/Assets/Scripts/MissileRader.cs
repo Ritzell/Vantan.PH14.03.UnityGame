@@ -48,7 +48,7 @@ public class MissileRader : MonoBehaviour {
 		while (!GameManager.IsGameOver) {
 			MissileAddList(true);
 			for(int i = 0; i <= outRangeMissiles.Count-1; i++){
-				if (Manager.AbsDistance(outRangeMissiles[i].position,Airframe.AirFramePosition) <= 2000) {
+				if (Airframe.isLife && Manager.AbsDistance(outRangeMissiles[i].position,Airframe.AirFramePosition) <= 2000) {
 						ToInRange (outRangeMissiles [i]);
 					}
 				yield return null;

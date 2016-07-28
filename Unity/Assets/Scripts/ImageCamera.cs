@@ -24,6 +24,7 @@ public class ImageCamera : MonoBehaviour {
         _renderCamera = gameObject.GetComponent<Camera>();
         _target = new RenderTexture(Screen.width, Screen.height, 16, RenderTextureFormat.ARGB32);
         _path = Path.Combine(Path.GetTempPath(), "Captured.png");
+		Debug.Log (_path);
     }
 	void Start()
     {

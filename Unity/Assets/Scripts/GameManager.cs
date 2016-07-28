@@ -249,4 +249,18 @@ public class GameManager : MonoBehaviour
 		IsGameOver = true;
 		Time.timeScale = 0.015f;
 	}
+
+
+	/// <summary>
+	/// ベジェ曲線
+	/// </summary>
+	/// <param name="t">T.</param>
+	/// <param name="p1">P1.</param>
+	/// <param name="p2">P2.</param>
+	/// <param name="p3">P3.</param>
+	/// <param name="p4">P4.</param>
+	public float Veje(float t, float p1,float p2,float p3,float p4){
+		float pos = (1-t)*(1-t)*(1-t)*p1 + 3*(1-t)*(1-t)*t*p1 + 3*(1-t)*t*t*p2 + t*t*t*p3;
+		return pos;
+	}
 }
