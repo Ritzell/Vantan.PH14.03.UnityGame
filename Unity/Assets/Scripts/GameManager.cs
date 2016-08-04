@@ -265,13 +265,24 @@ public class GameManager : MonoBehaviour
 	}
 
 	/// <summary>
-	/// 三平方の定理 
+	/// 符号を維持した三平方の定理 
 	/// 二次元ベクトルの計算の場合はベクトルごとに分けて計算
 	/// </summary>
 	/// <returns>The theorem.</returns>
 	/// <param name="a">The alpha component.</param>
 	/// <param name="b">The blue component.</param>
 	public float PythagoreanTheorem(float a, float b){
-		return Mathf.Pow (a,2) + Mathf.Pow(b,2);
+		return a+b < 0 ? -(Mathf.Pow (a,2) + Mathf.Pow(b,2)) : Mathf.Pow (a,2) + Mathf.Pow(b,2);
+	}
+
+
+	/// <summary>
+	/// 符号を維持した平方根
+	/// </summary>
+	/// <param name="sqrt">Sqrt.</param>
+	/// <param name="origin">Origin.</param>
+	public float ImaginarySqrt(float c, float sign){
+		float sqrt = Mathf.Sqrt (Mathf.Abs(c));
+		return sign == -1 ? -sqrt : sqrt;
 	}
 }

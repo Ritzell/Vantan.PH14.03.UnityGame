@@ -44,7 +44,13 @@ public class Enemy : MonoBehaviour
 				Quaternion StartRot = transform.rotation;
 				Vector3 p0 = transform.position, p1 = DebugPlayer.transform.position;
 				float[] b = new float[3]{ p1.x - p0.x , p1.y - p0.y,p1.z - p0.z};
-				Vector3 c = new Vector3 (Mathf.Sqrt (Manager.PythagoreanTheorem (MoveDistance, b [0])), Mathf.Sqrt (Manager.PythagoreanTheorem (MoveDistance, b [1])), Mathf.Sqrt (Manager.PythagoreanTheorem (MoveDistance, b [2])));
+				float[] PythagoreanTheoremArray = new float[3] {Manager.PythagoreanTheorem (b [0] >= 0 ? -MoveDistance : MoveDistance, b [1]),
+					Manager.PythagoreanTheorem (b [1] >= 0 ? -MoveDistance : MoveDistance, b [1]),
+					Manager.PythagoreanTheorem (b [1] >= 0 ? -MoveDistance : MoveDistance, b [2])
+				};
+				Vector3 c = new Vector3 (Manager.ImaginarySqrt(PythagoreanTheoremArray[0],Mathf.Sign(PythagoreanTheoremArray[0])),
+					Manager.ImaginarySqrt(PythagoreanTheoremArray[1],Mathf.Sign(PythagoreanTheoremArray[1])),
+					Manager.ImaginarySqrt(PythagoreanTheoremArray[2],Mathf.Sign(PythagoreanTheoremArray[2])));
 				Vector3 StartPos = transform.position;
 				Vector3 EndPos = p1 + c;
 				transform.LookAt (DebugPlayer.transform);
