@@ -63,6 +63,7 @@ public class CameraSystem : MonoBehaviour
 	void Awake ()
 	{
 		MyCamera = GameObject.Find ("Main Camera");
+//		MyCamera.GetComponent<Camera>(). 
 		DontDestroyOnLoad (MyCamera);
 		CameraBloom = gameObject.GetComponent<Bloom> ();
 		StartThreshold = CameraBloom.bloomThreshold;

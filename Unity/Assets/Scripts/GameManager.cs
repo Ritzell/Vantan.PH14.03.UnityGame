@@ -260,7 +260,18 @@ public class GameManager : MonoBehaviour
 	/// <param name="p3">P3.</param>
 	/// <param name="p4">P4.</param>
 	public float Veje(float t, float p1,float p2,float p3,float p4){
-		float pos = (1-t)*(1-t)*(1-t)*p1 + 3*(1-t)*(1-t)*t*p1 + 3*(1-t)*t*t*p2 + t*t*t*p3;
+		float pos = (1-t)*(1-t)*(1-t)*p1 + 3*(1-t)*(1-t)*t*p2 + 3*(1-t)*t*t*p3 + t*t*t*p4;
 		return pos;
+	}
+
+	/// <summary>
+	/// 三平方の定理 
+	/// 二次元ベクトルの計算の場合はベクトルごとに分けて計算
+	/// </summary>
+	/// <returns>The theorem.</returns>
+	/// <param name="a">The alpha component.</param>
+	/// <param name="b">The blue component.</param>
+	public float PythagoreanTheorem(float a, float b){
+		return Mathf.Pow (a,2) + Mathf.Pow(b,2);
 	}
 }

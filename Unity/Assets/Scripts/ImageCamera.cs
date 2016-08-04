@@ -77,7 +77,7 @@ public class ImageCamera : MonoBehaviour {
 		return new float[]{Mathf.Abs(rad * Mathf.Rad2Deg),Mathf.Abs(radTop * Mathf.Rad2Deg)};
 	}
 
-		
+	//void?
 	public static IEnumerator CaptureResultImage(Vector3 player,Vector3 missile){
 		SettingPosition (player, missile);
 		RenderTexture.active = _target;
