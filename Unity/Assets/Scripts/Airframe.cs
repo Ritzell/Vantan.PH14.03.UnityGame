@@ -19,6 +19,7 @@ public class Airframe : MonoBehaviour
 		}
 	}
 	public static GameObject AirFrame { get;private set;}
+	public static bool isLife { private set; get; }
 
 
 	void Awake ()
@@ -57,7 +58,6 @@ public class Airframe : MonoBehaviour
 			while (i == sprites.Length / 2 && !FirstAid) {
 				yield return null;
 			}
-//			yield return new WaitForSeconds (0.00f);
 			yield return null;
 		}
 		DamageEffectImage.color = new Color(80,106,255,DamageEffectImage.color.a);
@@ -128,7 +128,6 @@ public class Airframe : MonoBehaviour
 		}
 	}
 
-	public static bool isLife { private set; get; }
 
 	private IEnumerator Deth ()
 	{

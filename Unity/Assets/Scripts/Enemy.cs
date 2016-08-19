@@ -27,38 +27,61 @@ public class Enemy : MonoBehaviour
 	private static ReticleSystem PlayerReticle;
 
 
-	void Start(){
-		Manager = FindObjectOfType<GameManager> ();
-		StartCoroutine (DebugMove ());
+//	void Start(){
+//		Manager = FindObjectOfType<GameManager> ();
+//		StartCoroutine(BehaviourAI());
+//	}
+
+	private float Distance = 0f;
+
+	private IEnumerator BehaviourAI(){
+		float VigilanceRange = 2000, EscapeRange = 1000;
+		float MoveDistance = 1000;
+		GameObject Tgt = Airframe.AirFrame;
+		StartCoroutine (NaturalLookAt (VigilanceRange,Tgt));
+		StartCoroutine (Escape (EscapeRange,Tgt,MoveDistance));
+		while (!GameManager.IsGameOver) {
+			Distance = Manager.AbsDistance (Tgt.transform.position, transform.position);
+			yield return null;
+		}
 	}
 
-	private IEnumerator DebugMove(){
-		GameObject DebugPlayer = FindObjectOfType<DebugPlayer> ().gameObject;
-
-		float Area = 1000;
-		float MoveDistance = 1000;
-		bool outside = true;
-		while (true) {
-			if(Manager.AbsDistance(DebugPlayer.transform.position,transform.position) < Area && outside){
-//				outside = false;
+	private IEnumerator NaturalLookAt(float Range,GameObject tgt){
+		while (!GameManager.IsGameOver) {
+			if (Distance < Range) {
 				Quaternion StartRot = transform.rotation;
-				Vector3 p0 = transform.position, p1 = DebugPlayer.transform.position;
-				float[] b = new float[3]{ p1.x - p0.x , p1.y - p0.y,p1.z - p0.z};
+				transform.LookAt (tgt.transform);
+				Quaternion EndRot = transform.rotation;
+				transform.rotation = StartRot;
+				for (float time = 0; time < 1; time += Time.deltaTime / 2) {
+					float t = Manager.Veje(time,0,1,0.5f,1);
+					transform.rotation = Quaternion.Slerp (StartRot, EndRot, t);
+					yield return null;
+				}
+			}
+			yield return null;
+		}
+	}
+
+	private IEnumerator Escape(float range,GameObject tgt,float MoveDistance){
+		float MoveSpeed = 400;
+		while (!GameManager.IsGameOver) {
+			if (Distance < range) {
+				Vector3 p0 = transform.position, p1 = tgt.transform.position;
+				float[] b = new float[3]{ p1.x - p0.x, p1.y - p0.y, p1.z - p0.z };
 				float[] PythagoreanTheoremArray = new float[3] {Manager.PythagoreanTheorem (b [0] >= 0 ? -MoveDistance : MoveDistance, b [1]),
 					Manager.PythagoreanTheorem (b [1] >= 0 ? -MoveDistance : MoveDistance, b [1]),
 					Manager.PythagoreanTheorem (b [1] >= 0 ? -MoveDistance : MoveDistance, b [2])
 				};
-				Vector3 c = new Vector3 (Manager.ImaginarySqrt(PythagoreanTheoremArray[0],Mathf.Sign(PythagoreanTheoremArray[0])),
-					Manager.ImaginarySqrt(PythagoreanTheoremArray[1],Mathf.Sign(PythagoreanTheoremArray[1])),
-					Manager.ImaginarySqrt(PythagoreanTheoremArray[2],Mathf.Sign(PythagoreanTheoremArray[2])));
+				Vector3 c = new Vector3 (Manager.ImaginarySqrt (PythagoreanTheoremArray [0], Mathf.Sign (PythagoreanTheoremArray [0])),
+					           Manager.ImaginarySqrt (PythagoreanTheoremArray [1], Mathf.Sign (PythagoreanTheoremArray [1])),
+					           Manager.ImaginarySqrt (PythagoreanTheoremArray [2], Mathf.Sign (PythagoreanTheoremArray [2])));
+
 				Vector3 StartPos = transform.position;
 				Vector3 EndPos = p1 + c;
-				transform.LookAt (DebugPlayer.transform);
-				Quaternion EndRot = transform.rotation;
-				transform.rotation = StartRot;
-				for (float time = 0; time < 1; time+=Time.deltaTime) {
+
+				for (float time = 0; time < 1; time += Time.deltaTime / Mathf.Abs(Vector3.Distance(StartPos,EndPos)) * MoveSpeed) {
 					float t = Manager.Veje(time,0,1,0.5f,1);
-					transform.rotation = Quaternion.Slerp (StartRot, EndRot, t);
 					transform.position = Vector3.Lerp (StartPos, EndPos, t);
 					yield return null;
 				}
@@ -67,27 +90,26 @@ public class Enemy : MonoBehaviour
 		}
 	}
 
-//	void Awake ()
-//	{
-//		PlayerReticle = GameObject.Find ("ReticleImage").GetComponent<ReticleSystem> ();
-//
-//		MyMaterial = gameObject.GetComponent<Renderer> ().material;
-//		CameraS = GameObject.Find ("Main Camera").GetComponent<CameraSystem>();
-//		Manager = FindObjectOfType<GameManager> ();
-//
-//	}
-//
-//	void Start ()
-//	{
-//		MaxHP = HP;
-//		ArmorMaterial.color = new Color (0.3f, 0.3f, 0.3f, 1);
-//		MaterialColor = MyMaterial.GetColor ("_EmissionColor");
-//		EnemyBase.Rest = EnemyBase.Rest + 1;
-//		Breth = StartCoroutine (Respiration ());
-//		StateNotice = StateNotification();
-//		CryBox.pitch = 2.5f;
-////		StartCoroutine (Move ());
-//	}
+	void Awake ()
+	{
+		PlayerReticle = GameObject.Find ("ReticleImage").GetComponent<ReticleSystem> ();
+		MyMaterial = gameObject.GetComponent<Renderer> ().material;
+		CameraS = GameObject.Find ("Main Camera").GetComponent<CameraSystem>();
+		Manager = FindObjectOfType<GameManager> ();
+
+	}
+
+	void Start ()
+	{
+		MaxHP = HP;
+		ArmorMaterial.color = new Color (0.3f, 0.3f, 0.3f, 1);
+		MaterialColor = MyMaterial.GetColor ("_EmissionColor");
+		EnemyBase.Rest = EnemyBase.Rest + 1;
+		Breth = StartCoroutine (Respiration ());
+		StateNotice = StateNotification();
+		CryBox.pitch = 2.5f;
+		StartCoroutine (BehaviourAI ());
+	}
 		
 
 	void OnTriggerEnter (Collider Col)

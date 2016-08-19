@@ -8,8 +8,14 @@ public class ImageCamera : MonoBehaviour {
 	private List<Transform> CapturePositions = new List<Transform>();
 
 	private static Camera _renderCamera;
-    private static Texture2D _outputTexture;
+    
     private static RenderTexture _target;
+	private static Texture2D _outputTexture;
+	public static Texture2D OutPutTexture2D{
+		get{
+			return _outputTexture;
+		}
+	}
     private static string _path;
 	public static string ImagePath{
 		set{
@@ -26,19 +32,7 @@ public class ImageCamera : MonoBehaviour {
         _path = Path.Combine(Path.GetTempPath(), "Captured.png");
 		Debug.Log (_path);
     }
-	void Start()
-    {
-//        StartCoroutine (Capture ());
-	}
-
-//	private IEnumerator Capture(){
-//		while (!GameManager.GameOver) {
-//			if (Input.GetKeyDown (KeyCode.Escape)) {
-//				yield return StartCoroutine(CaptureResultImage ());
-//			}
-//			yield return null;
-//		}
-//	}
+		
 	public static void SettingPosition(Vector3 originPos,Vector3 otherPos){
 		Vector3[] Positions = CapturePos( MidPoints(originPos,otherPos));
 		_renderCamera.transform.position = Positions[0];
@@ -87,14 +81,14 @@ public class ImageCamera : MonoBehaviour {
         _outputTexture = new Texture2D(_target.width, _target.height, TextureFormat.ARGB32, false);
         _outputTexture.ReadPixels(new Rect(0, 0, _target.width, _target.height), 0, 0);
         _outputTexture.Apply();
-//		Debug.Log ("写真を撮った");
-		try{
-        File.WriteAllBytes(_path, _outputTexture.EncodeToPNG());
-//			Debug.Log("写真の保存に成功");
-//			Debug.Log(ImagePath);
-		}catch{
-//			Debug.Log("写真の保存に失敗");
-		}
+////		Debug.Log ("写真を撮った");
+//		try{
+////        File.WriteAllBytes(_path, _outputTexture.EncodeToPNG());
+////			Debug.Log("写真の保存に成功");
+////			Debug.Log(ImagePath);
+//		}catch{
+////			Debug.Log("写真の保存に失敗");
+//		}
 		_renderCamera.enabled = false;
 		yield return null;
 	}

@@ -2,8 +2,7 @@
 using System.Collections;
 using System;
 using UnityEngine.UI;
-
-//using UnityEngine;
+using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityStandardAssets.ImageEffects;
 
@@ -13,9 +12,20 @@ public class GameManager : MonoBehaviour
 	private static DateTime StartTime;
 	private static GameManager Manager;
 	private static MissileFactory Factory;
+	private static bool _IsGameOver = false;
 
-
-	public static bool IsGameOver { get; private set; }
+	public static bool IsGameOver { 
+		get{
+			return _IsGameOver;
+		}
+		set{
+			if (value == false) {
+				FindObjectOfType<GameManager> ().StopCoroutines ();
+			}
+			_IsGameOver = value;
+		}
+	}
+	public static List<Coroutine> StageCoroutine{ get; set;}
 	public static int MissileCount { get; set; }
 	public static int EnemyMIssilesCount { get; set; }
 
@@ -237,6 +247,10 @@ public class GameManager : MonoBehaviour
 			}
 			yield return null;
 		}
+	}
+
+	private void StopCoroutines(){
+		StageCoroutine.ForEach (coroutine => StopCoroutine (coroutine));
 	}
 
 	private static bool isNext ()

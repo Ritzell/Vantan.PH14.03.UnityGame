@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityStandardAssets.ImageEffects;
 
 public class PlayerMove : MonoBehaviour
 {
@@ -22,10 +23,11 @@ public class PlayerMove : MonoBehaviour
 	private const float MinSpeed = 200f;
 	private const float MaxSpeed = 690f;
 	private const float Keep = 0;
+	private const float MaxAngle = 5;
 	private static List<ParticleSystem.EmissionModule> em = new List<ParticleSystem.EmissionModule>();
 	private static List<ParticleSystem.MinMaxCurve> rate = new List<ParticleSystem.MinMaxCurve>();
 	private static EngineSound EngineS;
-
+	private static CameraMotionBlur MotionBlur;
 	public static float Speed{
 		get{
 			return speed;
@@ -49,6 +51,7 @@ public class PlayerMove : MonoBehaviour
 	{
 		gameObject.GetComponent<Animator>().Stop ();
 		CameraSystem cameraSystem = FindObjectOfType<CameraSystem> ();
+		MotionBlur = FindObjectOfType<CameraMotionBlur> ();
 		cameraSystem.StartCoroutine(CameraSystem.CameraChangePosition());
 		cameraSystem.StartCoroutine(cameraSystem.CameraModeChange());
 		cameraSystem.SetUp ();
@@ -120,7 +123,14 @@ public class PlayerMove : MonoBehaviour
 	}
 
 	private bool isAccele(){
-		return Input.GetKey (KeyCode.JoystickButton14) || Input.GetKey (KeyCode.Alpha2);
+		bool _isAccele = Input.GetKey (KeyCode.JoystickButton14) || Input.GetKey (KeyCode.Alpha2);
+		BlurEffects (_isAccele);
+		return _isAccele;
+	}
+
+	private void BlurEffects(bool isAccele){
+		MotionBlur.maxVelocity = isAccele ? 10 : 3.5f;
+		MotionBlur.velocityScale = isAccele ? 1 : 0.35f;
 	}
 
 	/// <summary>
@@ -173,6 +183,8 @@ public class PlayerMove : MonoBehaviour
 	private void Rotation(Vector3 AddRot) {
 		transform.Rotate (AddRot.x / 1.5f, 0f, AddRot.z * 2f);
 		Airframe.AirFrame.transform.localRotation = new Quaternion (DefaltRotation.x + AddRot.x/50,DefaltRotation.y,DefaltRotation.z,DefaltRotation.w);
+//		var RotateX = (DefaltRotation.x + Mathf.Abs (AddRot.x)) < DefaltRotation.x + MaxAngle ? DefaltRotation.x + (AddRot.x * MaxAngle * (Time.deltaTime / 6)) : Airframe.AirFrame.transform.localRotation.x;
+//		Airframe.AirFrame.transform.localRotation = new Quaternion (RotateX, DefaltRotation.y, DefaltRotation.z, DefaltRotation.w);
 	}
 	private Vector3 InputController(){
 		return new Vector3 (Input.GetAxis ("Vertical") * 3, 0, Input.GetAxis ("Horizontal") * 2);
