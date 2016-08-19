@@ -16,7 +16,7 @@ public class PlayerMove : MonoBehaviour
 	[SerializeField]
 	private  List<ParticleSystem> Glow = new List<ParticleSystem>();
 
-	private static float speed = 300f;
+	private static float speed = 300f;//戦闘機の速さ
 	private static Quaternion DefaltRotation;
 	private const short Accele = +1;
 	private const short Decele = -1;
@@ -62,9 +62,9 @@ public class PlayerMove : MonoBehaviour
 		StartCoroutine (ChangeSpeed ());
 		StartCoroutine (NotificationSystem.UpdateNotification ("操縦権を搭乗者に委託します"));
 	}
-
 	public IEnumerator FadeInSpeedLine(){
 		float fadeSpeed = 0.1f;
+		Debug.Log ("fadeinspeedline");
 		while (SpeedLineMaterial.GetColor ("_Color").a < (300/MaxSpeed)*SpeedLineThickness) {
 			SpeedLineMaterial.SetColor ("_Color", new Color (1, 1, 1, SpeedLineMaterial.GetColor ("_Color").a + (Time.deltaTime*SpeedLineThickness*fadeSpeed)));
 			yield return null;
@@ -129,8 +129,8 @@ public class PlayerMove : MonoBehaviour
 	}
 
 	private void BlurEffects(bool isAccele){
-		MotionBlur.maxVelocity = isAccele ? 10 : 3.5f;
-		MotionBlur.velocityScale = isAccele ? 1 : 0.35f;
+		MotionBlur.maxVelocity = Mathf.Clamp (MotionBlur.maxVelocity + (isAccele ? Time.deltaTime : -Time.deltaTime), 3.5f, 10);//isAccele ? 10 : Mathf.Clamp (MotionBlur.maxVelocity);//3.5f;
+		MotionBlur.velocityScale =  Mathf.Clamp (MotionBlur.maxVelocity + (isAccele ? Time.deltaTime*0.1f : -Time.deltaTime*0.1f), 0.35f, 1);
 	}
 
 	/// <summary>

@@ -32,12 +32,35 @@ public class Enemy : MonoBehaviour
 //		StartCoroutine(BehaviourAI());
 //	}
 
-	private float Distance = 0f;
 
+	void Awake ()
+	{
+		PlayerReticle = GameObject.Find ("ReticleImage").GetComponent<ReticleSystem> ();
+
+		MyMaterial = gameObject.GetComponent<Renderer> ().material;
+		CameraS = GameObject.Find ("Main Camera").GetComponent<CameraSystem>();
+		Manager = FindObjectOfType<GameManager> ();
+
+	}
+
+	void Start ()
+	{
+		MaxHP = HP;
+		ArmorMaterial.color = new Color (0.3f, 0.3f, 0.3f, 1);
+		MaterialColor = MyMaterial.GetColor ("_EmissionColor");
+		EnemyBase.Rest = EnemyBase.Rest + 1;
+		Breth = StartCoroutine (Respiration ());
+		StateNotice = StateNotification();
+		CryBox.pitch = 2.5f;
+		StartCoroutine (BehaviourAI ());
+//		StartCoroutine (Move ());
+	}
+	private float Distance = 0f;
 	private IEnumerator BehaviourAI(){
 		float VigilanceRange = 2000, EscapeRange = 1000;
 		float MoveDistance = 1000;
 		GameObject Tgt = Airframe.AirFrame;
+		Distance = Manager.AbsDistance (Tgt.transform.position, transform.position);
 		StartCoroutine (NaturalLookAt (VigilanceRange,Tgt));
 		StartCoroutine (Escape (EscapeRange,Tgt,MoveDistance));
 		while (!GameManager.IsGameOver) {
@@ -64,9 +87,10 @@ public class Enemy : MonoBehaviour
 	}
 
 	private IEnumerator Escape(float range,GameObject tgt,float MoveDistance){
-		float MoveSpeed = 400;
+		float MoveSpeed = 450;
 		while (!GameManager.IsGameOver) {
 			if (Distance < range) {
+				Debug.Log (Distance);
 				Vector3 p0 = transform.position, p1 = tgt.transform.position;
 				float[] b = new float[3]{ p1.x - p0.x, p1.y - p0.y, p1.z - p0.z };
 				float[] PythagoreanTheoremArray = new float[3] {Manager.PythagoreanTheorem (b [0] >= 0 ? -MoveDistance : MoveDistance, b [1]),
@@ -74,8 +98,8 @@ public class Enemy : MonoBehaviour
 					Manager.PythagoreanTheorem (b [1] >= 0 ? -MoveDistance : MoveDistance, b [2])
 				};
 				Vector3 c = new Vector3 (Manager.ImaginarySqrt (PythagoreanTheoremArray [0], Mathf.Sign (PythagoreanTheoremArray [0])),
-					           Manager.ImaginarySqrt (PythagoreanTheoremArray [1], Mathf.Sign (PythagoreanTheoremArray [1])),
-					           Manager.ImaginarySqrt (PythagoreanTheoremArray [2], Mathf.Sign (PythagoreanTheoremArray [2])));
+					Manager.ImaginarySqrt (PythagoreanTheoremArray [1], Mathf.Sign (PythagoreanTheoremArray [1])),
+					Manager.ImaginarySqrt (PythagoreanTheoremArray [2], Mathf.Sign (PythagoreanTheoremArray [2])));
 
 				Vector3 StartPos = transform.position;
 				Vector3 EndPos = p1 + c;
@@ -88,27 +112,6 @@ public class Enemy : MonoBehaviour
 			}
 			yield return null;
 		}
-	}
-
-	void Awake ()
-	{
-		PlayerReticle = GameObject.Find ("ReticleImage").GetComponent<ReticleSystem> ();
-		MyMaterial = gameObject.GetComponent<Renderer> ().material;
-		CameraS = GameObject.Find ("Main Camera").GetComponent<CameraSystem>();
-		Manager = FindObjectOfType<GameManager> ();
-
-	}
-
-	void Start ()
-	{
-		MaxHP = HP;
-		ArmorMaterial.color = new Color (0.3f, 0.3f, 0.3f, 1);
-		MaterialColor = MyMaterial.GetColor ("_EmissionColor");
-		EnemyBase.Rest = EnemyBase.Rest + 1;
-		Breth = StartCoroutine (Respiration ());
-		StateNotice = StateNotification();
-		CryBox.pitch = 2.5f;
-		StartCoroutine (BehaviourAI ());
 	}
 		
 
