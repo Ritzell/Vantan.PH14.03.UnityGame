@@ -135,7 +135,7 @@ public class SteamVR : System.IDisposable
 				Debug.Log("SteamVR Initialization Failed!  Make sure device's runtime is up to date.");
 				break;
 			default:
-				Debug.Log(OpenVR.GetStringForHmdError(error));
+                Debug.Log(OpenVR.GetStringForHmdError(error));
 				break;
 		}
 	}
