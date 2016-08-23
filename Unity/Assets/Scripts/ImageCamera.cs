@@ -81,13 +81,13 @@ public class ImageCamera : MonoBehaviour {
         _outputTexture = new Texture2D(_target.width, _target.height, TextureFormat.ARGB32, false);
         _outputTexture.ReadPixels(new Rect(0, 0, _target.width, _target.height), 0, 0);
         _outputTexture.Apply();
-////		Debug.Log ("写真を撮った");
+//		Debug.Log ("写真を撮った");
 //		try{
-////        File.WriteAllBytes(_path, _outputTexture.EncodeToPNG());
-////			Debug.Log("写真の保存に成功");
-////			Debug.Log(ImagePath);
+//        File.WriteAllBytes(_path, _outputTexture.EncodeToPNG());
+//			Debug.Log("写真の保存に成功");
+//			Debug.Log(ImagePath);
 //		}catch{
-////			Debug.Log("写真の保存に失敗");
+//			Debug.Log("写真の保存に失敗");
 //		}
 		_renderCamera.enabled = false;
 		yield return null;

@@ -60,7 +60,8 @@ public class Airframe : MonoBehaviour
 			}
 			yield return null;
 		}
-		DamageEffectImage.color = new Color(80,106,255,DamageEffectImage.color.a);
+		DamageEffectImage.color = Color.blue;//new Color(70,100,200,DamageEffectImage.color.a);
+		Debug.Log ("colorChange");
 		yield return null;
 	}
 

@@ -63,7 +63,12 @@ public class MissileRader : MonoBehaviour {
 		while(!GameManager.IsGameOver){
 			MissileAddList(false);
 			for(int i = 0; i <= _inRangeMissiles.Count-1; i++){
-				float distance  = Manager.AbsDistance (new Vector2 (_inRangeMissiles [i].position.x, _inRangeMissiles [i].position.y), RaderPos);
+				float distance;
+				try{
+				distance  = Manager.AbsDistance (new Vector2 (_inRangeMissiles [i].position.x, _inRangeMissiles [i].position.y), RaderPos);
+				}catch{
+					continue;
+				}
 				if (distance > RaderPos.x) {
 					ToOutRange (_inRangeMissiles [i]);
 				}

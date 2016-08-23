@@ -45,7 +45,7 @@ public class Record : MonoBehaviour {
 
 	private void ChangeImage(){
 		if (File.Exists (ImageCamera.ImagePath)) {
-			File.WriteAllBytes(ImageCamera.ImagePath, ImageCamera.OutPutTexture2D.EncodeToPNG());
+			
 			byte[] bytes = File.ReadAllBytes (ImageCamera.ImagePath);
 			Texture2D ResultTexture = new Texture2D (Screen.width, Screen.height);
 			ResultTexture.LoadImage (bytes);

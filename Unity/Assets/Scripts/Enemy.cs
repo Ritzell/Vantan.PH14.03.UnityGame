@@ -90,7 +90,6 @@ public class Enemy : MonoBehaviour
 		float MoveSpeed = 450;
 		while (!GameManager.IsGameOver) {
 			if (Distance < range) {
-				Debug.Log (Distance);
 				Vector3 p0 = transform.position, p1 = tgt.transform.position;
 				float[] b = new float[3]{ p1.x - p0.x, p1.y - p0.y, p1.z - p0.z };
 				float[] PythagoreanTheoremArray = new float[3] {Manager.PythagoreanTheorem (b [0] >= 0 ? -MoveDistance : MoveDistance, b [1]),

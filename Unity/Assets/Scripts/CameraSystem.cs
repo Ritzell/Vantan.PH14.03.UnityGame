@@ -156,9 +156,9 @@ public class CameraSystem : MonoBehaviour
 		yield return null;
 	}
 
-	public static IEnumerator SwayCamera (Action<bool> FirstAid)
+	public static IEnumerator SwayCamera (Action<bool> isEnd)
 	{
-		FirstAid(false);
+		isEnd(false);
 		float SwayTime = 0;
 		Vector3 NormalPos = new Vector3 (0, 15, -50);
 		while (SwayTime < 0.4f && !GameManager.IsGameOver) {
@@ -170,7 +170,7 @@ public class CameraSystem : MonoBehaviour
 			yield return null;
 		}
 		MyCamera.transform.localPosition = LookBehind ? LookBehindPos : NormalPos;
-		FirstAid (true);
+		isEnd (true);
 		yield return null;
 	}
 	public IEnumerator Flash(float FlashPower,bool isOut){

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityStandardAssets.ImageEffects;
+using System.IO;
 
 public class GameManager : MonoBehaviour
 {
@@ -178,6 +179,11 @@ public class GameManager : MonoBehaviour
 	public static IEnumerator FinishGame (bool isWin)
 	{
 		StopGame ();
+		try{
+		File.WriteAllBytes(ImageCamera.ImagePath, ImageCamera.OutPutTexture2D.EncodeToPNG());
+		}catch{
+			Debug.Log ("画像の保存に失敗しました.");
+		}
 		AudioSource AudioBox = Manager.GetComponent<AudioSource> ();
 		Record.IsVictory = isWin;
 		Manager.StartCoroutine (Manager.StopSounds ());
