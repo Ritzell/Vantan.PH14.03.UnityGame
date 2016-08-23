@@ -1,9 +1,3 @@
-﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
-//
-// Purpose: Custom inspector display for SteamVR_Skybox
-//
-//=============================================================================
-
 using UnityEngine;
 using UnityEditor;
 using System.Text;
@@ -381,4 +375,3 @@ public class SteamVR_SkyboxEditor : Editor
 #endif
 	}
 }
-

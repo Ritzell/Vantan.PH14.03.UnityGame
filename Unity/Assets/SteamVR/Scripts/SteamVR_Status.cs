@@ -1,9 +1,3 @@
-﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
-//
-// Purpose: Base class for fading things based on SteamVR events
-//
-//=============================================================================
-
 using UnityEngine;
 
 public abstract class SteamVR_Status : MonoBehaviour
@@ -78,4 +72,4 @@ public abstract class SteamVR_Status : MonoBehaviour
 		}
 	}
 }
-
+	

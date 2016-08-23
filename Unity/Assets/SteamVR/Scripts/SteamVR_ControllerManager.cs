@@ -1,9 +1,3 @@
-﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
-//
-// Purpose: Enables/disables objects based on connectivity and assigned roles.
-//
-//=============================================================================
-
 using UnityEngine;
 using System.Collections.Generic;
 using Valve.VR;
@@ -234,4 +228,3 @@ public class SteamVR_ControllerManager : MonoBehaviour
 		}
 	}
 }
-

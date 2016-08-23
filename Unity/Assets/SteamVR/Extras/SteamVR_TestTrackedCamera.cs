@@ -1,4 +1,3 @@
-﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
 using UnityEngine;
 
 public class SteamVR_TestTrackedCamera : MonoBehaviour
@@ -81,4 +80,3 @@ public class SteamVR_TestTrackedCamera : MonoBehaviour
 		}
 	}
 }
-

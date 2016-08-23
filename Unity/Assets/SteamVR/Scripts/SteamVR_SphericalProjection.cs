@@ -1,9 +1,3 @@
-﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
-//
-// Purpose: Applies spherical projection to output.
-//
-//=============================================================================
-
 using UnityEngine;
 
 [ExecuteInEditMode]
@@ -37,4 +31,3 @@ public class SteamVR_SphericalProjection : MonoBehaviour
 		Graphics.Blit(src, dest, material);
 	}
 }
-

@@ -1,9 +1,3 @@
-﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
-//
-// Purpose: Displays 2d content on a large virtual screen.
-//
-//=============================================================================
-
 using UnityEngine;
 using System.Collections;
 using Valve.VR;
@@ -180,4 +174,3 @@ public class SteamVR_Overlay : MonoBehaviour
 		return true;
 	}
 }
-

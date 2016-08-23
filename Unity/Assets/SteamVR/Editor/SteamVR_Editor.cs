@@ -1,9 +1,3 @@
-﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
-//
-// Purpose: Custom inspector display for SteamVR_Camera
-//
-//=============================================================================
-
 using UnityEngine;
 using UnityEditor;
 using System.IO;
@@ -126,4 +120,3 @@ public class SteamVR_Editor : Editor
 		EditorApplication.Exit(0);
 	}
 }
-

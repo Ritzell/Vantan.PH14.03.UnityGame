@@ -1,9 +1,3 @@
-﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
-//
-// Purpose: For controlling in-game objects with tracked devices.
-//
-//=============================================================================
-
 using UnityEngine;
 using Valve.VR;
 
@@ -96,4 +90,3 @@ public class SteamVR_TrackedObject : MonoBehaviour
 			this.index = (EIndex)index;
 	}
 }
-

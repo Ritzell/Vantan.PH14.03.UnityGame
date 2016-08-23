@@ -1,9 +1,3 @@
-﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
-//
-// Purpose: Access to SteamVR system (hmd) and compositor (distort) interfaces.
-//
-//=============================================================================
-
 using UnityEngine;
 using System.Runtime.InteropServices;
 using Valve.VR;
@@ -395,4 +389,3 @@ public class SteamVR : System.IDisposable
 	}
 #endif
 }
-

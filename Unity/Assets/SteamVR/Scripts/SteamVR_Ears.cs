@@ -1,9 +1,3 @@
-﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
-//
-// Purpose: Handles aligning audio listener when using speakers.
-//
-//=============================================================================
-
 using UnityEngine;
 using Valve.VR;
 
@@ -49,4 +43,3 @@ public class SteamVR_Ears : MonoBehaviour
 			SteamVR_Utils.Event.Remove("new_poses_applied", OnNewPosesApplied);
 	}
 }
-

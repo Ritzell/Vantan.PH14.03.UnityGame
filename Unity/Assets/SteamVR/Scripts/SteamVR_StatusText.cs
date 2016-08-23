@@ -1,8 +1,3 @@
-﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
-//
-// Purpose: Used to display SteamVR status messages
-//
-//=============================================================================
 
 using UnityEngine;
 
@@ -32,4 +27,3 @@ public class SteamVR_StatusText : SteamVR_Status
 		}
 	}
 }
-

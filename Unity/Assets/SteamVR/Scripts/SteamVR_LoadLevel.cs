@@ -1,9 +1,3 @@
-﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
-//
-// Purpose: Helper for smoothing over transitions between levels.
-//
-//=============================================================================
-
 using UnityEngine;
 using System.Collections;
 using Valve.VR;
@@ -519,4 +513,3 @@ public class SteamVR_LoadLevel : MonoBehaviour
 		return handle;
 	}
 }
-

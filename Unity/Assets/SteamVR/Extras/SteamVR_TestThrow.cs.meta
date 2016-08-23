@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 fileFormatVersion: 2
 guid: ff4f36585e15b1942827390ff1a92502
 timeCreated: 1437513988
@@ -10,3 +11,17 @@ MonoImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+=======
+fileFormatVersion: 2
+guid: ff4f36585e15b1942827390ff1a92502
+timeCreated: 1437513988
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+>>>>>>> 7a2dac852c2189b0ba9d13ef8a6daa196fae8c91
