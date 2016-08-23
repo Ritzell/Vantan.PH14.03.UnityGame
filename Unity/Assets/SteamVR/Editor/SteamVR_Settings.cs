@@ -1,3 +1,9 @@
+﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
+//
+// Purpose: Prompt developers to use settings most compatible with SteamVR.
+//
+//=============================================================================
+
 using UnityEngine;
 using UnityEditor;
 using System.IO;
@@ -715,3 +721,4 @@ public class SteamVR_Settings : EditorWindow
 		GUILayout.EndHorizontal();
 	}
 }
+

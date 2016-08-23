@@ -1,3 +1,9 @@
+﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
+//
+// Purpose: Render model of associated tracked object
+//
+//=============================================================================
+
 using UnityEngine;
 using System.Collections;
 using System.Runtime.InteropServices;
@@ -721,3 +727,4 @@ public class SteamVR_RenderModel : MonoBehaviour
 		}
 	}
 }
+

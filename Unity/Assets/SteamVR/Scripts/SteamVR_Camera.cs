@@ -1,3 +1,9 @@
+﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
+//
+// Purpose: Adds SteamVR render support to existing camera objects
+//
+//=============================================================================
+
 using UnityEngine;
 using System.Collections;
 using System.Reflection;
@@ -438,3 +444,4 @@ public class SteamVR_Camera : MonoBehaviour
 
 #endif
 }
+

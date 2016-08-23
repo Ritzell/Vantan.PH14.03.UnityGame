@@ -1,3 +1,9 @@
+﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
+//
+// Purpose: Access to SteamVR system (hmd) and compositor (distort) interfaces.
+//
+//=============================================================================
+
 using UnityEngine;
 using System.Runtime.InteropServices;
 using Valve.VR;
@@ -129,7 +135,7 @@ public class SteamVR : System.IDisposable
 				Debug.Log("SteamVR Initialization Failed!  Make sure device's runtime is up to date.");
 				break;
 			default:
-                Debug.Log(OpenVR.GetStringForHmdError(error));
+				Debug.Log(OpenVR.GetStringForHmdError(error));
 				break;
 		}
 	}
@@ -389,3 +395,4 @@ public class SteamVR : System.IDisposable
 	}
 #endif
 }
+

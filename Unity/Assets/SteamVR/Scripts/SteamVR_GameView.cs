@@ -1,3 +1,9 @@
+﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
+//
+// Purpose: Handles rendering to the game view window
+//
+//=============================================================================
+
 using UnityEngine;
 using Valve.VR;
 
@@ -98,3 +104,4 @@ public class SteamVR_GameView : MonoBehaviour
 	}
 #endif
 }
+

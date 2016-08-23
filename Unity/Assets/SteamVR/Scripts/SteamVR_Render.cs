@@ -1,3 +1,9 @@
+﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
+//
+// Purpose: Handles rendering of all SteamVR_Cameras
+//
+//=============================================================================
+
 using UnityEngine;
 using System.Collections;
 using Valve.VR;
@@ -480,3 +486,4 @@ public class SteamVR_Render : MonoBehaviour
 		}
 	}
 }
+

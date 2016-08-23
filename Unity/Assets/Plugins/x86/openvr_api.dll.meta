@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 fileFormatVersion: 2
 guid: 73d5d79effb76f84491567f3c473b810
 timeCreated: 1429123045
@@ -29,35 +28,3 @@ PluginImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-=======
-fileFormatVersion: 2
-guid: 73d5d79effb76f84491567f3c473b810
-timeCreated: 1429123045
-licenseType: Store
-PluginImporter:
-  serializedVersion: 1
-  iconMap: {}
-  executionOrder: {}
-  isPreloaded: 0
-  platformData:
-    Any:
-      enabled: 0
-      settings: {}
-    Editor:
-      enabled: 1
-      settings:
-        CPU: x86
-        DefaultValueInitialized: true
-        OS: Windows
-    Win:
-      enabled: 1
-      settings:
-        CPU: AnyCPU
-    Win64:
-      enabled: 1
-      settings:
-        CPU: None
-  userData: 
-  assetBundleName: 
-  assetBundleVariant: 
->>>>>>> 7a2dac852c2189b0ba9d13ef8a6daa196fae8c91

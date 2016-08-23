@@ -1,3 +1,15 @@
+﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
+//
+// Purpose: Wrapper for working with SteamVR controller input
+//
+// Example usage:
+//
+//	var deviceIndex = SteamVR_Controller.GetDeviceIndex(SteamVR_Controller.DeviceRelation.Leftmost);
+//	if (deviceIndex != -1 && SteamVR_Controller.Input(deviceIndex).GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+//		SteamVR_Controller.Input(deviceIndex).TriggerHapticPulse(1000);
+//
+//=============================================================================
+
 using UnityEngine;
 using Valve.VR;
 
@@ -220,3 +232,4 @@ public class SteamVR_Controller
 		return result;
 	}
 }
+

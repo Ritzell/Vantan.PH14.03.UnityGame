@@ -1,3 +1,9 @@
+﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
+//
+// Purpose: Generates a mesh based on field of view.
+//
+//=============================================================================
+
 using UnityEngine;
 using Valve.VR;
 

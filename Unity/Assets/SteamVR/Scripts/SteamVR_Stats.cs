@@ -1,3 +1,9 @@
+﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
+//
+// Purpose: Helper to display various hmd stats via GUIText
+//
+//=============================================================================
+
 using UnityEngine;
 using Valve.VR;
 
@@ -59,3 +65,4 @@ public class SteamVR_Stats : MonoBehaviour
 		}
 	}
 }
+

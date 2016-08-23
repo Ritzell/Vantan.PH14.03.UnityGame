@@ -1,3 +1,9 @@
+﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
+//
+// Purpose: Masks out pixels that cannot be seen through the connected hmd.
+//
+//=============================================================================
+
 using UnityEngine;
 using System.Collections;
 using UnityEngine.Rendering;
@@ -42,3 +48,4 @@ public class SteamVR_CameraMask : MonoBehaviour
 		meshFilter.mesh = null;
 	}
 }
+

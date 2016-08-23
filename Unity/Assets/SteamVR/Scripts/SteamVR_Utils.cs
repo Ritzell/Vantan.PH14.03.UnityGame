@@ -1,3 +1,9 @@
+﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
+//
+// Purpose: Utilities for working with SteamVR
+//
+//=============================================================================
+
 using UnityEngine;
 using System.Collections;
 using System.Runtime.InteropServices;
@@ -714,4 +720,4 @@ public static class SteamVR_Utils
 		Object.DestroyImmediate(texture);
 	}
 }
-	
+
