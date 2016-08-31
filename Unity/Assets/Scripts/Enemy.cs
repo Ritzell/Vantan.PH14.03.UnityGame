@@ -87,7 +87,7 @@ public class Enemy : MonoBehaviour
 	}
 
 	private IEnumerator Escape(float range,GameObject tgt,float MoveDistance){
-		float MoveSpeed = 450;
+		float MoveSpeed = 350;
 		while (!GameManager.IsGameOver) {
 			if (Distance < range) {
 				Vector3 p0 = transform.position, p1 = tgt.transform.position;
