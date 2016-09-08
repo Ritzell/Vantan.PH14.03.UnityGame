@@ -7,16 +7,9 @@ public class EnemyBase : MonoBehaviour
 	[SerializeField]
 	private Material material;
 
-	private const int TowerA = 0;
-	private const int TowerB = 1;
-	private const int TowerC = 2;
-	private const int TowerD = 3;
-	private const int TowerE = 4;
-	private const int TowerF = 5;
-	private static List<Transform> Towers = new List<Transform> ();
 	private static List<EnemyAttack> Childs = new List<EnemyAttack> ();
 	private static int RestChildren = 0;
-	private static int HP = 600;
+	private static int HP = 200;
 	private static IEnumerator StateNotice;
 
 	public static int Rest {

@@ -17,9 +17,10 @@ public class QualitySetting : MonoBehaviour {
 
 	void Start(){
 		if (!RunOutPut) {
-//			GameObject.Find("Main Camera").GetComponent<CameraSystem>().StartCoroutine (SettingActive());
+			GameObject.Find("Main Camera").GetComponent<CameraSystem>().StartCoroutine (SettingActive());
 			GameObject.Find("Main Camera").GetComponent<CameraSystem>().StartCoroutine (SettingOutPut());
 			RunOutPut = true;
+
 		}
 	}
 	private static int[] Dates = new int[Enum.GetNames(typeof(DateNumber)).Length];
@@ -60,7 +61,8 @@ public class QualitySetting : MonoBehaviour {
 		Camera camera = FindObjectOfType<CameraSystem> ().GetComponent<Camera> ();
 		while (true) {
 			if (Input.GetKeyDown (KeyCode.Space)) {
-				QualitySettings.SetQualityLevel (Dates [(int)DateNumber.RenderingPath]);//RenderingPath
+//				QualitySettings.SetQualityLevel (Dates [(int)DateNumber.RenderingPath]);//RenderingPath
+				yield return new WaitForEndOfFrame();
 				QualitySettings.antiAliasing = Dates [(int)DateNumber.AntiAliasing];//AntiAliasing
 				QualitySettings.vSyncCount = Dates [(int)DateNumber.Vsync];//vsync
 				foreach (Light light in FindObjectsOfType<Light>()) {//shadow
@@ -76,7 +78,7 @@ public class QualitySetting : MonoBehaviour {
 						break;
 					}
 				}
-				FindObjectOfType<Terrain> ().drawTreesAndFoliage = Dates [(int)DateNumber.DrowTree] == 0 ? true : false;//Draw
+//				FindObjectOfType<Terrain> ().drawTreesAndFoliage = Dates [(int)DateNumber.DrowTree] == 0 ? true : false;//Draw
 				camera.hdr = Dates [(int)DateNumber.HDR] == 0 ? true : false;//Draw
 
 			}

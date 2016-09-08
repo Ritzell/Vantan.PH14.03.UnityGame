@@ -13,7 +13,7 @@ public class Enemy : MonoBehaviour
 	private GameManager Manager;
 	private CameraSystem CameraS;
 	private bool isLife = true;
-	private float HP = 600;
+	private float HP = 100;
 	private float MaxHP;
 	private Material MyMaterial;
 	private Color MaterialColor;
@@ -122,7 +122,7 @@ public class Enemy : MonoBehaviour
 		if (Col.gameObject.layer == (int)PlayerAttackPower.bulletLayer) {
 			HP -= (int)PlayerAttackPower.bullet;
 		} else if (Col.gameObject.layer == (int)PlayerAttackPower.missileLayer) {
-			CryBox.Play ();
+			//CryBox.Play ();
 			HP -= (int)PlayerAttackPower.missile;
 		}
 		StateNotice.MoveNext ();
@@ -221,6 +221,7 @@ public class Enemy : MonoBehaviour
 
 		CryBox.pitch = Random.Range (0.65f, 1.3f);
 		CryBox.Play ();
+		Debug.Log ("death");
 		StopCoroutine (Breth);
 		MyMaterial.EnableKeyword ("_EMISSION");
 		MyMaterial.SetColor ("_EmissionColor",Color.red);
