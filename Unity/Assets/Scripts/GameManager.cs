@@ -82,7 +82,7 @@ public class GameManager : MonoBehaviour
 		StartTime = DateTime.Now;
 		StartCoroutine (Timer ());//タイマーを起動
 		StartCoroutine(EscapeGame());
-		QualitySettings.antiAliasing = QualitySetting.GameSetDates [(int)QualitySetting.DateNumber.AntiAliasing];
+		QualitySettings.antiAliasing =  GameSetting.GameSetDates [(int) GameSetting.DateNumber.AntiAliasing];
 	}
 
 	public IEnumerator ReloadMissile (Vector3 StartPos, Quaternion StartRot)

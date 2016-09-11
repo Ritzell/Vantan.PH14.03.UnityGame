@@ -10,10 +10,12 @@ using System;
 //	}
 //}
 
-public class QualitySetting : MonoBehaviour {
+public class  GameSetting : MonoBehaviour {
 	//valueで選択肢を得る
 	//QualitySettings.antiAliasing = 0;
 	private static bool RunOutPut = false;
+	[SerializeField]
+	private Text VolumeText;
 
 	void Start(){
 		if (!RunOutPut) {
@@ -137,5 +139,10 @@ public class QualitySetting : MonoBehaviour {
 	public void DrowGlass(bool isDrow){
 		Debug.Log (isDrow);
 		Dates [(int)DateNumber.DrowGlass] = isDrow ? 0 : 1;
+	}
+
+	public void ChangeVolume(float value){
+		AudioListener.volume = value;
+		VolumeText.text = "音量 " + (int)(value * 100);
 	}
 }
