@@ -64,7 +64,6 @@ public class GameManager : MonoBehaviour
 //		StartCoroutine (Resetf);
 //		StartCoroutine(EscapeGame());
 		StartCoroutine(EscapeGame());
-		Debug.Log ("I'm here");
 		IsGameOver = false;
 	}
 
@@ -93,7 +92,6 @@ public class GameManager : MonoBehaviour
 		StartCoroutine (Timer ());//タイマーを起動
 		StartCoroutine(EscapeGame());
 		QualitySettings.antiAliasing =  GameSetting.GameSetDates [(int) GameSetting.DateNumber.AntiAliasing];
-		Debug.Log ("Start");
 	}
 
 	public IEnumerator ReloadMissile (Vector3 StartPos, Quaternion StartRot)
@@ -166,7 +164,6 @@ public class GameManager : MonoBehaviour
 	//ゲームを途中で終了
 	private IEnumerator EscapeGame(){
 		while(!GameManager.IsGameOver){
-			Debug.Log ("serch");
 			if (Input.GetKeyDown (KeyCode.Escape)) {
 				ResetGame ();
 				CameraS.StartCoroutine(GameManager.FlashLoadScene (GameManager.Scenes.title));

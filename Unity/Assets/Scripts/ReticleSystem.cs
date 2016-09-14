@@ -102,7 +102,8 @@ public class ReticleSystem : MonoBehaviour
 	private IEnumerator ReticleMoveInput ()
 	{
 		while (!GameManager.IsGameOver) {
-			ReticleController (new Vector3 (Input.GetAxis ("3thAxis"), Input.GetAxis ("4thAxis"), 0));
+			ReticleController (new Vector3 (Input.GetAxis ("3thAxis"), Input.GetAxis ("4thAxis"), 0) == Vector3.zero ? new Vector3 (Input.GetAxis ("Key3thAxis"), Input.GetAxis ("Key4thAxis"), 0) : new Vector3 (Input.GetAxis ("3thAxis"), Input.GetAxis ("4thAxis"), 0));
+			Debug.Log (Input.GetAxis ("3thAxis"));
 			yield return null;
 		}
 		yield return null;

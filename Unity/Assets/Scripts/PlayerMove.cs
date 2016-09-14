@@ -64,7 +64,6 @@ public class PlayerMove : MonoBehaviour
 	}
 	public IEnumerator FadeInSpeedLine(){
 		float fadeSpeed = 0.1f;
-		Debug.Log ("fadeinspeedline");
 		while (SpeedLineMaterial.GetColor ("_Color").a < (300/MaxSpeed)*SpeedLineThickness) {
 			SpeedLineMaterial.SetColor ("_Color", new Color (1, 1, 1, SpeedLineMaterial.GetColor ("_Color").a + (Time.deltaTime*SpeedLineThickness*fadeSpeed)));
 			yield return null;
