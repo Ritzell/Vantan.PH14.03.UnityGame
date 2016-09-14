@@ -46,16 +46,26 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
+	public enum Scenes{
+		title,
+		customize,
+		stage,
+		result
+	}
+
 
 	void Awake ()
 	{
-		DontDestroyOnLoad (GameObject.Find ("GameManager"));
+		DontDestroyOnLoad (gameObject);
 		CameraS = FindObjectOfType<CameraSystem> ();
 	}
 
 	void Start(){
 //		StartCoroutine (Resetf);
 //		StartCoroutine(EscapeGame());
+		StartCoroutine(EscapeGame());
+		Debug.Log ("I'm here");
+		IsGameOver = false;
 	}
 
 	public float GetDegree(float x1, float x2, float y1, float y2){
@@ -83,6 +93,7 @@ public class GameManager : MonoBehaviour
 		StartCoroutine (Timer ());//タイマーを起動
 		StartCoroutine(EscapeGame());
 		QualitySettings.antiAliasing =  GameSetting.GameSetDates [(int) GameSetting.DateNumber.AntiAliasing];
+		Debug.Log ("Start");
 	}
 
 	public IEnumerator ReloadMissile (Vector3 StartPos, Quaternion StartRot)
@@ -134,24 +145,31 @@ public class GameManager : MonoBehaviour
 		RestTime = limitTime - elapsedTime;
 	}
 
-	public static IEnumerator FlashLoadScene (string SceneName)
+	public static IEnumerator FlashLoadScene (Scenes scene)
 	{
 		bool isOut = false;
 		CameraS.StartCoroutine (CameraS.Flash (3f, true, 1, GameObject.Find ("Canvas"), fadeout => isOut = fadeout));
 		while (!isOut) {
 			yield return null;
 		}
+		if (scene == Scenes.title) {
+			FindObjectOfType<Camera> ().gameObject.SetActive (false);
+		}
+		SceneManager.LoadSceneAsync ((int)scene);
 		yield return null;
-		SceneManager.LoadSceneAsync (SceneName);
+		if (scene == Scenes.title) {
+			FindObjectOfType<GameManager> ().gameObject.SetActive (false);//CameraSetting> ().MyCamera;//.SetActive (false);
+		}
 		yield return null;
 	}
 
 	//ゲームを途中で終了
 	private IEnumerator EscapeGame(){
 		while(!GameManager.IsGameOver){
+			Debug.Log ("serch");
 			if (Input.GetKeyDown (KeyCode.Escape)) {
 				ResetGame ();
-				CameraS.StartCoroutine(GameManager.FlashLoadScene ("title"));
+				CameraS.StartCoroutine(GameManager.FlashLoadScene (GameManager.Scenes.title));
 			}
 			yield return null;
 		}
@@ -233,7 +251,7 @@ public class GameManager : MonoBehaviour
 		yield return new WaitForSeconds (5 * Time.timeScale);
 		while (true) {
 			if (isNext ()) {
-				yield return Manager.StartCoroutine (FlashLoadScene ("Result"));
+				yield return Manager.StartCoroutine (FlashLoadScene (GameManager.Scenes.result));
 				yield break;
 			}
 			yield return null;
@@ -248,7 +266,7 @@ public class GameManager : MonoBehaviour
 		while (true) {
 			if (isNext ()) {
 				FindObjectOfType<CameraSystem> ().StopCoroutine ("CameraOut");
-				yield return Manager.StartCoroutine (FlashLoadScene ("Result"));
+				yield return Manager.StartCoroutine (FlashLoadScene (GameManager.Scenes.result));
 				yield break;
 			}
 			yield return null;
@@ -256,7 +274,7 @@ public class GameManager : MonoBehaviour
 	}
 
 	private void StopCoroutines(){
-		StageCoroutine.ForEach (coroutine => StopCoroutine (coroutine));
+		//StageCoroutine.ForEach (coroutine => StopCoroutine (coroutine));
 	}
 
 	private static bool isNext ()

@@ -61,7 +61,7 @@ public class Record : MonoBehaviour {
 	private IEnumerator NextScene(){
 		while(true){
 			if (Input.GetKeyDown (KeyCode.Space) || Input.GetKey (KeyCode.JoystickButton9)) {
-				FindObjectOfType<GameManager>().StartCoroutine(GameManager.FlashLoadScene ("title"));
+				FindObjectOfType<GameManager>().StartCoroutine(GameManager.FlashLoadScene (GameManager.Scenes.title));
 				GameObject.Find ("GameManager").GetComponent<AudioSource> ().Stop ();
 				if (File.Exists(ImageCamera.ImagePath))
 				{

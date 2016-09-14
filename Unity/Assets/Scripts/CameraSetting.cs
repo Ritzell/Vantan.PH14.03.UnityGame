@@ -4,6 +4,12 @@ using System.Collections;
 public class CameraSetting : MonoBehaviour {
     [SerializeField]
 	private GameObject Mycamera,VRCamera,NormalCamera;
+
+	public GameObject MyCamera{
+		get{
+			return Mycamera;
+		}
+	}
 	private static AudioClip TitleClip;
 
 
@@ -12,8 +18,18 @@ public class CameraSetting : MonoBehaviour {
         Mycamera = isVR ? VRCamera : NormalCamera;
     }
 
+	public void DestroyCamera (){
+		Destroy (Mycamera);
+	}
+
 	public void OnScene(Scenes scene){
-        Camera camera = Mycamera.GetComponent<Camera>();
+		Camera camera;
+		try{
+        camera = Mycamera.GetComponent<Camera>();
+		}catch{
+			Mycamera = FindObjectOfType<Camera> ().gameObject;
+			camera = Mycamera.GetComponent<Camera>();
+		}
 
 		if (scene == Scenes.Title) {
 			TitleClip = (AudioClip)Resources.Load ("Sounds/The Nutcracker - Valse des fleurs");

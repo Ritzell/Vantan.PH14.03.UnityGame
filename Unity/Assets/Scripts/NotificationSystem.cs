@@ -136,12 +136,15 @@ public class NotificationSystem : MonoBehaviour {
 		var TextComponent = TextBox.GetComponent<Text> ();
 		TextRect.pivot = isAnnounce ? new Vector2 (1,1) : new Vector2 (0.5f,0.5f);
 		TextRect.transform.localPosition = new Vector3 (0,0,0);
-		TextRect.sizeDelta = isAnnounce ? new Vector2 (ScreenRatioX*300,ScreenRatioY * 20) : new Vector2 (ScreenRatioX*300,ScreenRatioY * 28);
+		TextRect.sizeDelta = isAnnounce ? new Vector2 (1400,130) : new Vector2 (ScreenRatioX*300,ScreenRatioY * 28);
+		TextRect.localScale = isAnnounce ? new Vector3 (0.7f, 0.7f, 1) : new Vector3 (1, 1, 1);
+		//TextRect.sizeDelta = isAnnounce ? new Vector2 (ScreenRatioX*300,ScreenRatioY * 20) : new Vector2 (ScreenRatioX*300,ScreenRatioY * 28);
 		TextRect.anchorMax = isAnnounce ? new Vector2 (1,0) : new Vector2 (0.5f,0);
 		TextRect.anchorMin = TextRect.anchorMax;
 		TextComponent.alignment = isAnnounce ? TextAnchor.MiddleRight : TextAnchor.MiddleCenter;
 		TextComponent.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
-		TextComponent.fontSize = isAnnounce ? (int)(ScreenRatioY * 10) : (int)(ScreenRatioY * 25);
+		TextComponent.fontSize = isAnnounce ? 43 : (int)(ScreenRatioY * 250);
+//		TextComponent.fontSize = isAnnounce ? (int)(ScreenRatioY * 100) : (int)(ScreenRatioY * 250);
 		TextComponent.color = isAnnounce ? new Color (1,0.92f,0.16f,0) : new Color (1,0f,0f,0.8f) ;
 		if (isAnnounce) {
 			Sentences.Add (TextBox.GetComponent<RectTransform> ());

@@ -32,9 +32,9 @@ public class TitleButton : MonoBehaviour {
 
 	private static void ClickEvent(Buttons Button,TitleButton origin,GameObject SettingWindow){
 		if (Button == Buttons.Start) {
-			origin.StartCoroutine (GameManager.FlashLoadScene ("stage"));
+			origin.StartCoroutine (GameManager.FlashLoadScene (GameManager.Scenes.stage));
 		} else if (Button == Buttons.Cusomize) {
-			origin.StartCoroutine (GameManager.FlashLoadScene ("Customize"));
+			origin.StartCoroutine (GameManager.FlashLoadScene (GameManager.Scenes.customize));
 		} else if (Button == Buttons.Setting) {
 			SettingWindow.SetActive(true);
 			origin.StartCoroutine (CloseSettingWindow (SettingWindow));
