@@ -63,7 +63,6 @@ public class GameManager : MonoBehaviour
 	void Start(){
 //		StartCoroutine (Resetf);
 //		StartCoroutine(EscapeGame());
-		StartCoroutine(EscapeGame());
 		IsGameOver = false;
 	}
 

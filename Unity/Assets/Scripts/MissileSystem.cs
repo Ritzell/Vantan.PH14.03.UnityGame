@@ -186,6 +186,16 @@ public class MissileSystem : MonoBehaviour
 		yield return StartCoroutine (MoveForward ());
 	}
 
+	private IEnumerator RotateToTgtAngle(Quaternion toRot){
+		float time = 0;
+		while (time < 1) {
+			time += Time.deltaTime;
+			transform.rotation = Quaternion.Slerp (transform.rotation, toRot, time);
+			yield return null;
+		}
+		yield return null;
+	}
+
 	private void RefreshSelfBreak ()
 	{
 		StopCoroutine (selfBrake);
