@@ -3,18 +3,27 @@ using System.Collections;
 
 public class CameraSetting : MonoBehaviour {
     [SerializeField]
-	private GameObject Mycamera,VRCamera,NormalCamera;
+    private GameObject Mycamera, VRCamera, NormalCamera;
 
-	public GameObject MyCamera{
-		get{
-			return Mycamera;
-		}
-	}
+    public GameObject MyCamera {
+        get {
+            return Mycamera;
+        }
+    }
+
+    public GameObject VRcamera
+    {
+        get
+        {
+            return VRCamera;
+        }
+    }
 	private static AudioClip TitleClip;
 
 
     public void ChangeCamera(bool isVR)
     {
+
         Mycamera = isVR ? VRCamera : NormalCamera;
     }
 
@@ -38,7 +47,7 @@ public class CameraSetting : MonoBehaviour {
 			camera.farClipPlane = 1000;
 			camera.hdr = true;
 			Mycamera.transform.parent = null;
-			Mycamera.transform.position = new Vector3 (0, 0, -39.5f);
+			Mycamera.transform.position = new Vector3 (0, 0,  VRMode.isVRMode ? 0 : -39.5f);
 			Mycamera.transform.localRotation = new Quaternion (0, 0, 0,0);
 			Mycamera.GetComponent<AudioSource> ().clip = TitleClip;
 			Mycamera.GetComponent<AudioSource> ().Play();

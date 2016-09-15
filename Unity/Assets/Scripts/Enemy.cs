@@ -38,7 +38,7 @@ public class Enemy : MonoBehaviour
 		PlayerReticle = GameObject.Find ("ReticleImage").GetComponent<ReticleSystem> ();
 
 		MyMaterial = gameObject.GetComponent<Renderer> ().material;
-		CameraS = GameObject.Find ("Main Camera").GetComponent<CameraSystem>();
+		CameraS = FindObjectOfType<CameraSetting>().MyCamera.GetComponent<CameraSystem>();
 		Manager = FindObjectOfType<GameManager> ();
 
 	}

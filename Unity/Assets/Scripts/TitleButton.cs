@@ -23,7 +23,6 @@ public class TitleButton : MonoBehaviour {
 		CameraS = FindObjectOfType<CameraSystem> ();
 		QualitySettings.antiAliasing = 3;
 		FindObjectOfType<CameraSetting> ().OnScene (Scenes.Title);
-//		Camera.main.renderingPath = RenderingPath.DeferredShading;
 	}
 
 	public void OnClick(){

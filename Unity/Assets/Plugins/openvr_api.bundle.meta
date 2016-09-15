@@ -1,14 +1,6 @@
 fileFormatVersion: 2
-<<<<<<< HEAD
-guid: 6189579c99235db4c89b7066ebee8718
+guid: 98ba7a68920726142911c41776216f21
 folderAsset: yes
-timeCreated: 1471778017
-=======
-guid: 6f72bb1a1ca49490e9dada0c0f3c81dc
-folderAsset: yes
-timeCreated: 1471688995
->>>>>>> ea0b491460dcf3ced0fb4d4f6cd8201594829354
-licenseType: Free
 PluginImporter:
   serializedVersion: 1
   iconMap: {}
@@ -16,6 +8,19 @@ PluginImporter:
   isPreloaded: 0
   platformData:
     Any:
+      enabled: 0
+      settings: {}
+    Editor:
+      enabled: 1
+      settings:
+        DefaultValueInitialized: true
+    OSXIntel:
+      enabled: 1
+      settings: {}
+    OSXIntel64:
+      enabled: 1
+      settings: {}
+    OSXUniversal:
       enabled: 1
       settings: {}
   userData: 

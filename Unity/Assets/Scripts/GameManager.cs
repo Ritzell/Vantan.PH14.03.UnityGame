@@ -81,9 +81,9 @@ public class GameManager : MonoBehaviour
 
 	public void StartStage ()
 	{
-		QualitySettings.vSyncCount = 0; // VSyncをOFFにする
-		QualitySettings.antiAliasing = 0;
-		Camera.main.renderingPath = RenderingPath.Forward;
+		//QualitySettings.vSyncCount = 0; // VSyncをOFFにする
+		//QualitySettings.antiAliasing = 0;
+		//Camera.main.renderingPath = RenderingPath.Forward;
 		CameraS = FindObjectOfType<CameraSystem> ();
 		Manager = GameObject.FindObjectOfType<GameManager> ();
 		Factory = GameObject.FindObjectOfType<MissileFactory> ();
@@ -145,7 +145,8 @@ public class GameManager : MonoBehaviour
 	public static IEnumerator FlashLoadScene (Scenes scene)
 	{
 		bool isOut = false;
-		CameraS.StartCoroutine (CameraS.Flash (3f, true, 1, GameObject.Find ("Canvas"), fadeout => isOut = fadeout));
+        CameraS = FindObjectOfType<CameraSetting>().VRcamera.GetComponent<CameraSystem>();
+        CameraS.StartCoroutine (CameraS.Flash (3f, true, 1, GameObject.Find ("Canvas"), fadeout => isOut = fadeout));
 		while (!isOut) {
 			yield return null;
 		}
