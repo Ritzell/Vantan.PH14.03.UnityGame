@@ -23,13 +23,8 @@ public class CameraSetting : MonoBehaviour {
     {
         get
         {
-            return FirstParent(MyCamera);
+            return GameManager.FirstParent(MyCamera);
         }
-    }
-
-    GameObject FirstParent(GameObject child)
-    {
-        return child.transform.parent == null ? child : FirstParent(child.transform.parent.gameObject);
     }
 
 	private static AudioClip TitleClip;

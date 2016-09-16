@@ -135,7 +135,7 @@ public class Airframe : MonoBehaviour
 //		if (GameManager.IsGameOver) {
 //			yield break;
 //		}
-		GameObject.Find ("Main Camera").transform.parent = null;
+		FindObjectOfType<CameraSetting>().MyCamera.transform.parent = null;
 		Destroy (gameObject);
 		isLife = false;
 		yield return StartCoroutine (GameManager.FinishGame (false));

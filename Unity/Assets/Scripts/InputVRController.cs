@@ -28,6 +28,7 @@ public class InputVRController : MonoBehaviour {
 
     void Update()
     {
+        Debug.Log(GetPressStay(InputPress.PressGrip));
     }
 
     public static bool GetPress(InputPress input,bool isRight)
@@ -68,13 +69,20 @@ public class InputVRController : MonoBehaviour {
 
     public static bool GetPressStay(InputPress input)
     {
-        var device = SteamVR_Controller.Input((int)trackedObject[0].index);
-        var device2 = SteamVR_Controller.Input((int)trackedObject[1].index);
+        SteamVR_Controller.Device device, device2;
+        try
+        {
+            device = SteamVR_Controller.Input((int)trackedObject[0].index);
+            device2 = SteamVR_Controller.Input((int)trackedObject[1].index);
+        }catch
+        {
+            Debug.Log("コントローラーが認識されていません。");
+            return false;
+        }
 
-        switch (input)
+        if (input == InputPress.PressGrip)
             {
-                case InputPress.PressGrip:
-                    return device.GetPress(SteamVR_Controller.ButtonMask.Grip) || device2.GetPressDown(SteamVR_Controller.ButtonMask.Grip);
+                return device.GetPress(SteamVR_Controller.ButtonMask.Grip) || device2.GetPress(SteamVR_Controller.ButtonMask.Grip);
             }
         return false;
     }

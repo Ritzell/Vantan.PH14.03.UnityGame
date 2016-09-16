@@ -285,16 +285,21 @@ public class GameManager : MonoBehaviour
 		Time.timeScale = 0.015f;
 	}
 
+    public static GameObject FirstParent(GameObject child)
+    {
+        return child.transform.parent == null ? child : FirstParent(child.transform.parent.gameObject);
+    }
 
-	/// <summary>
-	/// ベジェ曲線
-	/// </summary>
-	/// <param name="t">T.</param>
-	/// <param name="p1">P1.</param>
-	/// <param name="p2">P2.</param>
-	/// <param name="p3">P3.</param>
-	/// <param name="p4">P4.</param>
-	public float Veje(float t, float p1,float p2,float p3,float p4){
+
+    /// <summary>
+    /// ベジェ曲線
+    /// </summary>
+    /// <param name="t">T.</param>
+    /// <param name="p1">P1.</param>
+    /// <param name="p2">P2.</param>
+    /// <param name="p3">P3.</param>
+    /// <param name="p4">P4.</param>
+    public float Veje(float t, float p1,float p2,float p3,float p4){
 		float pos = (1-t)*(1-t)*(1-t)*p1 + 3*(1-t)*(1-t)*t*p2 + 3*(1-t)*t*t*p3 + t*t*t*p4;
 		return pos;
 	}

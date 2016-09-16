@@ -180,7 +180,7 @@ public class PlayerMove : MonoBehaviour
 	}
 
 	private void Rotation(Vector3 AddRot) {
-		transform.Rotate (AddRot.x / 1.5f, 0f, AddRot.z * 2f);
+		transform.Rotate (AddRot.x / 1.5f, 0f, VRMode.isVRMode ? AddRot.y * 2 : AddRot.z * 2f);
 		Airframe.AirFrame.transform.localRotation = new Quaternion (DefaltRotation.x + AddRot.x/50,DefaltRotation.y,DefaltRotation.z,DefaltRotation.w);
 //		var RotateX = (DefaltRotation.x + Mathf.Abs (AddRot.x)) < DefaltRotation.x + MaxAngle ? DefaltRotation.x + (AddRot.x * MaxAngle * (Time.deltaTime / 6)) : Airframe.AirFrame.transform.localRotation.x;
 //		Airframe.AirFrame.transform.localRotation = new Quaternion (RotateX, DefaltRotation.y, DefaltRotation.z, DefaltRotation.w);
@@ -192,7 +192,7 @@ public class PlayerMove : MonoBehaviour
         } else
         {
             Vector2 Axis = InputVRController.GetAxis(false);
-            return new Vector2(Axis.y * 3, Axis.x * 3);
+            return new Vector2(Axis.y, Axis.x);
         }
 	}
 }
