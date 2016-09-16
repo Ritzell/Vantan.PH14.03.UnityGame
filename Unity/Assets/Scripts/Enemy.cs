@@ -20,10 +20,6 @@ public class Enemy : MonoBehaviour
 	private Coroutine Breth;
 	private IEnumerator StateNotice;
 
-	/// <summary>
-	/// フレアによる回避はミサイルのスクリプトで行う
-	/// </summary>
-
 	private static ReticleSystem PlayerReticle;
 
 

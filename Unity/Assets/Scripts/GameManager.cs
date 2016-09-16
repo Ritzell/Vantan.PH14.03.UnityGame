@@ -145,7 +145,7 @@ public class GameManager : MonoBehaviour
 	public static IEnumerator FlashLoadScene (Scenes scene)
 	{
 		bool isOut = false;
-        CameraS = FindObjectOfType<CameraSetting>().VRcamera.GetComponent<CameraSystem>();
+        CameraS = FindObjectOfType<CameraSetting>().MyCamera.GetComponent<CameraSystem>();
         CameraS.StartCoroutine (CameraS.Flash (3f, true, 1, GameObject.Find ("Canvas"), fadeout => isOut = fadeout));
 		while (!isOut) {
 			yield return null;

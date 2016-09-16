@@ -14,13 +14,13 @@ public class VRController : MonoBehaviour {
     {
         Debug.Log(col.gameObject);
         TouchObject = col.gameObject;
-        TouchObject.GetComponent<Image>().color = Color.red;
+        TouchObject.GetComponentInChildren<Text>().color = Color.red;
         PressTriggerCoroutine = StartCoroutine(PressTrigger());
     }
 
     void OnTriggerExit(Collider col)
     {
-        TouchObject.GetComponent<Image>().color = Color.white;
+        TouchObject.GetComponentInChildren<Text>().color = Color.white;
         TouchObject = null;
         StopCoroutine(PressTriggerCoroutine);
     }

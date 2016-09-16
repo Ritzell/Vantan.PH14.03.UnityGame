@@ -50,7 +50,7 @@ public class PlayerMove : MonoBehaviour
 	public void Manual ()
 	{
 		gameObject.GetComponent<Animator>().Stop ();
-		CameraSystem cameraSystem = FindObjectOfType<CameraSystem> ();
+		CameraSystem cameraSystem = FindObjectOfType<CameraSetting>().MyCamera.GetComponent<CameraSystem>();
 		MotionBlur = FindObjectOfType<CameraMotionBlur> ();
 		cameraSystem.StartCoroutine(CameraSystem.CameraChangePosition());
 		cameraSystem.StartCoroutine(cameraSystem.CameraModeChange());

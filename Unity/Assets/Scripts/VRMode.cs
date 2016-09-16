@@ -30,15 +30,11 @@ public class VRMode : MonoBehaviour
     void Start()
     {
         VRConnectionConfirmation(VRDevice.isPresent);
-        //isVR();
     }
     public void isVR()
     {
-        ChangePlayMode(true);
-        //ChangePlayMode(VRToggle.isOn);
-        //FindObjectOfType<CameraSetting>().ChangeCamera(VRToggle.isOn);
-        FindObjectOfType<CameraSetting>().ChangeCamera(true);
-
+        ChangePlayMode(VRToggle.isOn);
+        FindObjectOfType<CameraSetting>().ChangeCamera(VRToggle.isOn);
     }
 
     public void ChangePlayMode(bool isVR)
