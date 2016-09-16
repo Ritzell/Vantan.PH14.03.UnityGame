@@ -114,15 +114,15 @@ public class PlayerMove : MonoBehaviour
 	}
 
 	private bool isKeyUp(){
-		return Input.GetKeyUp (KeyCode.JoystickButton13) || Input.GetKeyUp (KeyCode.JoystickButton14) || Input.GetKeyUp (KeyCode.Alpha1) || Input.GetKeyUp (KeyCode.Alpha2);
+		return Input.GetKeyUp (KeyCode.JoystickButton13) || Input.GetKeyUp (KeyCode.JoystickButton14) || Input.GetKeyUp (KeyCode.Alpha1) || Input.GetKeyUp (KeyCode.Alpha2) || InputVRController.GetPressStay(InputVRController.InputPress.UpGrip);
 	}
 
 	private bool isKeyDown(){
-		return Input.GetKey (KeyCode.JoystickButton13) || Input.GetKey (KeyCode.JoystickButton14) || Input.GetKey (KeyCode.Alpha1) || Input.GetKey (KeyCode.Alpha2);
+		return Input.GetKey (KeyCode.JoystickButton13) || Input.GetKey (KeyCode.JoystickButton14) || Input.GetKey (KeyCode.Alpha1) || Input.GetKey (KeyCode.Alpha2) || InputVRController.GetPressUp(InputVRController.InputPress.PressGrip);
 	}
 
 	private bool isAccele(){
-		bool _isAccele = Input.GetKey (KeyCode.JoystickButton14) || Input.GetKey (KeyCode.Alpha2);
+		bool _isAccele = Input.GetKey (KeyCode.JoystickButton14) || Input.GetKey (KeyCode.Alpha2) || InputVRController.GetPressStay(InputVRController.InputPress.PressGrip,true);
 		BlurEffects (_isAccele);
 		return _isAccele;
 	}
@@ -185,7 +185,14 @@ public class PlayerMove : MonoBehaviour
 //		var RotateX = (DefaltRotation.x + Mathf.Abs (AddRot.x)) < DefaltRotation.x + MaxAngle ? DefaltRotation.x + (AddRot.x * MaxAngle * (Time.deltaTime / 6)) : Airframe.AirFrame.transform.localRotation.x;
 //		Airframe.AirFrame.transform.localRotation = new Quaternion (RotateX, DefaltRotation.y, DefaltRotation.z, DefaltRotation.w);
 	}
-	private Vector3 InputController(){
-		return new Vector3 (Input.GetAxis ("Vertical") * 3, 0, Input.GetAxis ("Horizontal") * 2);
+    private Vector3 InputController() {
+        if (!VRMode.isVRMode)
+        {
+            return new Vector3(Input.GetAxis("Vertical") * 3, 0, Input.GetAxis("Horizontal") * 2);
+        } else
+        {
+            Vector2 Axis = InputVRController.GetAxis(false);
+            return new Vector2(Axis.y * 3, Axis.x * 3);
+        }
 	}
 }

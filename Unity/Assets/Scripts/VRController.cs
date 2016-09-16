@@ -6,9 +6,6 @@ public class VRController : MonoBehaviour {
     private GameObject TouchObject;
     private Coroutine PressTriggerCoroutine;
     // Use this for initialization
-    void Start() {
-
-    }
 
     void OnTriggerEnter(Collider col)
     {
@@ -20,7 +17,7 @@ public class VRController : MonoBehaviour {
 
     void OnTriggerExit(Collider col)
     {
-        TouchObject.GetComponentInChildren<Text>().color = Color.white;
+        TouchObject.GetComponentInChildren<Text>().color = Color.black;
         TouchObject = null;
         StopCoroutine(PressTriggerCoroutine);
     }
@@ -29,14 +26,12 @@ public class VRController : MonoBehaviour {
     {
         while (true)
         {
-            SteamVR_TrackedObject trackedObject = GetComponent<SteamVR_TrackedObject>();
-            var device = SteamVR_Controller.Input((int)trackedObject.index);
-
-            if (TouchObject && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            if (TouchObject && InputVRController.GetPress(InputVRController.InputPress.PressTrigger,true))
             {
                 TouchObject.GetComponent<TitleButton>().OnClick();
             }
             yield return null;
         }
     }
+
 }

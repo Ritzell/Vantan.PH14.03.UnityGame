@@ -96,12 +96,12 @@ public class Attack : MonoBehaviour
 
 	private bool isBoot (float Reloading)
 	{
-		return (Input.GetKeyDown (KeyCode.JoystickButton18) || Input.GetKeyDown (KeyCode.Space));
+		return (Input.GetKeyDown (KeyCode.JoystickButton18) || Input.GetKeyDown (KeyCode.Space) || InputVRController.GetPress(InputVRController.InputPress.PressPad,true));
 	}
 
 	private bool isEnd (float Reloading)
 	{
-		return (Input.GetKeyUp (KeyCode.JoystickButton18) || Input.GetKeyUp (KeyCode.Space));
+		return (Input.GetKeyUp (KeyCode.JoystickButton18) || Input.GetKeyUp (KeyCode.Space) || InputVRController.GetPress(InputVRController.InputPress.UpPad, true));
 	}
 
 	private void LockOrReset (float Reloading)
@@ -135,13 +135,27 @@ public class Attack : MonoBehaviour
 		while (!GameManager.IsGameOver) {
 			Reloading += Time.deltaTime;
 			if (Reloading >= missileDelay) {
-				if (isStraightMissileShoot ()) {
-					StartCoroutine (Missile (true).Straight (true));
-					Reloading = 0f;
-				} else if (isTrackingShoot () && ReticleSystem.LockOnTgt != null) {
-					StartCoroutine (Missile (true).TrackingForEnemy (ReticleSystem.LockOnTgt.transform, true));
-					Reloading = 0f;
-				}
+                if (!VRMode.isVRMode){
+                    if (isStraightMissileShoot()) {
+                        StartCoroutine(Missile(true).Straight(true));
+                        Reloading = 0f;
+                    } else if (isTrackingShoot() && ReticleSystem.LockOnTgt != null) {
+                        StartCoroutine(Missile(true).TrackingForEnemy(ReticleSystem.LockOnTgt.transform, true));
+                        Reloading = 0f;
+                    }
+                } else if(isStraightMissileShoot())
+                {
+                    if (ReticleSystem.LockOnTgt != null)
+                    {
+                        StartCoroutine(Missile(true).TrackingForEnemy(ReticleSystem.LockOnTgt.transform, true));
+                        Reloading = 0f;
+                    }
+                    else
+                    {
+                        StartCoroutine(Missile(true).Straight(true));
+                        Reloading = 0f;
+                    }
+                }
 			}
 			yield return null;
 		}
@@ -149,7 +163,7 @@ public class Attack : MonoBehaviour
 
 	private bool isStraightMissileShoot ()
 	{
-		if ((Input.GetAxis ("RTrigger") == 1 || Input.GetKeyDown (KeyCode.C)) && _playerMissiles.Count >= 1) {
+		if ((Input.GetAxis ("RTrigger") == 1 || InputVRController.GetPress(InputVRController.InputPress.PressTrigger,true) || Input.GetKeyDown (KeyCode.C)) && _playerMissiles.Count >= 1) {
 			GameManager.MissileCount += 1;
 			return true;
 		} else {
@@ -180,7 +194,7 @@ public class Attack : MonoBehaviour
 
 	private bool isGunShot ()
 	{
-		return (Input.GetKey (KeyCode.JoystickButton12) || Input.GetKey (KeyCode.F));
+		return (Input.GetKey (KeyCode.JoystickButton12) || Input.GetKey (KeyCode.F) || InputVRController.GetPressStay(InputVRController.InputPress.PressTrigger, false));
 	}
 
 	void OnDestroy(){

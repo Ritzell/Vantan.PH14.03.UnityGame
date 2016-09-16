@@ -61,9 +61,9 @@ public class GameManager : MonoBehaviour
 	}
 
 	void Start(){
-//		StartCoroutine (Resetf);
-//		StartCoroutine(EscapeGame());
-		IsGameOver = false;
+        //		StartCoroutine (Resetf);
+        //		StartCoroutine(EscapeGame());
+        IsGameOver = false;
 	}
 
 	public float GetDegree(float x1, float x2, float y1, float y2){
