@@ -34,28 +34,6 @@ public class InputVRController : MonoBehaviour {
         //Debug.Log(GetPressStay(InputPress.PressGrip));
     }
 
-    private IEnumerator SerchEnemy()
-    {
-        RaycastHit Hit;
-        const int LayerMask = 1 << (int)Layers.Enemy | 1 << (int)Layers.EnemyMissile | 1 << (int)Layers.EnemyArmor;
-        while (!GameManager.IsGameOver)
-        {
-            var ray = Camera.main.ScreenPointToRay(new Vector3(transform.position.x, transform.position.y, 0.0f));
-
-            if (Physics.Raycast(ray, out Hit, 30000, LayerMask))
-            {
-                StartCoroutine(Gun.MuzzuleLookTgt(Hit.transform.position));
-                FindObjectOfType<ReticleSystem>().SelectTgt(Hit.transform.gameObject);
-            }
-            else
-            {
-                StartCoroutine(Gun.MuzzuleLookTgt(ray.GetPoint(4000)));/////////////////
-                FindObjectOfType<ReticleSystem>().FadeCancel();
-            }
-            yield return null;
-        }
-    }
-
     public static bool GetPress(InputPress input,HandType type)
     {
         SteamVR_Controller.Device device;

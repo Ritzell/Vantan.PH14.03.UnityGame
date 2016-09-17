@@ -71,7 +71,7 @@ public class Airframe : MonoBehaviour
 		LightingSystem.TurningOff (UIType.HP);
 		StartCoroutine (CameraSystem.SwayCamera (b => FirstAid = b));
 		StartCoroutine (DamageEffect ());
-        StartCoroutine(InputVRController.ControllerPulse(1500, HandType.Right));
+        StartCoroutine(InputVRController.ControllerPulse(2000, HandType.Both));
 		PlayerSound.HitSound ();
 	}
 
