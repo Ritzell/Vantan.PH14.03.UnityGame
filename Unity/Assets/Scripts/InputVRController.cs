@@ -116,7 +116,7 @@ public class InputVRController : MonoBehaviour {
             device2 = SteamVR_Controller.Input((int)trackedObject[1].index);
         }catch
         {
-            Debug.Log("コントローラーが認識されていません。");
+            //Debug.Log("コントローラーが認識されていません。");
             return false;
         }
 

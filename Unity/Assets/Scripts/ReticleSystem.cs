@@ -154,9 +154,16 @@ public class ReticleSystem : MonoBehaviour
 	{
 		StartCoroutine (ForciblyRelaseLock ());
 		while (!GameManager.IsGameOver) {
-			var ray = MainCamera.ScreenPointToRay (new Vector3 (transform.position.x, transform.position.y, 0.0f));
+			var ray = VRMode.isVRMode ? new Ray(transform.position,transform.forward) : MainCamera.ScreenPointToRay (new Vector3 (transform.position.x, transform.position.y, 0.0f));
 			StartCoroutine (Gun.MuzzuleLookTgt (ray.GetPoint (4000)));
-			UITransform.position = RectTransformUtility.WorldToScreenPoint (Camera.main, lockOnTgt.transform.position);
+            var pos = RectTransformUtility.WorldToScreenPoint(MainCamera, lockOnTgt.transform.position);
+            /*if (!VRMode.isVRMode)
+            {*/
+                UITransform.position = pos;
+            /*} else
+            {
+                transform.position = new Vector3(transform.position.x + (pos.x * transform.localScale.x), transform.position.y + (pos.y * transform.localScale.y), transform.position.z);
+            }*/
 			yield return null;
 		}
 	}
@@ -166,11 +173,9 @@ public class ReticleSystem : MonoBehaviour
 		while (lockOnTgt != null && !GameManager.IsGameOver) {
 			if (ReticleIsOutOfScreen ()) {
 				LockOnTgt = null;
-				yield return null;
 			}
 			yield return null;
 		}
-		yield return null;
 	}
 
 	private bool ReticleIsOutOfScreen ()
@@ -181,6 +186,10 @@ public class ReticleSystem : MonoBehaviour
 		return false;
 	}
 
+    /// <summary>
+    /// ロックオン対象が破壊されたときに呼び出すメソッド
+    /// </summary>
+    /// <param name="Enemy"></param>
 	public void DestoroyLockOnTgt (GameObject Enemy)
 	{
 		if (LockOnTgt == Enemy) {
@@ -208,7 +217,6 @@ public class ReticleSystem : MonoBehaviour
 	{
 		if (UI.color.r >= 1) {
 			LockOnTgt = Tgt;
-			Debug.Log (LockOnTgt.name + " をロックオン!");
 		}
 	}
 
@@ -271,7 +279,10 @@ public class ReticleSystem : MonoBehaviour
 		if (LockOn) {
 			StopAllCoroutines ();
 			StartCoroutine (ReleaseLockInput ());
-			StartCoroutine (ReticleMoveToTgt ());
+            if (!VRMode.isVRMode)
+            {
+                StartCoroutine(ReticleMoveToTgt());
+            }
 		} else {
 			StopAllCoroutines ();
 			StartCoroutine (SerchEnemy ());
