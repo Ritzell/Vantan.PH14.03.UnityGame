@@ -4,8 +4,10 @@ using System.Collections.Generic;
 
 public class InputVRController : MonoBehaviour {
     [SerializeField]
-    private List<GameObject> Controllers = new List<GameObject>();
-    static SteamVR_TrackedObject[] trackedObject = new SteamVR_TrackedObject[2];
+    public List<GameObject> Controllers = new List<GameObject>();
+    [SerializeField]
+    private GameObject Reticle;
+    public static SteamVR_TrackedObject[] trackedObject = new SteamVR_TrackedObject[2];
 
     public enum InputPress
     {
@@ -28,7 +30,7 @@ public class InputVRController : MonoBehaviour {
 
     void Update()
     {
-        Debug.Log(GetPressStay(InputPress.PressGrip));
+        //Debug.Log(GetPressStay(InputPress.PressGrip));
     }
 
     private IEnumerator SerchEnemy()
@@ -55,7 +57,14 @@ public class InputVRController : MonoBehaviour {
 
     public static bool GetPress(InputPress input,HandType type)
     {
-        var device = SteamVR_Controller.Input((int)trackedObject[(int)type].index);
+        SteamVR_Controller.Device device;
+        try
+        {
+            device = SteamVR_Controller.Input((int)trackedObject[(int)type].index);
+        }catch
+        {
+            return false;
+        }
         switch (input)
         {
             case InputPress.PressTrigger:
@@ -77,7 +86,14 @@ public class InputVRController : MonoBehaviour {
 
     public static bool GetPressStay(InputPress input, HandType type)
     {
-        var device = SteamVR_Controller.Input((int)trackedObject[(int)type].index);
+        SteamVR_Controller.Device device;
+        try
+        {
+            device = SteamVR_Controller.Input((int)trackedObject[(int)type].index);
+        }catch
+        {
+            return false;
+        }
         switch (input)
         {
             case InputPress.PressTrigger:
@@ -113,8 +129,15 @@ public class InputVRController : MonoBehaviour {
 
     public static bool GetPressUp(InputPress input)
     {
-        var device = SteamVR_Controller.Input((int)trackedObject[0].index);
-        var device2 = SteamVR_Controller.Input((int)trackedObject[1].index);
+        SteamVR_Controller.Device device, device2;
+        try
+        {
+            device = SteamVR_Controller.Input((int)trackedObject[0].index);
+            device2 = SteamVR_Controller.Input((int)trackedObject[1].index);
+        }catch
+        {
+            return false;
+        }
 
         switch (input)
         {
@@ -129,4 +152,5 @@ public class InputVRController : MonoBehaviour {
         var device = SteamVR_Controller.Input((int)trackedObject[(int) type].index);
         return device.GetAxis();
     }
+
 }

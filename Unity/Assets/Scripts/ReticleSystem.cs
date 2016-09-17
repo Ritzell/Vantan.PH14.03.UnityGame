@@ -67,7 +67,7 @@ public class ReticleSystem : MonoBehaviour
 	}
 
 	[SerializeField]
-	private Camera MainCamera;
+	public Camera MainCamera;
 
 	[SerializeField]
 	private GameObject ReticleUI;
@@ -95,12 +95,10 @@ public class ReticleSystem : MonoBehaviour
 	}
 
 	public void EnableReticle(){
-        if (VRMode.isVRMode)
-        {
-            return;
-        }
 	    StartCoroutine (SerchEnemy ());
-		StartCoroutine (ReticleMoveInput ());
+        if (!VRMode.isVRMode) {
+            StartCoroutine(ReticleMoveInput());
+        } 
 	}
 
 	private IEnumerator ReticleMoveInput ()
@@ -124,8 +122,9 @@ public class ReticleSystem : MonoBehaviour
 				yield return null;
 				continue;
 			}
-			var ray = Camera.main.ScreenPointToRay (new Vector3 (transform.position.x, transform.position.y, 0.0f));
 
+			var ray = VRMode.isVRMode? new Ray(transform.position,transform.forward) : MainCamera.ScreenPointToRay (new Vector3 (transform.position.x, transform.position.y,  0.0f));
+            Debug.DrawRay(ray.origin, ray.direction, Color.red);
 			if (Physics.Raycast (ray, out Hit, 30000, LayerMask)) {
 				StartCoroutine (Gun.MuzzuleLookTgt (Hit.transform.position));
 				SelectTgt (Hit.transform.gameObject);
@@ -155,7 +154,7 @@ public class ReticleSystem : MonoBehaviour
 	{
 		StartCoroutine (ForciblyRelaseLock ());
 		while (!GameManager.IsGameOver) {
-			var ray = Camera.main.ScreenPointToRay (new Vector3 (transform.position.x, transform.position.y, 0.0f));
+			var ray = MainCamera.ScreenPointToRay (new Vector3 (transform.position.x, transform.position.y, 0.0f));
 			StartCoroutine (Gun.MuzzuleLookTgt (ray.GetPoint (4000)));
 			UITransform.position = RectTransformUtility.WorldToScreenPoint (Camera.main, lockOnTgt.transform.position);
 			yield return null;

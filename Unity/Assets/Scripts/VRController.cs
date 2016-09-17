@@ -12,7 +12,7 @@ public class VRController : MonoBehaviour {
     private GameObject TouchObject;
     private Coroutine PressTriggerCoroutine;
     [SerializeField]
-    private GameObject HandCamera;
+    public GameObject HandCamera;
     // Use this for initialization
 
     void Start()
@@ -53,7 +53,7 @@ public class VRController : MonoBehaviour {
     {
         while (true)
         {
-            if(InputVRController.GetPress(InputVRController.InputPress.PressMenu,HandType.Right))
+            if(InputVRController.GetPress(InputVRController.InputPress.PressMenu,type))
             {
                 HandCamera.SetActive(!HandCamera.active);
             }
