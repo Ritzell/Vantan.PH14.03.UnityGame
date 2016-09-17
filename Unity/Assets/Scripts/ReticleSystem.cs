@@ -95,6 +95,7 @@ public class ReticleSystem : MonoBehaviour
 	}
 
 	public void EnableReticle(){
+        LockOnTgt = null;
 	    StartCoroutine (SerchEnemy ());
         if (!VRMode.isVRMode) {
             StartCoroutine(ReticleMoveInput());
@@ -119,17 +120,17 @@ public class ReticleSystem : MonoBehaviour
 		 
 		while (!GameManager.IsGameOver) {
 			if (CameraSystem.FreeMove) {
-				yield return null;
-				continue;
+                continue;
+                yield return null;
+				
 			}
 
 			var ray = VRMode.isVRMode? new Ray(transform.position,transform.forward) : MainCamera.ScreenPointToRay (new Vector3 (transform.position.x, transform.position.y,  0.0f));
-            Debug.DrawRay(ray.origin, ray.direction, Color.red);
 			if (Physics.Raycast (ray, out Hit, 30000, LayerMask)) {
 				StartCoroutine (Gun.MuzzuleLookTgt (Hit.transform.position));
 				SelectTgt (Hit.transform.gameObject);
 			} else {
-				StartCoroutine (Gun.MuzzuleLookTgt (ray.GetPoint (4000)));/////////////////
+				StartCoroutine (Gun.MuzzuleLookTgt (ray.GetPoint (4000)));
 				FadeCancel ();
 			}
 			yield return null;
@@ -142,6 +143,7 @@ public class ReticleSystem : MonoBehaviour
 	/// <returns>The lock input.</returns>
 	private IEnumerator ReleaseLockInput ()
 	{
+        Debug.Log("input");
 		while (!GameManager.IsGameOver) {
 			if (Attack.isCancel()) {
 				LockOnTgt = null;
@@ -286,7 +288,10 @@ public class ReticleSystem : MonoBehaviour
 		} else {
 			StopAllCoroutines ();
 			StartCoroutine (SerchEnemy ());
-			StartCoroutine (ReticleMoveInput ());
+            if (!VRMode.isVRMode)
+            {
+                StartCoroutine(ReticleMoveInput());
+            }
 		}
 	}
 

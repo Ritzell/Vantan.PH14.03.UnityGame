@@ -15,6 +15,7 @@ public class InputVRController : MonoBehaviour {
         PressPad,
         PressGrip,
         PressMenu,
+        UpMenu,
         UpPad,
         UpGrip,
         TouchPadPosition
@@ -107,6 +108,26 @@ public class InputVRController : MonoBehaviour {
         }
     }
 
+    public static bool GetUp(InputPress input, HandType type)
+    {
+        SteamVR_Controller.Device device;
+        try
+        {
+            device = SteamVR_Controller.Input((int)trackedObject[(int)type].index);
+        }
+        catch
+        {
+            return false;
+        }
+        switch (input)
+        {
+            case InputPress.UpMenu:
+                return device.GetPressUp(SteamVR_Controller.ButtonMask.ApplicationMenu);
+            default:
+                return false;
+        }
+    }
+
     public static bool GetPressStay(InputPress input)
     {
         SteamVR_Controller.Device device, device2;
@@ -153,4 +174,57 @@ public class InputVRController : MonoBehaviour {
         return device.GetAxis();
     }
 
+    /// <summary>
+    /// コントローラーを振動させます。パワーは100～2000迄です。
+    /// </summary>
+    /// <param name="Power"></param>
+    /// <param name="type"></param>
+    public static IEnumerator ControllerPulse(ushort Power,HandType type)
+    {
+        if(!(Power >= 100 && Power <= 2000))
+        {
+            Debug.Log("ControllerPulseのPowerは100~2000までの間で指定してください");
+            yield break;
+            yield return null;
+        }
+        if (!(type == HandType.Both))
+        {
+            SteamVR_Controller.Device device;
+            try
+            {
+                device = SteamVR_Controller.Input((int)trackedObject[(int)type].index);
+            }
+            catch
+            {
+                Debug.Log("Cant Pulse");
+                yield break;
+            }
+            for (float time = 0; time < 1; time += Time.deltaTime)
+            {
+                device.TriggerHapticPulse(Power);
+                yield return null;
+            }
+        }
+        else
+        {
+            SteamVR_Controller.Device device,device2;
+            try
+            {
+                device = SteamVR_Controller.Input((int)trackedObject[0].index);
+                device2 = SteamVR_Controller.Input((int)trackedObject[1].index);
+            }
+            catch
+            {
+                Debug.Log("Cant Pulse");
+                yield break;
+            }
+            for (float time = 0; time < 1; time += Time.deltaTime)
+            {
+                device.TriggerHapticPulse(Power);
+                device2.TriggerHapticPulse(Power);
+                yield return null;
+            }
+        }
+        
+    }
 }

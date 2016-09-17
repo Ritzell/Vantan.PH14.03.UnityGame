@@ -63,7 +63,7 @@ public class MissileSystem : MonoBehaviour
 		if (gameObject.layer == 12) {
 			AudioS.volume = 0.5f;
 			AudioS.spatialBlend = 1;
-			AudioS.maxDistance = 200f;
+			AudioS.maxDistance = 250f;
 			GameManager.EnemyMIssilesCount += 1;
 			AudioS.clip = AudioClip3;
 			AudioS.loop = true;

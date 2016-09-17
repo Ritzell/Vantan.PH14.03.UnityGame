@@ -217,7 +217,6 @@ public class Enemy : MonoBehaviour
 
 		CryBox.pitch = Random.Range (0.65f, 1.3f);
 		CryBox.Play ();
-		Debug.Log ("death");
 		StopCoroutine (Breth);
 		MyMaterial.EnableKeyword ("_EMISSION");
 		MyMaterial.SetColor ("_EmissionColor",Color.red);

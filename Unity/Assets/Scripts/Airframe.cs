@@ -61,7 +61,6 @@ public class Airframe : MonoBehaviour
 			yield return null;
 		}
 		DamageEffectImage.color = Color.blue;//new Color(70,100,200,DamageEffectImage.color.a);
-		Debug.Log ("colorChange");
 		yield return null;
 	}
 
@@ -72,6 +71,7 @@ public class Airframe : MonoBehaviour
 		LightingSystem.TurningOff (UIType.HP);
 		StartCoroutine (CameraSystem.SwayCamera (b => FirstAid = b));
 		StartCoroutine (DamageEffect ());
+        StartCoroutine(InputVRController.ControllerPulse(1500, HandType.Right));
 		PlayerSound.HitSound ();
 	}
 

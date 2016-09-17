@@ -115,7 +115,7 @@ public class Attack : MonoBehaviour
 
 	public static bool isCancel ()
 	{
-		return (Input.GetKeyUp (KeyCode.JoystickButton16) || Input.GetKeyUp (KeyCode.Alpha3) || InputVRController.GetPress(InputVRController.InputPress.PressMenu,HandType.Right));
+        return (Input.GetKeyUp(KeyCode.JoystickButton16) || Input.GetKeyUp(KeyCode.Alpha3) || InputVRController.GetUp(InputVRController.InputPress.UpMenu,HandType.Right));
 	}
 
 	private bool isTrackingShoot ()

@@ -276,7 +276,7 @@ public class GameManager : MonoBehaviour
 
     private static bool isNext()
     {
-        return Input.GetKeyDown(KeyCode.Space) || Input.GetKey(KeyCode.JoystickButton9);
+        return Input.GetKeyDown(KeyCode.Space) || Input.GetKey(KeyCode.JoystickButton9) || InputVRController.GetPress(InputVRController.InputPress.PressGrip,HandType.Right);
     }
 
     private static void StopGame()

@@ -5,7 +5,8 @@ using UnityEngine.UI;
 public enum HandType
 {
     Right,
-    Left
+    Left,
+    Both
 }
 
 public class VRController : MonoBehaviour {
@@ -56,6 +57,10 @@ public class VRController : MonoBehaviour {
             if(InputVRController.GetPress(InputVRController.InputPress.PressMenu,type))
             {
                 HandCamera.SetActive(!HandCamera.active);
+                if (HandCamera.active)
+                {
+                    FindObjectOfType<ReticleSystem>().EnableReticle();
+                }
             }
             yield return null;
         }
