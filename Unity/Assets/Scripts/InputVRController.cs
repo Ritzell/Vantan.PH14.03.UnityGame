@@ -6,13 +6,13 @@ public class InputVRController : MonoBehaviour {
     [SerializeField]
     private List<GameObject> Controllers = new List<GameObject>();
     static SteamVR_TrackedObject[] trackedObject = new SteamVR_TrackedObject[2];
-    // Use this for initialization
 
     public enum InputPress
     {
         PressTrigger,
         PressPad,
         PressGrip,
+        PressMenu,
         UpPad,
         UpGrip,
         TouchPadPosition
@@ -31,9 +31,31 @@ public class InputVRController : MonoBehaviour {
         Debug.Log(GetPressStay(InputPress.PressGrip));
     }
 
-    public static bool GetPress(InputPress input,bool isRight)
+    private IEnumerator SerchEnemy()
     {
-        var device = SteamVR_Controller.Input((int)trackedObject[isRight ? 0 : 1].index);
+        RaycastHit Hit;
+        const int LayerMask = 1 << (int)Layers.Enemy | 1 << (int)Layers.EnemyMissile | 1 << (int)Layers.EnemyArmor;
+        while (!GameManager.IsGameOver)
+        {
+            var ray = Camera.main.ScreenPointToRay(new Vector3(transform.position.x, transform.position.y, 0.0f));
+
+            if (Physics.Raycast(ray, out Hit, 30000, LayerMask))
+            {
+                StartCoroutine(Gun.MuzzuleLookTgt(Hit.transform.position));
+                FindObjectOfType<ReticleSystem>().SelectTgt(Hit.transform.gameObject);
+            }
+            else
+            {
+                StartCoroutine(Gun.MuzzuleLookTgt(ray.GetPoint(4000)));/////////////////
+                FindObjectOfType<ReticleSystem>().FadeCancel();
+            }
+            yield return null;
+        }
+    }
+
+    public static bool GetPress(InputPress input,HandType type)
+    {
+        var device = SteamVR_Controller.Input((int)trackedObject[(int)type].index);
         switch (input)
         {
             case InputPress.PressTrigger:
@@ -42,6 +64,8 @@ public class InputVRController : MonoBehaviour {
                 return device.GetPressDown(SteamVR_Controller.ButtonMask.Touchpad);
             case InputPress.PressGrip:
                 return device.GetPressDown(SteamVR_Controller.ButtonMask.Grip);
+            case InputPress.PressMenu:
+                return device.GetPressDown(SteamVR_Controller.ButtonMask.ApplicationMenu);
             case InputPress.UpPad:
                 return device.GetPressUp(SteamVR_Controller.ButtonMask.Touchpad);
             case InputPress.UpGrip:
@@ -51,9 +75,9 @@ public class InputVRController : MonoBehaviour {
         }
     }
 
-    public static bool GetPressStay(InputPress input, bool isRight)
+    public static bool GetPressStay(InputPress input, HandType type)
     {
-        var device = SteamVR_Controller.Input((int)trackedObject[isRight ? 0 : 1].index);
+        var device = SteamVR_Controller.Input((int)trackedObject[(int)type].index);
         switch (input)
         {
             case InputPress.PressTrigger:
@@ -100,9 +124,9 @@ public class InputVRController : MonoBehaviour {
         return false;
     }
 
-    public static Vector2 GetAxis(bool isRight)
+    public static Vector2 GetAxis(HandType type)
     {
-        var device = SteamVR_Controller.Input((int)trackedObject[isRight ? 0 : 1].index);
+        var device = SteamVR_Controller.Input((int)trackedObject[(int) type].index);
         return device.GetAxis();
     }
 }

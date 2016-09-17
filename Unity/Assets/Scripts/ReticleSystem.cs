@@ -95,7 +95,11 @@ public class ReticleSystem : MonoBehaviour
 	}
 
 	public void EnableReticle(){
-		StartCoroutine (SerchEnemy ());
+        if (VRMode.isVRMode)
+        {
+            return;
+        }
+	    StartCoroutine (SerchEnemy ());
 		StartCoroutine (ReticleMoveInput ());
 	}
 
@@ -188,13 +192,13 @@ public class ReticleSystem : MonoBehaviour
 		return;
 	}
 
-	private void SelectTgt (GameObject TgtOb)
+	public void SelectTgt (GameObject TgtOb)
 	{
 		ReticleColorFade (Color.red);
 		LockNow (TgtOb);
 	}
 
-	private void FadeCancel ()
+	public void FadeCancel ()
 	{
 		if (UI.color.g < 1) {
 			ReticleColorFade (Color.green);

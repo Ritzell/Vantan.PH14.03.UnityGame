@@ -122,7 +122,7 @@ public class PlayerMove : MonoBehaviour
 	}
 
 	private bool isAccele(){
-		bool _isAccele = Input.GetKey (KeyCode.JoystickButton14) || Input.GetKey (KeyCode.Alpha2) || InputVRController.GetPressStay(InputVRController.InputPress.PressGrip,true);
+		bool _isAccele = Input.GetKey (KeyCode.JoystickButton14) || Input.GetKey (KeyCode.Alpha2) || InputVRController.GetPressStay(InputVRController.InputPress.PressGrip,HandType.Right);
 		BlurEffects (_isAccele);
 		return _isAccele;
 	}
@@ -191,7 +191,7 @@ public class PlayerMove : MonoBehaviour
             return new Vector3(Input.GetAxis("Vertical") * 3, 0, Input.GetAxis("Horizontal") * 2);
         } else
         {
-            Vector2 Axis = InputVRController.GetAxis(false);
+            Vector2 Axis = InputVRController.GetAxis(HandType.Left);
             return new Vector2(Axis.y, Axis.x);
         }
 	}

@@ -2,10 +2,25 @@
 using System.Collections;
 using UnityEngine.UI;
 
+public enum HandType
+{
+    Right,
+    Left
+}
+
 public class VRController : MonoBehaviour {
     private GameObject TouchObject;
     private Coroutine PressTriggerCoroutine;
+    [SerializeField]
+    private GameObject HandCamera;
     // Use this for initialization
+
+    void Start()
+    {
+        StartCoroutine(DeploymentScope());
+    }
+
+    public HandType type;
 
     void OnTriggerEnter(Collider col)
     {
@@ -26,9 +41,21 @@ public class VRController : MonoBehaviour {
     {
         while (true)
         {
-            if (TouchObject && InputVRController.GetPress(InputVRController.InputPress.PressTrigger,true))
+            if (TouchObject && InputVRController.GetPress(InputVRController.InputPress.PressTrigger,HandType.Right))
             {
                 TouchObject.GetComponent<TitleButton>().OnClick();
+            }
+            yield return null;
+        }
+    }
+
+    IEnumerator DeploymentScope()
+    {
+        while (true)
+        {
+            if(InputVRController.GetPress(InputVRController.InputPress.PressMenu,HandType.Right))
+            {
+                HandCamera.SetActive(!HandCamera.active);
             }
             yield return null;
         }

@@ -96,12 +96,12 @@ public class Attack : MonoBehaviour
 
 	private bool isBoot (float Reloading)
 	{
-		return (Input.GetKeyDown (KeyCode.JoystickButton18) || Input.GetKeyDown (KeyCode.Space) || InputVRController.GetPress(InputVRController.InputPress.PressPad,true));
+		return (Input.GetKeyDown (KeyCode.JoystickButton18) || Input.GetKeyDown (KeyCode.Space) || InputVRController.GetPress(InputVRController.InputPress.PressPad,HandType.Right));
 	}
 
 	private bool isEnd (float Reloading)
 	{
-		return (Input.GetKeyUp (KeyCode.JoystickButton18) || Input.GetKeyUp (KeyCode.Space) || InputVRController.GetPress(InputVRController.InputPress.UpPad, true));
+		return (Input.GetKeyUp (KeyCode.JoystickButton18) || Input.GetKeyUp (KeyCode.Space) || InputVRController.GetPress(InputVRController.InputPress.UpPad, HandType.Right));
 	}
 
 	private void LockOrReset (float Reloading)
@@ -163,7 +163,7 @@ public class Attack : MonoBehaviour
 
 	private bool isStraightMissileShoot ()
 	{
-		if ((Input.GetAxis ("RTrigger") == 1 || InputVRController.GetPress(InputVRController.InputPress.PressTrigger,true) || Input.GetKeyDown (KeyCode.C)) && _playerMissiles.Count >= 1) {
+		if ((Input.GetAxis ("RTrigger") == 1 || InputVRController.GetPress(InputVRController.InputPress.PressTrigger,HandType.Right) || Input.GetKeyDown (KeyCode.C)) && _playerMissiles.Count >= 1) {
 			GameManager.MissileCount += 1;
 			return true;
 		} else {
@@ -194,7 +194,7 @@ public class Attack : MonoBehaviour
 
 	private bool isGunShot ()
 	{
-		return (Input.GetKey (KeyCode.JoystickButton12) || Input.GetKey (KeyCode.F) || InputVRController.GetPressStay(InputVRController.InputPress.PressTrigger, false));
+		return (Input.GetKey (KeyCode.JoystickButton12) || Input.GetKey (KeyCode.F) || InputVRController.GetPressStay(InputVRController.InputPress.PressTrigger, HandType.Left));
 	}
 
 	void OnDestroy(){
