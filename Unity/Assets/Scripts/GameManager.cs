@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     private static GameManager Manager;
     private static MissileFactory Factory;
     private static bool _IsGameOver = false;
+    public static Scenes NowScene;
 
     public static bool IsGameOver {
         get {
@@ -64,6 +65,7 @@ public class GameManager : MonoBehaviour
         //		StartCoroutine (Resetf);
         //		StartCoroutine(EscapeGame());
         IsGameOver = false;
+        NowScene = Scenes.title;
     }
 
     public float GetDegree(float x1, float x2, float y1, float y2) {
@@ -150,6 +152,7 @@ public class GameManager : MonoBehaviour
         while (!isOut) {
             yield return null;
         }
+        NowScene = scene;
         if (scene == Scenes.title) {
             FindObjectOfType<Camera>().gameObject.SetActive(false);
         }
@@ -194,6 +197,8 @@ public class GameManager : MonoBehaviour
     public static IEnumerator FinishGame(bool isWin)
     {
         StopGame();
+        GameObject camera = VRMode.isVRMode ? GameObject.Find("[CameraRig") : FindObjectOfType<CameraSetting>().MyCamera;
+        camera.transform.parent = null;
         try {
             File.WriteAllBytes(ImageCamera.ImagePath, ImageCamera.OutPutTexture2D.EncodeToPNG());
         } catch {

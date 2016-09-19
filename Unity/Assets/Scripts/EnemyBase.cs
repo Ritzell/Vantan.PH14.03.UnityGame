@@ -9,7 +9,8 @@ public class EnemyBase : MonoBehaviour
 
 	private static List<EnemyAttack> Childs = new List<EnemyAttack> ();
 	private static int RestChildren = 0;
-	private static int HP = 200;
+	private static float HP = 250;
+    private static float MaxHP;
 	private static IEnumerator StateNotice;
 
 	public static int Rest {
@@ -22,128 +23,41 @@ public class EnemyBase : MonoBehaviour
 
 	void Awake ()
 	{
-//		Towers.Add (GameObject.Find ("TowerA").transform);
-//		Towers.Add (GameObject.Find ("TowerB").transform);
-//		Towers.Add (GameObject.Find ("TowerC").transform);
-//		Towers.Add (GameObject.Find ("TowerD").transform);
-//		Towers.Add (GameObject.Find ("TowerE").transform);
-//		Towers.Add (GameObject.Find ("TowerF").transform);
-
 		Childs.Add (GameObject.Find ("ChildEnemyA").GetComponent<EnemyAttack> ());
 		Childs.Add (GameObject.Find ("ChildEnemyB").GetComponent<EnemyAttack> ());
-
-
 	}
-
-	void Start ()
-	{
-//		StartCoroutine (ChangeTarget ());
-		//material.color = Color.gray;
-		StartCoroutine (Respiration ());
-		StateNotice = FindObjectOfType<EnemyBase> ().StateNotification ();
-		material.color = new Color (0.3f, 0.3f, 0.3f, 1);
-	}
-
 
 	public static IEnumerator PlayerInArea(){
-		yield return new WaitForSeconds (5f);
+		yield return new WaitForSeconds (3f);
 		foreach(EnemyAttack Enemy in GameObject.FindObjectsOfType<EnemyAttack>()){
 			Enemy.StartCoroutine (Enemy.Attack ());
 		}
-//		NotificationSystem.Announce = "敵の攻撃が開始しました";
 		GameObject.FindObjectOfType<NotificationSystem>().StartCoroutine(NotificationSystem.UpdateNotification("敵の攻撃が開始しました"));
 		yield return null;
 	}
 
-	void OnTriggerEnter (Collider Col)
-	{
-		if (Col.gameObject.layer == (int)PlayerAttackPower.bulletLayer) {
-			HP -= (int)PlayerAttackPower.bullet;
-		} else if (Col.gameObject.layer == (int)PlayerAttackPower.missileLayer) {
-			HP -= (int)PlayerAttackPower.missile;
-		}
-		StateNotice.MoveNext ();
-		if (RestChildren <= 0 && HP <= 0) {
-			GameObject.Find ("engine").GetComponent<AudioSource> ().Stop ();
-			StopAllCoroutines ();
-			StartCoroutine (GameManager.FinishGame (true));
-			//Destroy(gameObject);
-		}
-	}
+    public IEnumerator Death(Enemy EnemyScript)
+    {
+        Airframe Frame = Airframe.AirFrame.GetComponent<Airframe>();
+        EnemyScript.CryBox.pitch = Random.Range(0.65f, 1.3f);
+        EnemyScript.CryBox.Play();
+        StopCoroutine(EnemyScript.Breth);
+        EnemyScript.MyMaterial.EnableKeyword("_EMISSION");
+        EnemyScript.MyMaterial.SetColor("_EmissionColor", Color.red);
+        StartCoroutine(EnemyScript.StateChange(EnemyScript.CryBox));
+        StartCoroutine(EnemyScript.ShakeBody());
+        EnemyScript.CameraS.StartCoroutine(EnemyScript.CameraS.Flash(0.8f, true, 0.35f, gameObject));
 
-	private IEnumerator StateNotification(){
-		bool isPassing = false;
-		while (!isPassing) {
-			if (HP <= 300) {
-				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "の体力が著しく消耗しています。"));
-				isPassing = true;
-				yield return null;
-			}
-			yield return null;
-		}
-		isPassing = false;
-		while (!isPassing) {
-			if (HP <= 150) {
-				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "が非常に弱っています"));
-				isPassing = true;
-				yield return null;
-			}
-			yield return null;
-		}
-		isPassing = false;
-		while (!isPassing) {
-			if (HP <= 75) {
-				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "敵がもう少しで撃破できます。"));
-				isPassing = true;
-				yield return null;
-			}
-			yield return null;
-		}
-	}
-
-	private IEnumerator Respiration ()
-	{
-		Material material;
-		material = gameObject.GetComponent<Renderer> ().material;
-		material.EnableKeyword ("_EMISSION");
-		Color MaterialMaxColor = material.GetColor ("_EmissionColor");
-		float Turning = (MaterialMaxColor.r + MaterialMaxColor.g + MaterialMaxColor.b) / 3;
-		while (true) {
-			
-			while (0.05f < (material.GetColor ("_EmissionColor").r + material.GetColor ("_EmissionColor").g + material.GetColor ("_EmissionColor").b) / 3) {
-				Brethes (material, MaterialMaxColor);
-				yield return null;
-			}
-			while (Turning > (material.GetColor ("_EmissionColor").r + material.GetColor ("_EmissionColor").g + material.GetColor ("_EmissionColor").b) / 3) {
-				Suck (material, MaterialMaxColor);
-				yield return null;
-			}
-		}
-	}
-
-	private void Brethes(Material material,Color MaxColor){
-		Color mColor = material.GetColor ("_EmissionColor");
-		material.SetColor ("_EmissionColor", new Color (mColor.r - (MaxColor.r * (Time.deltaTime))
-			, mColor.g - (MaxColor.g * (Time.deltaTime))
-			, mColor.b - (MaxColor.b * (Time.deltaTime))));
-	}
-
-	private void Suck(Material material,Color MaxColor){
-		Color mColor = material.GetColor ("_EmissionColor");
-		material.SetColor ("_EmissionColor", new Color (mColor.r + (MaxColor.r * (Time.deltaTime))
-			, mColor.g + (MaxColor.g * (Time.deltaTime))
-			, mColor.b + (MaxColor.b * (Time.deltaTime))));
-	}
-
-	public static IEnumerator ChangeTarget ()
-	{
-		while (true) {
-			yield return new WaitForSeconds (3000);
-//			Childs [0].Target = Towers [TowerA];
-//			Childs [1].Target = Towers [TowerA];
-			Debug.Log ("攻撃対象が変更されました");
-		}
-
-	}
-
+        while (true)
+        {
+            if (EnemyScript.CryBox.isPlaying == false)
+            {
+                Frame.StartCoroutine(NotificationSystem.UpdateNotification(gameObject.name + "を撃破しました！"));
+                GameObject.Find("engine").GetComponent<AudioSource>().Stop();
+                StartCoroutine(GameManager.FinishGame(true));
+                Destroy(gameObject);
+            }
+            yield return null;
+        }
+    }
 }

@@ -15,6 +15,8 @@ public class MissileSystem : MonoBehaviour
 	private float ChangeModeDistance = 100f;
 	[SerializeField]
 	private Vector2 RandomRange = new Vector2 (-10, 10);
+    [SerializeField]
+    private TrailRenderer trail;
 
 	private AudioSource AudioS;
 	private float Speed;
@@ -59,7 +61,6 @@ public class MissileSystem : MonoBehaviour
 
 	void Start ()
 	{
-
 		if (gameObject.layer == 12) {
 			AudioS.volume = 0.5f;
 			AudioS.spatialBlend = 1;
@@ -72,7 +73,8 @@ public class MissileSystem : MonoBehaviour
 			Speed = 700;//700
 			MissileRader.AddOutRangeMissile.Add (gameObject.transform);
 		} else {
-			Speed = 850;
+            trail.enabled = false;
+            Speed = 850;
 			AudioS.clip = AudioClip1;
 		}
 
@@ -88,11 +90,7 @@ public class MissileSystem : MonoBehaviour
 			StartCoroutine (SelfBreak ());
 		}
 		transform.LookAt (tgt);
-
-		while (true) {
-			StartCoroutine (MoveForward ());
-			yield return null;
-		}
+		yield return StartCoroutine (MoveForward ());
 	}
 
 	public IEnumerator Straight (bool isPlayer)
@@ -102,46 +100,35 @@ public class MissileSystem : MonoBehaviour
 		} else {
 			selfBrake = StartCoroutine (SelfBreak ());
 		}
-		while (true) {
-			yield return StartCoroutine (MoveForward ());
-		}
-	}
+        yield return StartCoroutine(MoveForward());
+    }
 
 	public IEnumerator TrackingForEnemy (Transform tgt, bool isReload)
 	{
 		ShootReady (isReload);
-		while (tgt != null) {
+        trail.enabled = true;
+        while (tgt != null) {
 			yield return StartCoroutine (Tracking (tgt));
-//			try {
-////				yield return StartCoroutine(Tracking
-//			} catch {
-//			}
-//			yield return null;
 		}
-		while (gameObject != null) {
-			StartCoroutine (MoveForward ());
-			yield return null;
-		}
-	}
+        yield return StartCoroutine(MoveForward(gameObject));
+    }
 
 	public IEnumerator TrackingForPlayer (Transform tgt)
 	{
 		GameManager Manager = FindObjectOfType<GameManager> ();
 		selfBrake = StartCoroutine (SelfBreak ());
-		Vector3 RandomError = new Vector3 (Random.Range (RandomRange.x, RandomRange.y), Random.Range (RandomRange.x, RandomRange.y), Random.Range (RandomRange.x, RandomRange.y));
+        Vector3 RandomError = new Vector3 (Random.Range (RandomRange.x, RandomRange.y), Random.Range (RandomRange.x, RandomRange.y), Random.Range (RandomRange.x, RandomRange.y));
 		while (Airframe.isLife  && Manager.AbsDistance (tgt.position,transform.position) >= ChangeModeDistance) {
 			yield return StartCoroutine (Tracking (tgt, RandomError));
 		}
 		RefreshSelfBreak ();
-		while (true) {
-			yield return StartCoroutine (MoveForward ());
-		}
-	}
+        yield return StartCoroutine(MoveForward());
+    }
 
 	public IEnumerator MultipleMissileInterceptShoot ()
 	{
 		if (ReticleSystem.MultiMissileLockOn [0] != null) {
-			StartCoroutine (TrackingForEnemy (ReticleSystem.MultiMissileLockOn [0].transform, false));
+            StartCoroutine (TrackingForEnemy (ReticleSystem.MultiMissileLockOn [0].transform, false));
 			ReticleSystem.MultiMissileLockOn.RemoveAt (0);
 		} else {
 			ReticleSystem.MultiMissileLockOn.RemoveAt (0);
@@ -177,14 +164,16 @@ public class MissileSystem : MonoBehaviour
 	private IEnumerator Tracking (Transform tgt)
 	{
 		transform.LookAt (tgt.transform.position);
-		yield return StartCoroutine (MoveForward ());
-	}
+        transform.Translate(Vector3.forward * Time.deltaTime * Speed);
+        yield return null;
+    }
 
 	private IEnumerator Tracking (Transform tgt, Vector3 error)
 	{
 		transform.LookAt (tgt.transform.position + error);
-		yield return StartCoroutine (MoveForward ());
-	}
+        transform.Translate(Vector3.forward * Time.deltaTime * Speed);
+        yield return null;
+    }
 
 	private IEnumerator RotateToTgtAngle(Quaternion toRot){
 		float time = 0;
@@ -211,17 +200,32 @@ public class MissileSystem : MonoBehaviour
 		transform.parent = null;
 		AudioS.Play ();
 		selfBrake = StartCoroutine (SelfBreak ());
-		transform.FindChild ("Steam").gameObject.SetActive (true);
-		transform.FindChild ("Afterburner").gameObject.SetActive (true);
-	}
+        transform.FindChild("Glow").gameObject.SetActive(true);
+        //transform.FindChild ("Steam").gameObject.SetActive (true);
+        //transform.FindChild ("Afterburner").gameObject.SetActive (true);
+    }
 
-	private IEnumerator MoveForward ()
+    private IEnumerator MoveForward ()
 	{
-		transform.Translate (Vector3.forward * Time.deltaTime * Speed);
-		yield return null;
+        trail.enabled = true;
+        while (true)
+        {
+            transform.Translate(Vector3.forward * Time.deltaTime * Speed);
+            yield return null;
+        }
 	}
 
-	private bool isDeth = false;
+    private IEnumerator MoveForward(GameObject sync)
+    {
+        trail.enabled = true;
+        while (sync != null)
+        {
+            transform.Translate(Vector3.forward * Time.deltaTime * Speed);
+            yield return null;
+        }
+    }
+
+    private bool isDeth = false;
 	void OnTriggerStay (Collider col)
 	{
 		if (transform.parent != null || isDeth || col.gameObject.layer == 16) {

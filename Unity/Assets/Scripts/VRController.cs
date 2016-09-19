@@ -25,7 +25,6 @@ public class VRController : MonoBehaviour {
 
     void OnTriggerEnter(Collider col)
     {
-        Debug.Log(col.gameObject);
         TouchObject = col.gameObject;
         TouchObject.GetComponentInChildren<Text>().color = Color.red;
         PressTriggerCoroutine = StartCoroutine(PressTrigger());
@@ -56,8 +55,8 @@ public class VRController : MonoBehaviour {
         {
             if(InputVRController.GetPress(InputVRController.InputPress.PressMenu,type))
             {
-                HandCamera.SetActive(!HandCamera.active);
-                if (HandCamera.active)
+                HandCamera.SetActive(!HandCamera.activeSelf);
+                if (HandCamera.activeSelf && GameManager.NowScene == GameManager.Scenes.stage && type == HandType.Right)
                 {
                     FindObjectOfType<ReticleSystem>().EnableReticle();
                 }

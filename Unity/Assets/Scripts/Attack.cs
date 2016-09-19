@@ -16,6 +16,8 @@ public class Attack : MonoBehaviour
 
 	[SerializeField]
 	private Gun Guns;
+    [SerializeField]
+    private GameObject[] missile = new GameObject[4];
 
 	private static Queue<GameObject> _playerMissiles = new Queue<GameObject> ();
 
@@ -40,10 +42,6 @@ public class Attack : MonoBehaviour
 
 	void Awake ()
 	{
-		_playerMissiles.Enqueue (GameObject.Find ("missileA"));
-		_playerMissiles.Enqueue (GameObject.Find ("missileB"));
-		_playerMissiles.Enqueue (GameObject.Find ("missileC"));
-		_playerMissiles.Enqueue (GameObject.Find ("missileD"));
 		Bullet.Lighting = FindObjectOfType<LightingControlSystem> ();
 		Reticle = GameObject.FindObjectOfType<ReticleSystem> ();
 		Frame = GameObject.FindObjectOfType<Airframe> ();
@@ -51,6 +49,10 @@ public class Attack : MonoBehaviour
 
 	void Start ()
 	{
+        foreach(GameObject m in missile)
+        {
+            _playerMissiles.Enqueue(m);
+        }
 		Reloading = 0;
 	}
 

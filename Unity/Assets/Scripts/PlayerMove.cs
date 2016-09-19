@@ -99,13 +99,12 @@ public class PlayerMove : MonoBehaviour
 	private IEnumerator ChangeSpeed ()
 	{
 		while (!GameManager.IsGameOver) {
-			if (isKeyDown()) {
-				if (isAccele()) {
-					FuelInjector(Accele);
-				} else {
-					FuelInjector(Decele);
-				}
-			} else if (isKeyUp()) {
+            if (isAccele()) {
+                Debug.Log("Aceele");
+                FuelInjector(Accele);
+            } else if(isDecele()){
+                FuelInjector(Decele);
+            } else if (isKeyUp()) {
 				AfterBurner (Keep);
 				StartCoroutine (CameraSystem.CameraPosReset ());
 			}
@@ -114,11 +113,7 @@ public class PlayerMove : MonoBehaviour
 	}
 
 	private bool isKeyUp(){
-		return Input.GetKeyUp (KeyCode.JoystickButton13) || Input.GetKeyUp (KeyCode.JoystickButton14) || Input.GetKeyUp (KeyCode.Alpha1) || Input.GetKeyUp (KeyCode.Alpha2) || InputVRController.GetPressStay(InputVRController.InputPress.UpGrip);
-	}
-
-	private bool isKeyDown(){
-		return Input.GetKey (KeyCode.JoystickButton13) || Input.GetKey (KeyCode.JoystickButton14) || Input.GetKey (KeyCode.Alpha1) || Input.GetKey (KeyCode.Alpha2) || InputVRController.GetPressUp(InputVRController.InputPress.PressGrip);
+		return Input.GetKeyUp (KeyCode.JoystickButton13) || Input.GetKeyUp (KeyCode.JoystickButton14) || Input.GetKeyUp (KeyCode.Alpha1) || Input.GetKeyUp (KeyCode.Alpha2) || InputVRController.GetUp(InputVRController.InputPress.UpGrip);
 	}
 
 	private bool isAccele(){
@@ -126,6 +121,12 @@ public class PlayerMove : MonoBehaviour
 		BlurEffects (_isAccele);
 		return _isAccele;
 	}
+
+    private bool isDecele()
+    {
+		return Input.GetKey (KeyCode.JoystickButton13) || Input.GetKey (KeyCode.Alpha1) || InputVRController.GetPressStay(InputVRController.InputPress.PressGrip,HandType.Left);
+        
+    }
 
 	private void BlurEffects(bool isAccele){
 		MotionBlur.maxVelocity = Mathf.Clamp (MotionBlur.maxVelocity + (isAccele ? Time.deltaTime : -Time.deltaTime), 3.5f, 10);//isAccele ? 10 : Mathf.Clamp (MotionBlur.maxVelocity);//3.5f;
@@ -188,7 +189,7 @@ public class PlayerMove : MonoBehaviour
     private Vector3 InputController() {
         if (!VRMode.isVRMode)
         {
-            return new Vector3(Input.GetAxis("Vertical") * 3, 0, Input.GetAxis("Horizontal") * 2);
+            return new Vector3(Input.GetAxis("Vertical") * 200 * Time.deltaTime, 0, Input.GetAxis("Horizontal") * 140 * Time.deltaTime);
         } else
         {
             Vector2 Axis = InputVRController.GetAxis(HandType.Left);

@@ -126,7 +126,7 @@ public class InputVRController : MonoBehaviour {
         return false;
     }
 
-    public static bool GetPressUp(InputPress input)
+    public static bool GetUp(InputPress input)
     {
         SteamVR_Controller.Device device, device2;
         try
@@ -135,6 +135,7 @@ public class InputVRController : MonoBehaviour {
             device2 = SteamVR_Controller.Input((int)trackedObject[1].index);
         }catch
         {
+            //Debug.Log("GetUp デバイス取得にエラー");
             return false;
         }
 

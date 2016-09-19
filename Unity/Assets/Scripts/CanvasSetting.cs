@@ -16,10 +16,11 @@ public class CanvasSetting : MonoBehaviour {
         canvas.transform.parent = isVR ? GameManager.FirstParent(Airframe.AirFrame).transform : null;
         canvas.GetComponent<Canvas>().renderMode = isVR ? RenderMode.WorldSpace : RenderMode.ScreenSpaceOverlay;
         //GameObject DamageEffect = canvas.transform.FindChild("DamageEffectImage").gameObject;
-        // GameManager.RemovableObject(DamageEffect,new Canvas().gameObject,isVR);
         if (isVR)
         {
             GameObject VRCamera = FindObjectOfType<InputVRController>().Controllers[(int)HandType.Right].transform.FindChild("HandCamera").gameObject;
+            //canvas.GetComponent<Canvas>().worldCamera = FindObjectOfType<CameraSetting>().MyCamera.GetComponent<Camera>();
+            //canvas.GetComponent<Canvas>().planeDistance = 10f;
             canvas.transform.localPosition = new Vector3(0, 16, 74);
             canvas.transform.localScale = new Vector3(0.08f, 0.08f, 1);
             Reticle.GetComponent<ReticleSystem>().MainCamera = VRCamera.GetComponent<Camera>();
@@ -27,10 +28,6 @@ public class CanvasSetting : MonoBehaviour {
             Reticle.transform.localPosition = Vector3.zero;
             Reticle.transform.localRotation = new Quaternion(0, 0, 0, 0);
             Reticle.transform.localScale = new Vector3(0.0001f, 0.0001f, 1);
-            
-            //Canvas DamageCanvas = GameManager.FirstParent(DamageEffect).GetComponent<Canvas>();//.renderMode = RenderMode.ScreenSpaceCamera;
-            //DamageCanvas.renderMode = RenderMode.ScreenSpaceCamera;
-            //DamageCanvas.worldCamera = FindObjectOfType<CameraSetting>().MyCamera.GetComponent<Camera>();
         } else
         {
             Reticle.GetComponent<ReticleSystem>().MainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();

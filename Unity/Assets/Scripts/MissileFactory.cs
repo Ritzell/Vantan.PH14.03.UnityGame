@@ -32,9 +32,11 @@ public class MissileFactory : MonoBehaviour
 		newMissileE.name = newMissileE.name.Substring (0, 7)+Numbering;
 		newMissileE.layer = 12;
 		newMissileE.tag = "EnemyMissile";
-		newMissileE.transform.FindChild ("Steam").gameObject.SetActive(true);
-		newMissileE.transform.FindChild ("Afterburner").gameObject.SetActive(true);
-		return newMissileE;
+        newMissileE.transform.FindChild("Glow").gameObject.SetActive(true);
+
+        //newMissileE.transform.FindChild ("Steam").gameObject.SetActive(true);
+        //newMissileE.transform.FindChild ("Afterburner").gameObject.SetActive(true);
+        return newMissileE;
 	}
 
 	public GameObject NewEnemyMissile (Vector3 Pos,Vector3 Rot)
