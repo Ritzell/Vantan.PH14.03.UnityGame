@@ -38,7 +38,7 @@ public class MissileRader : MonoBehaviour {
 	}
 
 	private IEnumerator RotateRader(){
-		while(!GameManager.IsGameOver){
+		while(!GameManager.IsGameOver && !VRMode.isVRMode){
 			transform.rotation = new Quaternion (0,0,Airframe.AirFrame.transform.localRotation.y,transform.rotation.w);
 			yield return null;
 		}

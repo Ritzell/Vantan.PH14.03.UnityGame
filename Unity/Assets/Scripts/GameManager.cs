@@ -197,14 +197,15 @@ public class GameManager : MonoBehaviour
     public static IEnumerator FinishGame(bool isWin)
     {
         StopGame();
-        GameObject camera = VRMode.isVRMode ? GameObject.Find("[CameraRig") : FindObjectOfType<CameraSetting>().MyCamera;
+        GameObject camera = VRMode.isVRMode ? GameObject.Find("[CameraRig]") : FindObjectOfType<CameraSetting>().MyCamera;
         camera.transform.parent = null;
+        DontDestroyOnLoad(camera);
         try {
             File.WriteAllBytes(ImageCamera.ImagePath, ImageCamera.OutPutTexture2D.EncodeToPNG());
         } catch {
             Debug.Log("画像の保存に失敗しました.");
         }
-        AudioSource AudioBox = Manager.GetComponent<AudioSource>();
+        AudioSource AudioBox = FindObjectOfType<CameraSetting>().MyCamera.GetComponent<AudioSource>();
         Record.IsVictory = isWin;
         Manager.StartCoroutine(Manager.StopSounds());
         Manager.StartCoroutine(isWin ? Victory() : Defeat());

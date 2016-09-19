@@ -100,7 +100,6 @@ public class PlayerMove : MonoBehaviour
 	{
 		while (!GameManager.IsGameOver) {
             if (isAccele()) {
-                Debug.Log("Aceele");
                 FuelInjector(Accele);
             } else if(isDecele()){
                 FuelInjector(Decele);
@@ -193,7 +192,7 @@ public class PlayerMove : MonoBehaviour
         } else
         {
             Vector2 Axis = InputVRController.GetAxis(HandType.Left);
-            return new Vector2(Axis.y, Axis.x);
+            return new Vector2(Axis.y*2, Axis.x*2);
         }
 	}
 }

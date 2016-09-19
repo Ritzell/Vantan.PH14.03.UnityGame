@@ -32,7 +32,7 @@ public class SteamVR_PlayArea : MonoBehaviour
 	[HideInInspector]
 	public Vector3[] vertices;
 
-    void Awake()
+    void Start()
     {
         DontDestroyOnLoad(gameObject);
     }

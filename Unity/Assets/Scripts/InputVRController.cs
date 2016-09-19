@@ -27,6 +27,7 @@ public class InputVRController : MonoBehaviour {
         {
             trackedObject[i] = Controllers[i].GetComponent<SteamVR_TrackedObject>();
         }
+        DontDestroyOnLoad(GameManager.FirstParent(gameObject));
     }
 
     void Update()
