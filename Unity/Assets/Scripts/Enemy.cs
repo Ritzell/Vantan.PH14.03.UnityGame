@@ -42,6 +42,7 @@ public class Enemy : MonoBehaviour
 
 	void Start ()
 	{
+        HP = GetComponent<EnemyBase>() ? 450 : 250;
 		MaxHP = HP;
 		ArmorMaterial.color = new Color (0.3f, 0.3f, 0.3f, 1);
 		MaterialColor = MyMaterial.GetColor ("_EmissionColor");
@@ -82,7 +83,7 @@ public class Enemy : MonoBehaviour
 	}
 
 	private IEnumerator Escape(float range,GameObject tgt,float MoveDistance){
-		float MoveSpeed = 350;
+		float MoveSpeed = 275;
 		while (!GameManager.IsGameOver) {
 			if (Distance < range) {
 				Vector3 p0 = transform.position, p1 = tgt.transform.position;

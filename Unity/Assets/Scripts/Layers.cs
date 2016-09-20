@@ -9,5 +9,8 @@ public enum Layers{
 	EnemyMissile,
 	bullet,
 	AirFrame,
-	EnemyArmor
+	EnemyArmor,
+    ShutterCollider,
+    VRtitle,
+    barrier
 }

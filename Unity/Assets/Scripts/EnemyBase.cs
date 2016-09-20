@@ -6,6 +6,8 @@ public class EnemyBase : MonoBehaviour
 {
 	[SerializeField]
 	private Material material;
+    [SerializeField]
+    private GameObject barrier;
 
 	private static List<EnemyAttack> Childs = new List<EnemyAttack> ();
 	private static int RestChildren = 0;
@@ -16,6 +18,10 @@ public class EnemyBase : MonoBehaviour
 	public static int Rest {
 		set {
 			RestChildren = value;
+            if(RestChildren <= 0)
+            {
+                FindObjectOfType<EnemyBase>().DisableBarrier();
+            }
 		}get {
 			return RestChildren;
 		}
@@ -26,6 +32,11 @@ public class EnemyBase : MonoBehaviour
 		Childs.Add (GameObject.Find ("ChildEnemyA").GetComponent<EnemyAttack> ());
 		Childs.Add (GameObject.Find ("ChildEnemyB").GetComponent<EnemyAttack> ());
 	}
+
+    void DisableBarrier()
+    {
+        barrier.SetActive(false);
+    }
 
 	public static IEnumerator PlayerInArea(){
 		yield return new WaitForSeconds (3f);

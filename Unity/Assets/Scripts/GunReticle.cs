@@ -19,8 +19,8 @@ public class GunReticle : MonoBehaviour {
             var ray = new Ray(transform.position, transform.forward);
             if (Physics.Raycast(ray, out Hit, 30000, LayerMask))
             {
-                StartCoroutine(Gun.MuzzuleLookTgt(ray.GetPoint(4000)));
                 GetComponent<Image>().color = Color.yellow;
+                StartCoroutine(Gun.MuzzuleLookTgt(ray.GetPoint(4000)));
             }
             else
             {

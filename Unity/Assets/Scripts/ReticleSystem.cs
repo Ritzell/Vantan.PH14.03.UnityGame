@@ -121,7 +121,7 @@ public class ReticleSystem : MonoBehaviour
 
 			var ray = MainCamera.ScreenPointToRay (new Vector3 (transform.position.x, transform.position.y,  0.0f));
 			if (Physics.Raycast (ray, out Hit, 30000, LayerMask)) {
-				StartCoroutine (Gun.MuzzuleLookTgt (Hit.transform.position));
+                StartCoroutine(Gun.MuzzuleLookTgt (Hit.transform.position));
 				SelectTgt (Hit.transform.gameObject);
 			} else {
 				StartCoroutine (Gun.MuzzuleLookTgt (ray.GetPoint (4000)));
@@ -139,15 +139,12 @@ public class ReticleSystem : MonoBehaviour
         while (!GameManager.IsGameOver)
         {
 
-            var ray = new Ray(transform.position, transform.forward);//MainCamera.ScreenPointToRay(new Vector3(transform.position.x, transform.position.y, 0.0f));
-            if (Physics.Raycast(ray, out Hit, 30000, LayerMask))
-            {
-                //StartCoroutine(Gun.MuzzuleLookTgt(Hit.transform.position));
-                SelectTgt(Hit.transform.gameObject);
+            var ray = new Ray(transform.position, transform.forward);
+            if (Physics.Raycast(ray, out Hit, 30000, LayerMask) && Hit.transform.gameObject.layer != (int)Layers.barrier) {
+                   SelectTgt(Hit.transform.gameObject);
             }
             else
             {
-                //StartCoroutine(Gun.MuzzuleLookTgt(ray.GetPoint(4000)));
                 FadeCancel();
             }
             yield return null;
