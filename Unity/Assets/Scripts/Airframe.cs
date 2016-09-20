@@ -32,7 +32,8 @@ public class Airframe : MonoBehaviour
 
 	void Start ()
 	{
-		StartCoroutine (NotificationSystem.UpdateNotification ("戦闘を開始します"));
+        
+        StartCoroutine (NotificationSystem.UpdateNotification ("戦闘を開始します"));
 		DamageEffectImage = GameObject.Find ("DamageEffectImage").GetComponent<Image>();
 		StartCoroutine (ObstacleWarning ());
 	}

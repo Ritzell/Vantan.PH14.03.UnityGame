@@ -85,14 +85,31 @@ public class GameManager : MonoBehaviour
     {
         //QualitySettings.vSyncCount = 0; // VSyncをOFFにする
         //QualitySettings.antiAliasing = 0;
-        //Camera.main.renderingPath = RenderingPath.Forward;
+        //FindObjectOfType<CameraSetting>().MyCamera.GetComponent<Camera>().renderingPath = RenderingPath.DeferredShading;
         CameraS = FindObjectOfType<CameraSystem>();
         Manager = GameObject.FindObjectOfType<GameManager>();
         Factory = GameObject.FindObjectOfType<MissileFactory>();
         StartTime = DateTime.Now;
         StartCoroutine(Timer());//タイマーを起動
         StartCoroutine(EscapeGame());
-        QualitySettings.antiAliasing = GameSetting.GameSetDates[(int)GameSetting.DateNumber.AntiAliasing];
+        QualitySettings.antiAliasing = GameSetting.GameSetDates[(int)GameSetting.DateNumber.AntiAliasing];//AntiAliasing
+        QualitySettings.vSyncCount = GameSetting.GameSetDates[(int)GameSetting.DateNumber.Vsync];//vsync
+
+        foreach (Light light in FindObjectsOfType<Light>())
+        {//shadow
+            switch (GameSetting.GameSetDates[(int)GameSetting.DateNumber.Shadow])
+            {
+                case 0:
+                    light.shadows = LightShadows.None;
+                    break;
+                case 1:
+                    light.shadows = LightShadows.Hard;
+                    break;
+                case 2:
+                    light.shadows = LightShadows.Soft;
+                    break;
+            }
+        }
     }
 
     public IEnumerator ReloadMissile(Vector3 StartPos, Quaternion StartRot)
@@ -228,10 +245,10 @@ public class GameManager : MonoBehaviour
 
     private static IEnumerator ChangeMusic(AudioSource AudioBox, bool isWin)
     {
-        int TimeSpeed = (int)(1 / Time.timeScale);
+        float TimeSpeed = 1 / Time.timeScale;
 
         while (AudioBox.volume > 0) {
-            AudioBox.volume -= 0.2f * (Time.deltaTime * TimeSpeed);
+            AudioBox.volume -= 0.25f * (Time.deltaTime * TimeSpeed);
             yield return null;
         }
         AudioBox.Stop();
