@@ -8,6 +8,11 @@ public class GunReticle : MonoBehaviour {
     {
         StartCoroutine(SerchEnemy());
     }
+    void Start()
+    {
+        StartCoroutine(SerchEnemy());
+
+    }
     public IEnumerator SerchEnemy()
     {
 
@@ -19,8 +24,9 @@ public class GunReticle : MonoBehaviour {
             var ray = new Ray(transform.position, transform.forward);
             if (Physics.Raycast(ray, out Hit, 30000, LayerMask))
             {
-                GetComponent<Image>().color = Color.yellow;
                 StartCoroutine(Gun.MuzzuleLookTgt(ray.GetPoint(4000)));
+
+                GetComponent<Image>().color = Color.yellow;
             }
             else
             {

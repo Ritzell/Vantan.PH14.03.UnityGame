@@ -55,6 +55,10 @@ public class VRController : MonoBehaviour {
         {
             if(InputVRController.GetPress(InputVRController.InputPress.PressMenu,type))
             {
+                if(type == HandType.Left)
+                {
+                    yield break;
+                }
                 HandCamera.SetActive(!HandCamera.activeSelf);
                 if (HandCamera.activeSelf && GameManager.NowScene == GameManager.Scenes.stage && type == HandType.Right)
                 {
