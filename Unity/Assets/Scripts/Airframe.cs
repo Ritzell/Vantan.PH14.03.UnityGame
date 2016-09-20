@@ -79,7 +79,7 @@ public class Airframe : MonoBehaviour
 		if (HP <= 0 || Col.layer == 10 || Col.layer == (int)Layers.EnemyArmor || Col.layer == (int)Layers.Enemy) {
 			LightingControlSystem.ShatDown ();
 			Instantiate (Resources.Load ("prefabs/Explosion"), AirFramePosition, Quaternion.identity);
-			StartCoroutine (Deth ());
+			StartCoroutine (Death ());
 		}
 	}
 
@@ -130,7 +130,7 @@ public class Airframe : MonoBehaviour
 	}
 
 
-	private IEnumerator Deth ()
+	private IEnumerator Death ()
 	{
         //		if (GameManager.IsGameOver) {
         //			yield break;

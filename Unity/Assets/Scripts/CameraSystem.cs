@@ -15,6 +15,7 @@ public class CameraSystem : MonoBehaviour
 	private static Vector3 LookFrontPos;
 	private static Bloom CameraBloom;
 	private static float StartThreshold;
+    private static float StartIntensity;
 
 	private static bool _lookBehind = false;
 	public  static bool LookBehind {
@@ -67,6 +68,7 @@ public class CameraSystem : MonoBehaviour
 		DontDestroyOnLoad (MyCamera);
 		CameraBloom = gameObject.GetComponent<Bloom> ();
 		StartThreshold = CameraBloom.bloomThreshold;
+        StartIntensity = CameraBloom.bloomIntensity;
 //		StartCoroutine (Caputure ());
 
 	}
@@ -234,7 +236,8 @@ public class CameraSystem : MonoBehaviour
 			yield return null;
 		}
 		CameraBloom.bloomThreshold = StartThreshold;
-		yield return null;
+        CameraBloom.bloomIntensity = StartIntensity;
+        yield return null;
 	}
 
 	public IEnumerator Flash(float FlashPower,bool isOut,float FlashSpeed,GameObject sync,Action<bool> FadeOut){
@@ -247,6 +250,7 @@ public class CameraSystem : MonoBehaviour
 		}
 		FadeOut (true);
 		while(isOut && sync != null){
+            
 			yield return null;
 		}
 		while (CameraBloom.bloomThreshold < StartThreshold/3) {
@@ -254,7 +258,8 @@ public class CameraSystem : MonoBehaviour
 			yield return null;
 		}
 		CameraBloom.bloomThreshold = StartThreshold;
-		yield return null;
+        CameraBloom.bloomIntensity = StartIntensity;
+        yield return null;
 	}
 
 	private void FlashIn(float FlashPower, float FlashSpeed){
