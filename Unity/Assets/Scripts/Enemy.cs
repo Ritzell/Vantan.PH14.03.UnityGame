@@ -6,23 +6,20 @@ public class Enemy : MonoBehaviour
 {
 
 	[SerializeField]
-	private AudioSource CryBox;
+	public AudioSource CryBox;
 	[SerializeField]
 	private Material ArmorMaterial;
 	[SerializeField]
 	private GameManager Manager;
-	private CameraSystem CameraS;
+    public CameraSystem CameraS;
 	private bool isLife = true;
-	private float HP = 100;
+	private float HP = 250;
 	private float MaxHP;
-	private Material MyMaterial;
+	public Material MyMaterial;
 	private Color MaterialColor;
-	private Coroutine Breth;
-	private IEnumerator StateNotice;
+	public Coroutine Breth;
+	public IEnumerator StateNotice;
 
-	/// <summary>
-	/// フレアによる回避はミサイルのスクリプトで行う
-	/// </summary>
 
 	private static ReticleSystem PlayerReticle;
 
@@ -35,25 +32,24 @@ public class Enemy : MonoBehaviour
 
 	void Awake ()
 	{
-		PlayerReticle = GameObject.Find ("ReticleImage").GetComponent<ReticleSystem> ();
+		PlayerReticle = FindObjectOfType<ReticleSystem> ();
 
 		MyMaterial = gameObject.GetComponent<Renderer> ().material;
-		CameraS = GameObject.Find ("Main Camera").GetComponent<CameraSystem>();
+		CameraS = FindObjectOfType<CameraSetting>().MyCamera.GetComponent<CameraSystem>();
 		Manager = FindObjectOfType<GameManager> ();
 
 	}
 
 	void Start ()
 	{
+        HP = GetComponent<EnemyBase>() ? 450 : 250;
 		MaxHP = HP;
 		ArmorMaterial.color = new Color (0.3f, 0.3f, 0.3f, 1);
 		MaterialColor = MyMaterial.GetColor ("_EmissionColor");
-		EnemyBase.Rest = EnemyBase.Rest + 1;
 		Breth = StartCoroutine (Respiration ());
 		StateNotice = StateNotification();
 		CryBox.pitch = 2.5f;
 		StartCoroutine (BehaviourAI ());
-//		StartCoroutine (Move ());
 	}
 	private float Distance = 0f;
 	private IEnumerator BehaviourAI(){
@@ -87,7 +83,7 @@ public class Enemy : MonoBehaviour
 	}
 
 	private IEnumerator Escape(float range,GameObject tgt,float MoveDistance){
-		float MoveSpeed = 350;
+		float MoveSpeed = 275;
 		while (!GameManager.IsGameOver) {
 			if (Distance < range) {
 				Vector3 p0 = transform.position, p1 = tgt.transform.position;
@@ -116,13 +112,12 @@ public class Enemy : MonoBehaviour
 
 	void OnTriggerEnter (Collider Col)
 	{
-		if (!isLife) {
+		if (!isLife || (GetComponent<EnemyBase>() && EnemyBase.Rest != 0)) {
 			return;
 		}
 		if (Col.gameObject.layer == (int)PlayerAttackPower.bulletLayer) {
 			HP -= (int)PlayerAttackPower.bullet;
 		} else if (Col.gameObject.layer == (int)PlayerAttackPower.missileLayer) {
-			//CryBox.Play ();
 			HP -= (int)PlayerAttackPower.missile;
 		}
 		StateNotice.MoveNext ();
@@ -144,9 +139,14 @@ public class Enemy : MonoBehaviour
 	private void DiedJudgment(){
 		if (HP <= 0) {
 			isLife = false;
-			EnemyBase.Rest = EnemyBase.Rest - 1;
 			PlayerReticle.DestoroyLockOnTgt (gameObject);
-			StartCoroutine (Deth ());
+            if (GetComponent<EnemyBase>())
+            {
+                StartCoroutine(GetComponent<EnemyBase>().Death(this));
+            } else
+            {
+                StartCoroutine(GetComponent<ChildEnemy>().Death(this));
+            }
 		}
 	}
 
@@ -154,7 +154,6 @@ public class Enemy : MonoBehaviour
 		bool isPassing = false;
 		while (!isPassing) {
 			if (HP <= MaxHP/2) {
-//				NotificationSystem.Announce = gameObject.name + "の体力が著しく消耗しています。";
 				StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "の体力が著しく消耗しています。"));
 				isPassing = true;
 				yield return null;
@@ -201,45 +200,21 @@ public class Enemy : MonoBehaviour
 		}
 	}
 
-	private void Brethes(Material material,Color MaxColor){
+    public void Brethes(Material material,Color MaxColor){
 		Color mColor = material.GetColor ("_EmissionColor");
-		material.SetColor ("_EmissionColor", new Color (mColor.r - (MaxColor.r * (Time.deltaTime))
-			, mColor.g - (MaxColor.g * (Time.deltaTime))
-			, mColor.b - (MaxColor.b * (Time.deltaTime))));
+		material.SetColor ("_EmissionColor", new Color (mColor.r - (MaxColor.r * Time.deltaTime * MaxHP/HP)
+			, mColor.g - (MaxColor.g * Time.deltaTime * MaxHP / HP)
+			, mColor.b - (MaxColor.b * Time.deltaTime * MaxHP / HP)));
 	}
 
-	private void Suck(Material material,Color MaxColor){
+    public void Suck(Material material,Color MaxColor){
 		Color mColor = material.GetColor ("_EmissionColor");
-		material.SetColor ("_EmissionColor", new Color (mColor.r + (MaxColor.r * (Time.deltaTime))
-			, mColor.g + (MaxColor.g * (Time.deltaTime))
-			, mColor.b + (MaxColor.b * (Time.deltaTime))));
+		material.SetColor ("_EmissionColor", new Color (mColor.r + (MaxColor.r * Time.deltaTime * MaxHP / HP)
+			, mColor.g + (MaxColor.g * Time.deltaTime * MaxHP / HP)
+			, mColor.b + (MaxColor.b * Time.deltaTime * MaxHP / HP)));
 	}
 
-	private IEnumerator Deth ()
-	{
-		Airframe Frame = Airframe.AirFrame.GetComponent<Airframe> ();
-
-		CryBox.pitch = Random.Range (0.65f, 1.3f);
-		CryBox.Play ();
-		Debug.Log ("death");
-		StopCoroutine (Breth);
-		MyMaterial.EnableKeyword ("_EMISSION");
-		MyMaterial.SetColor ("_EmissionColor",Color.red);
-		StartCoroutine (StateChange (CryBox));
-		StartCoroutine (ShakeBody());
-		CameraS.StartCoroutine(CameraS.Flash(0.8f,true,0.35f,gameObject));
-
-		while (true) {
-			if (CryBox.isPlaying == false) {
-//				NotificationSystem.Announce = gameObject.name + "を撃破しました！";
-				Frame.StartCoroutine (NotificationSystem.UpdateNotification (gameObject.name + "を撃破しました！"));
-				Destroy (gameObject);
-			}
-			yield return null;
-		}
-	}
-
-	private IEnumerator StateChange(AudioSource AudioBox){
+    public IEnumerator StateChange(AudioSource AudioBox){
 		var color = ArmorMaterial.color;
 		while (AudioBox.isPlaying) {
 			Expansion ();
@@ -248,7 +223,7 @@ public class Enemy : MonoBehaviour
 		}
 	}
 
-	private IEnumerator ShakeBody(){
+	public IEnumerator ShakeBody(){
 		Vector3 DefaultPos = transform.position;
 		while (gameObject != null) {
 			Vector3 RandomRange = new Vector3 (Random.Range(-10,10),Random.Range(-10,10),Random.Range(-10,10));

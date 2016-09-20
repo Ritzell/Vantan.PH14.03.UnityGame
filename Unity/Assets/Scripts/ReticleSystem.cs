@@ -67,16 +67,10 @@ public class ReticleSystem : MonoBehaviour
 	}
 
 	[SerializeField]
-	private Camera MainCamera;
+	public Camera MainCamera;
 
 	[SerializeField]
 	private GameObject ReticleUI;
-
-	[SerializeField]
-	private GameObject MuzzleA;
-
-	[SerializeField]
-	private GameObject MuzzleB;
 
 	[SerializeField]
 	private GameObject MultipleReticleObject;
@@ -95,8 +89,11 @@ public class ReticleSystem : MonoBehaviour
 	}
 
 	public void EnableReticle(){
-		StartCoroutine (SerchEnemy ());
-		StartCoroutine (ReticleMoveInput ());
+        LockOnTgt = null;
+	    StartCoroutine (VRMode.isVRMode ? SerchEnemyVR() : SerchEnemy ());
+        if (!VRMode.isVRMode) {
+            StartCoroutine(ReticleMoveInput());
+        } 
 	}
 
 	private IEnumerator ReticleMoveInput ()
@@ -117,27 +114,64 @@ public class ReticleSystem : MonoBehaviour
 		 
 		while (!GameManager.IsGameOver) {
 			if (CameraSystem.FreeMove) {
-				yield return null;
-				continue;
+                continue;
+                yield return null;
+				
 			}
-			var ray = Camera.main.ScreenPointToRay (new Vector3 (transform.position.x, transform.position.y, 0.0f));
 
+			var ray = MainCamera.ScreenPointToRay (new Vector3 (transform.position.x, transform.position.y,  0.0f));
 			if (Physics.Raycast (ray, out Hit, 30000, LayerMask)) {
-				StartCoroutine (Gun.MuzzuleLookTgt (Hit.transform.position));
+                StartCoroutine(Gun.MuzzuleLookTgt (Hit.transform.position));
 				SelectTgt (Hit.transform.gameObject);
 			} else {
-				StartCoroutine (Gun.MuzzuleLookTgt (ray.GetPoint (4000)));/////////////////
+				StartCoroutine (Gun.MuzzuleLookTgt (ray.GetPoint (4000)));
 				FadeCancel ();
 			}
 			yield return null;
 		}
 	}
 
-	/// <summary>
-	/// ロックを外す
-	/// </summary>
-	/// <returns>The lock input.</returns>
-	private IEnumerator ReleaseLockInput ()
+    private IEnumerator SerchEnemyVR()
+    {
+        RaycastHit Hit;
+        const int LayerMask = 1 << (int)Layers.Enemy | 1 << (int)Layers.EnemyMissile | 1 << (int)Layers.EnemyArmor;
+
+        while (!GameManager.IsGameOver)
+        {
+
+            var ray = new Ray(transform.position, transform.forward);
+            if (Physics.Raycast(ray, out Hit, 30000, LayerMask) && Hit.transform.gameObject.layer != (int)Layers.barrier) {
+                   SelectTgt(Hit.transform.gameObject);
+            }
+            else
+            {
+                FadeCancel();
+            }
+            yield return null;
+        }
+        /*RaycastHit Hit;
+        const int LayerMask = 1 << (int)Layers.Enemy | 1 << (int)Layers.EnemyMissile | 1 << (int)Layers.EnemyArmor;
+
+        while (!GameManager.IsGameOver)
+        {
+            var ray = new Ray(transform.position, transform.forward);
+            if (Physics.Raycast(ray, out Hit, 30000, LayerMask))
+            {
+                SelectTgt(Hit.transform.gameObject);
+            }
+            else
+            {
+                FadeCancel();
+            }
+            yield return null;
+        }*/
+    }
+
+    /// <summary>
+    /// ロックを外す
+    /// </summary>
+    /// <returns>The lock input.</returns>
+    private IEnumerator ReleaseLockInput ()
 	{
 		while (!GameManager.IsGameOver) {
 			if (Attack.isCancel()) {
@@ -151,9 +185,16 @@ public class ReticleSystem : MonoBehaviour
 	{
 		StartCoroutine (ForciblyRelaseLock ());
 		while (!GameManager.IsGameOver) {
-			var ray = Camera.main.ScreenPointToRay (new Vector3 (transform.position.x, transform.position.y, 0.0f));
+			var ray = VRMode.isVRMode ? new Ray(transform.position,transform.forward) : MainCamera.ScreenPointToRay (new Vector3 (transform.position.x, transform.position.y, 0.0f));
 			StartCoroutine (Gun.MuzzuleLookTgt (ray.GetPoint (4000)));
-			UITransform.position = RectTransformUtility.WorldToScreenPoint (Camera.main, lockOnTgt.transform.position);
+            var pos = RectTransformUtility.WorldToScreenPoint(MainCamera, lockOnTgt.transform.position);
+            /*if (!VRMode.isVRMode)
+            {*/
+                UITransform.position = pos;
+            /*} else
+            {
+                transform.position = new Vector3(transform.position.x + (pos.x * transform.localScale.x), transform.position.y + (pos.y * transform.localScale.y), transform.position.z);
+            }*/
 			yield return null;
 		}
 	}
@@ -163,11 +204,9 @@ public class ReticleSystem : MonoBehaviour
 		while (lockOnTgt != null && !GameManager.IsGameOver) {
 			if (ReticleIsOutOfScreen ()) {
 				LockOnTgt = null;
-				yield return null;
 			}
 			yield return null;
 		}
-		yield return null;
 	}
 
 	private bool ReticleIsOutOfScreen ()
@@ -178,6 +217,10 @@ public class ReticleSystem : MonoBehaviour
 		return false;
 	}
 
+    /// <summary>
+    /// ロックオン対象が破壊されたときに呼び出すメソッド
+    /// </summary>
+    /// <param name="Enemy"></param>
 	public void DestoroyLockOnTgt (GameObject Enemy)
 	{
 		if (LockOnTgt == Enemy) {
@@ -188,13 +231,13 @@ public class ReticleSystem : MonoBehaviour
 		return;
 	}
 
-	private void SelectTgt (GameObject TgtOb)
+	public void SelectTgt (GameObject TgtOb)
 	{
 		ReticleColorFade (Color.red);
 		LockNow (TgtOb);
 	}
 
-	private void FadeCancel ()
+	public void FadeCancel ()
 	{
 		if (UI.color.g < 1) {
 			ReticleColorFade (Color.green);
@@ -205,7 +248,6 @@ public class ReticleSystem : MonoBehaviour
 	{
 		if (UI.color.r >= 1) {
 			LockOnTgt = Tgt;
-			Debug.Log (LockOnTgt.name + " をロックオン!");
 		}
 	}
 
@@ -268,11 +310,17 @@ public class ReticleSystem : MonoBehaviour
 		if (LockOn) {
 			StopAllCoroutines ();
 			StartCoroutine (ReleaseLockInput ());
-			StartCoroutine (ReticleMoveToTgt ());
+            if (!VRMode.isVRMode)
+            {
+                StartCoroutine(ReticleMoveToTgt());
+            }
 		} else {
 			StopAllCoroutines ();
-			StartCoroutine (SerchEnemy ());
-			StartCoroutine (ReticleMoveInput ());
+			StartCoroutine (VRMode.isVRMode? SerchEnemyVR() : SerchEnemy ());
+            if (!VRMode.isVRMode)
+            {
+                StartCoroutine(ReticleMoveInput());
+            }
 		}
 	}
 

@@ -41,8 +41,8 @@ public class StageResultText : MonoBehaviour {
 		BackText.text = isVictory ? "Victory" : "Defeat";
 	}
 	private IEnumerator FadeIn(){
-		ForwardText.color = new Color (ForwardText.color.r, ForwardText.color.g, ForwardText.color.b, ForwardText.color.a +(10f*Time.deltaTime));
-		BackText.color = new Color(BackText.color.r,BackText.color.g,BackText.color.b,BackText.color.a + (10f*Time.deltaTime));
+		ForwardText.color = new Color (ForwardText.color.r, ForwardText.color.g, ForwardText.color.b, ForwardText.color.a +(Time.deltaTime * (1 / Time.timeScale)));
+		BackText.color = new Color(BackText.color.r,BackText.color.g,BackText.color.b,BackText.color.a + (Time.deltaTime * (1 / Time.timeScale )));
 		yield return null;
 	}
 }

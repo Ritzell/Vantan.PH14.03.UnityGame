@@ -38,7 +38,7 @@ public class MissileRader : MonoBehaviour {
 	}
 
 	private IEnumerator RotateRader(){
-		while(!GameManager.IsGameOver){
+		while(!GameManager.IsGameOver && !VRMode.isVRMode){
 			transform.rotation = new Quaternion (0,0,Airframe.AirFrame.transform.localRotation.y,transform.rotation.w);
 			yield return null;
 		}
@@ -48,9 +48,17 @@ public class MissileRader : MonoBehaviour {
 		while (!GameManager.IsGameOver) {
 			MissileAddList(true);
 			for(int i = 0; i <= outRangeMissiles.Count-1; i++){
-				if (Airframe.isLife && Manager.AbsDistance(outRangeMissiles[i].position,Airframe.AirFramePosition) <= 2000) {
-						ToInRange (outRangeMissiles [i]);
-					}
+                try
+                {
+                    if (Airframe.isLife && Manager.AbsDistance(outRangeMissiles[i].position, Airframe.AirFramePosition) <= 2000)
+                    {
+                        ToInRange(outRangeMissiles[i]);
+                    }
+                }
+                catch
+                {
+                    continue;
+                }
 				yield return null;
 			}
 			yield return null;

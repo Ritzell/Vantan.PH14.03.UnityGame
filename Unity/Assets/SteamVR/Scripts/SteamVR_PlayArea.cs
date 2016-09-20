@@ -11,7 +11,8 @@ using Valve.VR;
 
 [ExecuteInEditMode, RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]
 public class SteamVR_PlayArea : MonoBehaviour
-{
+{ 
+
 	public float borderThickness = 0.15f;
 	public float wireframeHeight = 2.0f;
 	public bool drawWireframeWhenSelectedOnly = false;
@@ -30,6 +31,11 @@ public class SteamVR_PlayArea : MonoBehaviour
 
 	[HideInInspector]
 	public Vector3[] vertices;
+
+    void Start()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
 
 	public static bool GetBounds( Size size, ref HmdQuad_t pRect )
 	{

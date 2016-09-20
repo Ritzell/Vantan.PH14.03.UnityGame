@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class Bullet : MonoBehaviour
 {
+    [SerializeField]
 	private float Speed = 800f;
 	public static LightingControlSystem Lighting;// = FindObjectOfType<LightingControlSystem> ();
 

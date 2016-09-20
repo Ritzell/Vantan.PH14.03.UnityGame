@@ -84,6 +84,7 @@ public class NotificationSystem : MonoBehaviour {
 	}
 
 	private static IEnumerator MoveUpSentences(bool isEnableTrash,NotificationType type){//List<RectTransform> TextList){
+        var UpRange = VRMode.isVRMode ? 5 : 25;
 		List<RectTransform> TextList = new List<RectTransform>();
 		if (type == NotificationType.Announce) {
 			TextList = Sentences;
@@ -99,7 +100,7 @@ public class NotificationSystem : MonoBehaviour {
 		
 		for (float time = 0f; time < 0.1f; time += Time.deltaTime) {
 			foreach (RectTransform text in TextList) {
-				text.Translate (0, (ScreenRatioY * (isEnableTrash ? 10 : 25)) * (Time.deltaTime / 0.1f), 0);
+				text.Translate (0, (ScreenRatioY * (isEnableTrash ? UpRange*0.4f : UpRange)) * (Time.deltaTime / 0.1f), 0,Space.Self);
 			}
 			yield return null;
 		}
@@ -136,6 +137,7 @@ public class NotificationSystem : MonoBehaviour {
 		var TextComponent = TextBox.GetComponent<Text> ();
 		TextRect.pivot = isAnnounce ? new Vector2 (1,1) : new Vector2 (0.5f,0.5f);
 		TextRect.transform.localPosition = new Vector3 (0,0,0);
+        TextRect.transform.rotation = new Quaternion(0,0,0,0);
 		TextRect.sizeDelta = isAnnounce ? new Vector2 (1400,130) : new Vector2 (ScreenRatioX*300,ScreenRatioY * 28);
 		TextRect.localScale = isAnnounce ? new Vector3 (0.7f, 0.7f, 1) : new Vector3 (1, 1, 1);
 		//TextRect.sizeDelta = isAnnounce ? new Vector2 (ScreenRatioX*300,ScreenRatioY * 20) : new Vector2 (ScreenRatioX*300,ScreenRatioY * 28);

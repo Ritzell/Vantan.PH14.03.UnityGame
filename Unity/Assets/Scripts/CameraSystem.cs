@@ -15,6 +15,7 @@ public class CameraSystem : MonoBehaviour
 	private static Vector3 LookFrontPos;
 	private static Bloom CameraBloom;
 	private static float StartThreshold;
+    private static float StartIntensity;
 
 	private static bool _lookBehind = false;
 	public  static bool LookBehind {
@@ -67,6 +68,7 @@ public class CameraSystem : MonoBehaviour
 		DontDestroyOnLoad (MyCamera);
 		CameraBloom = gameObject.GetComponent<Bloom> ();
 		StartThreshold = CameraBloom.bloomThreshold;
+        StartIntensity = CameraBloom.bloomIntensity;
 //		StartCoroutine (Caputure ());
 
 	}
@@ -159,17 +161,18 @@ public class CameraSystem : MonoBehaviour
 	public static IEnumerator SwayCamera (Action<bool> isEnd)
 	{
 		isEnd(false);
+        GameObject camera = VRMode.isVRMode ? GameObject.Find("[CameraRig]") : MyCamera;
 		float SwayTime = 0;
-		Vector3 NormalPos = new Vector3 (0, 15, -50);
+		Vector3 NormalPos = VRMode.isVRMode? new Vector3(-0.5f,5.4f,-10) : new Vector3 (0, 15, -50);
 		while (SwayTime < 0.4f && !GameManager.IsGameOver) {
 			SwayTime += Time.deltaTime;
 
-			Vector3 Amplitude = new Vector3 (UnityEngine.Random.Range (-5, 5), UnityEngine.Random.Range (-5, 5), 0);
-			MyCamera.transform.localPosition = new Vector3 (NormalPos.x + Amplitude.x, NormalPos.y + Amplitude.y,MyCamera.transform.localPosition.z);
+			Vector3 Amplitude = new Vector3 (VRMode.isVRMode? UnityEngine.Random.Range(-1f, 1f) : UnityEngine.Random.Range (-5, 5), VRMode.isVRMode ? UnityEngine.Random.Range(-1f, 1f) : UnityEngine.Random.Range(-5, 5), 0);
+			camera.transform.localPosition = new Vector3 (NormalPos.x + Amplitude.x, NormalPos.y + Amplitude.y,camera.transform.localPosition.z);
 			yield return new WaitForSeconds (0.01f);
 			yield return null;
 		}
-		MyCamera.transform.localPosition = LookBehind ? LookBehindPos : NormalPos;
+		camera.transform.localPosition = LookBehind ? LookBehindPos : NormalPos;
 		isEnd (true);
 		yield return null;
 	}
@@ -233,7 +236,8 @@ public class CameraSystem : MonoBehaviour
 			yield return null;
 		}
 		CameraBloom.bloomThreshold = StartThreshold;
-		yield return null;
+        CameraBloom.bloomIntensity = StartIntensity;
+        yield return null;
 	}
 
 	public IEnumerator Flash(float FlashPower,bool isOut,float FlashSpeed,GameObject sync,Action<bool> FadeOut){
@@ -246,6 +250,7 @@ public class CameraSystem : MonoBehaviour
 		}
 		FadeOut (true);
 		while(isOut && sync != null){
+            
 			yield return null;
 		}
 		while (CameraBloom.bloomThreshold < StartThreshold/3) {
@@ -253,7 +258,8 @@ public class CameraSystem : MonoBehaviour
 			yield return null;
 		}
 		CameraBloom.bloomThreshold = StartThreshold;
-		yield return null;
+        CameraBloom.bloomIntensity = StartIntensity;
+        yield return null;
 	}
 
 	private void FlashIn(float FlashPower, float FlashSpeed){

@@ -120,13 +120,12 @@ public class SteamVR_TestController : MonoBehaviour
 			foreach (var buttonId in axisIds)
 			{
 				if (SteamVR_Controller.Input(index).GetTouchDown(buttonId))
-					Debug.Log(buttonId + " touch down");
+					//Debug.Log(buttonId + " touch down");
 				if (SteamVR_Controller.Input(index).GetTouchUp(buttonId))
-					Debug.Log(buttonId + " touch up");
+					//Debug.Log(buttonId + " touch up");
 				if (SteamVR_Controller.Input(index).GetTouch(buttonId))
 				{
 					var axis = SteamVR_Controller.Input(index).GetAxis(buttonId);
-					Debug.Log("axis: " + axis);
 				}
 			}
 		}

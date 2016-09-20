@@ -32,7 +32,8 @@ public class Airframe : MonoBehaviour
 
 	void Start ()
 	{
-		StartCoroutine (NotificationSystem.UpdateNotification ("戦闘を開始します"));
+        
+        StartCoroutine (NotificationSystem.UpdateNotification ("戦闘を開始します"));
 		DamageEffectImage = GameObject.Find ("DamageEffectImage").GetComponent<Image>();
 		StartCoroutine (ObstacleWarning ());
 	}
@@ -61,7 +62,6 @@ public class Airframe : MonoBehaviour
 			yield return null;
 		}
 		DamageEffectImage.color = Color.blue;//new Color(70,100,200,DamageEffectImage.color.a);
-		Debug.Log ("colorChange");
 		yield return null;
 	}
 
@@ -72,6 +72,7 @@ public class Airframe : MonoBehaviour
 		LightingSystem.TurningOff (UIType.HP);
 		StartCoroutine (CameraSystem.SwayCamera (b => FirstAid = b));
 		StartCoroutine (DamageEffect ());
+        StartCoroutine(InputVRController.ControllerPulse(2000, HandType.Both));
 		PlayerSound.HitSound ();
 	}
 
@@ -79,7 +80,7 @@ public class Airframe : MonoBehaviour
 		if (HP <= 0 || Col.layer == 10 || Col.layer == (int)Layers.EnemyArmor || Col.layer == (int)Layers.Enemy) {
 			LightingControlSystem.ShatDown ();
 			Instantiate (Resources.Load ("prefabs/Explosion"), AirFramePosition, Quaternion.identity);
-			StartCoroutine (Deth ());
+			StartCoroutine (Death ());
 		}
 	}
 
@@ -130,13 +131,12 @@ public class Airframe : MonoBehaviour
 	}
 
 
-	private IEnumerator Deth ()
+	private IEnumerator Death ()
 	{
-//		if (GameManager.IsGameOver) {
-//			yield break;
-//		}
-		GameObject.Find ("Main Camera").transform.parent = null;
-		Destroy (gameObject);
+        //		if (GameManager.IsGameOver) {
+        //			yield break;
+        //		}
+        Destroy (gameObject);
 		isLife = false;
 		yield return StartCoroutine (GameManager.FinishGame (false));
 	}

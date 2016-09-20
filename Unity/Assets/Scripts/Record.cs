@@ -45,7 +45,6 @@ public class Record : MonoBehaviour {
 
 	private void ChangeImage(){
 		if (File.Exists (ImageCamera.ImagePath)) {
-			
 			byte[] bytes = File.ReadAllBytes (ImageCamera.ImagePath);
 			Texture2D ResultTexture = new Texture2D (Screen.width, Screen.height);
 			ResultTexture.LoadImage (bytes);
@@ -92,7 +91,8 @@ public class Record : MonoBehaviour {
 	private static string VictoryEntry(){
 		BattleIssue.color = Color.red;
 		Rank.text = EvaluationRank (true);
-		return "Victory";
+        FindObjectOfType<Record>().ChangeImage();
+        return "Victory";
 	}
 
 	private static string DefeatEntry(){
