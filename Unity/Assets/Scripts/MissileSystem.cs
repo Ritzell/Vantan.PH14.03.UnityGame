@@ -121,7 +121,7 @@ public class MissileSystem : MonoBehaviour
 		while (Airframe.isLife  && Manager.AbsDistance (tgt.position,transform.position) >= ChangeModeDistance) {
 			yield return StartCoroutine (Tracking (tgt, RandomError));
 		}
-		RefreshSelfBreak ();
+        RefreshSelfBreak ();
         yield return StartCoroutine(MoveForward());
     }
 

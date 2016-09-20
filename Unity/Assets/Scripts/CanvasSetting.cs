@@ -30,6 +30,7 @@ public class CanvasSetting : MonoBehaviour {
                 Reticle.transform.localPosition = Vector3.zero;
                 Reticle.transform.localRotation = new Quaternion(0, 0, 0, 0);
                 Reticle.transform.localScale = new Vector3(0.0001f, 0.0001f, 1);
+                FindObjectOfType<GunReticle>().EnableReticle();
             } else
             {
                 canvas.transform.localRotation = new Quaternion(0, 0, 0, 0);

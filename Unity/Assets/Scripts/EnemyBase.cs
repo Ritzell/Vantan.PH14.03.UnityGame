@@ -9,7 +9,7 @@ public class EnemyBase : MonoBehaviour
 
 	private static List<EnemyAttack> Childs = new List<EnemyAttack> ();
 	private static int RestChildren = 0;
-	private static float HP = 250;
+	private static float HP = 400;
     private static float MaxHP;
 	private static IEnumerator StateNotice;
 
@@ -38,6 +38,7 @@ public class EnemyBase : MonoBehaviour
 
     public IEnumerator Death(Enemy EnemyScript)
     {
+        StartCoroutine(GameManager.FinishGame(true));
         Airframe Frame = Airframe.AirFrame.GetComponent<Airframe>();
         EnemyScript.CryBox.pitch = Random.Range(0.65f, 1.3f);
         EnemyScript.CryBox.Play();
@@ -54,7 +55,6 @@ public class EnemyBase : MonoBehaviour
             {
                 Frame.StartCoroutine(NotificationSystem.UpdateNotification(gameObject.name + "を撃破しました！"));
                 GameObject.Find("engine").GetComponent<AudioSource>().Stop();
-                StartCoroutine(GameManager.FinishGame(true));
                 Destroy(gameObject);
             }
             yield return null;

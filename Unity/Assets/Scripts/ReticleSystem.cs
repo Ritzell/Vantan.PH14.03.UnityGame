@@ -73,12 +73,6 @@ public class ReticleSystem : MonoBehaviour
 	private GameObject ReticleUI;
 
 	[SerializeField]
-	private GameObject MuzzleA;
-
-	[SerializeField]
-	private GameObject MuzzleB;
-
-	[SerializeField]
 	private GameObject MultipleReticleObject;
 
 	void Awake ()
@@ -96,7 +90,7 @@ public class ReticleSystem : MonoBehaviour
 
 	public void EnableReticle(){
         LockOnTgt = null;
-	    StartCoroutine (SerchEnemy ());
+	    StartCoroutine (VRMode.isVRMode ? SerchEnemyVR() : SerchEnemy ());
         if (!VRMode.isVRMode) {
             StartCoroutine(ReticleMoveInput());
         } 
@@ -125,7 +119,7 @@ public class ReticleSystem : MonoBehaviour
 				
 			}
 
-			var ray = VRMode.isVRMode? new Ray(transform.position,transform.forward) : MainCamera.ScreenPointToRay (new Vector3 (transform.position.x, transform.position.y,  0.0f));
+			var ray = MainCamera.ScreenPointToRay (new Vector3 (transform.position.x, transform.position.y,  0.0f));
 			if (Physics.Raycast (ray, out Hit, 30000, LayerMask)) {
 				StartCoroutine (Gun.MuzzuleLookTgt (Hit.transform.position));
 				SelectTgt (Hit.transform.gameObject);
@@ -137,13 +131,51 @@ public class ReticleSystem : MonoBehaviour
 		}
 	}
 
-	/// <summary>
-	/// ロックを外す
-	/// </summary>
-	/// <returns>The lock input.</returns>
-	private IEnumerator ReleaseLockInput ()
+    private IEnumerator SerchEnemyVR()
+    {
+        RaycastHit Hit;
+        const int LayerMask = 1 << (int)Layers.Enemy | 1 << (int)Layers.EnemyMissile | 1 << (int)Layers.EnemyArmor;
+
+        while (!GameManager.IsGameOver)
+        {
+
+            var ray = new Ray(transform.position, transform.forward);//MainCamera.ScreenPointToRay(new Vector3(transform.position.x, transform.position.y, 0.0f));
+            if (Physics.Raycast(ray, out Hit, 30000, LayerMask))
+            {
+                //StartCoroutine(Gun.MuzzuleLookTgt(Hit.transform.position));
+                SelectTgt(Hit.transform.gameObject);
+            }
+            else
+            {
+                //StartCoroutine(Gun.MuzzuleLookTgt(ray.GetPoint(4000)));
+                FadeCancel();
+            }
+            yield return null;
+        }
+        /*RaycastHit Hit;
+        const int LayerMask = 1 << (int)Layers.Enemy | 1 << (int)Layers.EnemyMissile | 1 << (int)Layers.EnemyArmor;
+
+        while (!GameManager.IsGameOver)
+        {
+            var ray = new Ray(transform.position, transform.forward);
+            if (Physics.Raycast(ray, out Hit, 30000, LayerMask))
+            {
+                SelectTgt(Hit.transform.gameObject);
+            }
+            else
+            {
+                FadeCancel();
+            }
+            yield return null;
+        }*/
+    }
+
+    /// <summary>
+    /// ロックを外す
+    /// </summary>
+    /// <returns>The lock input.</returns>
+    private IEnumerator ReleaseLockInput ()
 	{
-        Debug.Log("input");
 		while (!GameManager.IsGameOver) {
 			if (Attack.isCancel()) {
 				LockOnTgt = null;
@@ -287,7 +319,7 @@ public class ReticleSystem : MonoBehaviour
             }
 		} else {
 			StopAllCoroutines ();
-			StartCoroutine (SerchEnemy ());
+			StartCoroutine (VRMode.isVRMode? SerchEnemyVR() : SerchEnemy ());
             if (!VRMode.isVRMode)
             {
                 StartCoroutine(ReticleMoveInput());

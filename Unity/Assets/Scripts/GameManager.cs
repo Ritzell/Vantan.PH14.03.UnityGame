@@ -231,7 +231,7 @@ public class GameManager : MonoBehaviour
         int TimeSpeed = (int)(1 / Time.timeScale);
 
         while (AudioBox.volume > 0) {
-            AudioBox.volume -= 0.05f * (Time.deltaTime * TimeSpeed);
+            AudioBox.volume -= 0.2f * (Time.deltaTime * TimeSpeed);
             yield return null;
         }
         AudioBox.Stop();

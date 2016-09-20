@@ -13,7 +13,7 @@ public class Enemy : MonoBehaviour
 	private GameManager Manager;
     public CameraSystem CameraS;
 	private bool isLife = true;
-	private float HP = 150;
+	private float HP = 250;
 	private float MaxHP;
 	public Material MyMaterial;
 	private Color MaterialColor;
@@ -32,7 +32,7 @@ public class Enemy : MonoBehaviour
 
 	void Awake ()
 	{
-		PlayerReticle = GameObject.Find ("ReticleImage").GetComponent<ReticleSystem> ();
+		PlayerReticle = FindObjectOfType<ReticleSystem> ();
 
 		MyMaterial = gameObject.GetComponent<Renderer> ().material;
 		CameraS = FindObjectOfType<CameraSetting>().MyCamera.GetComponent<CameraSystem>();

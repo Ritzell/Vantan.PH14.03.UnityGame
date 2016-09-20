@@ -41,9 +41,9 @@ public class EnemyAttack : MonoBehaviour
 	public IEnumerator Attack ()
 	{
         int MaxRest = EnemyBase.Rest;
-		float delay = 2f;
+		float delay = 4f;
 		while (!GameManager.IsGameOver ) {
-			yield return new WaitForSeconds (delay - (MaxRest - EnemyBase.Rest / 2));
+			yield return new WaitForSeconds (delay - ((MaxRest - EnemyBase.Rest) / 2));
 			while (!isShoot()) {
 				yield return null;
 			}
