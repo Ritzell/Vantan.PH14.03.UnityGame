@@ -16,6 +16,8 @@ public class Attack : MonoBehaviour
 
 	[SerializeField]
 	private Gun Guns;
+    [SerializeField]
+    private GameObject[] missile = new GameObject[4];
 
 	private static Queue<GameObject> _playerMissiles = new Queue<GameObject> ();
 
@@ -40,10 +42,6 @@ public class Attack : MonoBehaviour
 
 	void Awake ()
 	{
-		_playerMissiles.Enqueue (GameObject.Find ("missileA"));
-		_playerMissiles.Enqueue (GameObject.Find ("missileB"));
-		_playerMissiles.Enqueue (GameObject.Find ("missileC"));
-		_playerMissiles.Enqueue (GameObject.Find ("missileD"));
 		Bullet.Lighting = FindObjectOfType<LightingControlSystem> ();
 		Reticle = GameObject.FindObjectOfType<ReticleSystem> ();
 		Frame = GameObject.FindObjectOfType<Airframe> ();
@@ -51,6 +49,10 @@ public class Attack : MonoBehaviour
 
 	void Start ()
 	{
+        foreach(GameObject m in missile)
+        {
+            _playerMissiles.Enqueue(m);
+        }
 		Reloading = 0;
 	}
 
@@ -96,12 +98,12 @@ public class Attack : MonoBehaviour
 
 	private bool isBoot (float Reloading)
 	{
-		return (Input.GetKeyDown (KeyCode.JoystickButton18) || Input.GetKeyDown (KeyCode.Space));
+		return (Input.GetKeyDown (KeyCode.JoystickButton18) || Input.GetKeyDown (KeyCode.Space) || InputVRController.GetPress(InputVRController.InputPress.PressPad,HandType.Right));
 	}
 
 	private bool isEnd (float Reloading)
 	{
-		return (Input.GetKeyUp (KeyCode.JoystickButton18) || Input.GetKeyUp (KeyCode.Space));
+		return (Input.GetKeyUp (KeyCode.JoystickButton18) || Input.GetKeyUp (KeyCode.Space) || InputVRController.GetPress(InputVRController.InputPress.UpPad, HandType.Right));
 	}
 
 	private void LockOrReset (float Reloading)
@@ -115,7 +117,7 @@ public class Attack : MonoBehaviour
 
 	public static bool isCancel ()
 	{
-		return (Input.GetKeyUp (KeyCode.JoystickButton16) || Input.GetKeyUp (KeyCode.Alpha3));
+        return (Input.GetKeyUp(KeyCode.JoystickButton16) || Input.GetKeyUp(KeyCode.Alpha3) || InputVRController.GetUp(InputVRController.InputPress.UpMenu,HandType.Right));
 	}
 
 	private bool isTrackingShoot ()
@@ -135,13 +137,27 @@ public class Attack : MonoBehaviour
 		while (!GameManager.IsGameOver) {
 			Reloading += Time.deltaTime;
 			if (Reloading >= missileDelay) {
-				if (isStraightMissileShoot ()) {
-					StartCoroutine (Missile (true).Straight (true));
-					Reloading = 0f;
-				} else if (isTrackingShoot () && ReticleSystem.LockOnTgt != null) {
-					StartCoroutine (Missile (true).TrackingForEnemy (ReticleSystem.LockOnTgt.transform, true));
-					Reloading = 0f;
-				}
+                if (!VRMode.isVRMode){
+                    if (isStraightMissileShoot()) {
+                        StartCoroutine(Missile(true).Straight(true));
+                        Reloading = 0f;
+                    } else if (isTrackingShoot() && ReticleSystem.LockOnTgt != null) {
+                        StartCoroutine(Missile(true).TrackingForEnemy(ReticleSystem.LockOnTgt.transform, true));
+                        Reloading = 0f;
+                    }
+                } else if(isStraightMissileShoot())
+                {
+                    if (ReticleSystem.LockOnTgt != null)
+                    {
+                        StartCoroutine(Missile(true).TrackingForEnemy(ReticleSystem.LockOnTgt.transform, true));
+                        Reloading = 0f;
+                    }
+                    else
+                    {
+                        StartCoroutine(Missile(true).Straight(true));
+                        Reloading = 0f;
+                    }
+                }
 			}
 			yield return null;
 		}
@@ -149,7 +165,7 @@ public class Attack : MonoBehaviour
 
 	private bool isStraightMissileShoot ()
 	{
-		if ((Input.GetAxis ("RTrigger") == 1 || Input.GetKeyDown (KeyCode.C)) && _playerMissiles.Count >= 1) {
+		if ((Input.GetAxis ("RTrigger") == 1 || InputVRController.GetPress(InputVRController.InputPress.PressTrigger,HandType.Right) || Input.GetKeyDown (KeyCode.C)) && _playerMissiles.Count >= 1) {
 			GameManager.MissileCount += 1;
 			return true;
 		} else {
@@ -180,7 +196,7 @@ public class Attack : MonoBehaviour
 
 	private bool isGunShot ()
 	{
-		return (Input.GetKey (KeyCode.JoystickButton12) || Input.GetKey (KeyCode.F));
+		return (Input.GetKey (KeyCode.JoystickButton12) || Input.GetKey (KeyCode.F) || InputVRController.GetPressStay(InputVRController.InputPress.PressTrigger, HandType.Left));
 	}
 
 	void OnDestroy(){

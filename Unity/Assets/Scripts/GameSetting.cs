@@ -2,13 +2,6 @@
 using System.Collections;
 using UnityEngine.UI;
 using System;
-//using System.Collections.Generic;
-
-//public static class Test{
-//	static void Start(){
-//		GameObject.Find("Main Camera").GetComponent<CameraSystem>().StartCoroutine (DropdownCallback.OutPut());
-//	}
-//}
 
 public class  GameSetting : MonoBehaviour {
 	//valueで選択肢を得る

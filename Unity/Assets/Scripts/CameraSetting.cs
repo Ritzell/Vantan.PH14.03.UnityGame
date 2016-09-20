@@ -3,18 +3,36 @@ using System.Collections;
 
 public class CameraSetting : MonoBehaviour {
     [SerializeField]
-	private GameObject Mycamera,VRCamera,NormalCamera;
+    private GameObject Mycamera, VRCamera, NormalCamera;
 
-	public GameObject MyCamera{
-		get{
-			return Mycamera;
-		}
-	}
+    public GameObject MyCamera {
+        get {
+            return Mycamera;
+        }
+    }
+
+    public GameObject VRcamera
+    {
+        get
+        {
+            return VRCamera;
+        }
+    }
+
+    public GameObject MyCameraParent
+    {
+        get
+        {
+            return GameManager.FirstParent(MyCamera);
+        }
+    }
+
 	private static AudioClip TitleClip;
 
 
     public void ChangeCamera(bool isVR)
     {
+
         Mycamera = isVR ? VRCamera : NormalCamera;
     }
 
@@ -38,7 +56,7 @@ public class CameraSetting : MonoBehaviour {
 			camera.farClipPlane = 1000;
 			camera.hdr = true;
 			Mycamera.transform.parent = null;
-			Mycamera.transform.position = new Vector3 (0, 0, -39.5f);
+			Mycamera.transform.position = new Vector3 (0, 0,  VRMode.isVRMode ? 0 : -39.5f);
 			Mycamera.transform.localRotation = new Quaternion (0, 0, 0,0);
 			Mycamera.GetComponent<AudioSource> ().clip = TitleClip;
 			Mycamera.GetComponent<AudioSource> ().Play();
@@ -51,11 +69,12 @@ public class CameraSetting : MonoBehaviour {
 			camera.fieldOfView = 75;
 			camera.farClipPlane = 100000;
 			camera.hdr = true;
-			Mycamera.transform.parent = GameObject.Find ("AirPlain").transform;
+            GameObject Parent = MyCameraParent.transform.gameObject;
+			Parent.transform.parent = GameObject.Find ("AirPlain").transform;
 			Mycamera.GetComponent<AudioSource> ().Stop ();
-			Mycamera.transform.localPosition = new Vector3 (0, 15, -50);
-			Mycamera.transform.localRotation = new Quaternion (0, 0, 0,0);
-			if (Mycamera.GetComponent<ArsenalCamera> ()) {
+            Parent.transform.localPosition = VRMode.isVRMode ? new Vector3(-0.5f, 5.4f, -10) : new Vector3 (0, 15, -50);
+            Parent.transform.localRotation = new Quaternion (0, 0, 0,0);
+			if (MyCameraParent.GetComponent<ArsenalCamera> ()) {
 				Destroy (Mycamera.GetComponent<ArsenalCamera> ());
 			}
 
@@ -64,10 +83,10 @@ public class CameraSetting : MonoBehaviour {
 			camera.fieldOfView = 60;
 			camera.farClipPlane = 1000;
 			camera.hdr = false;
-			Mycamera.transform.parent = null;
-			Mycamera.transform.localPosition = new Vector3 (2.4f, 4.4f, 23.7f);
-			Mycamera.transform.localRotation = new Quaternion (0, -180, 0,0);
-			Mycamera.AddComponent<ArsenalCamera> ().Fighter = GameObject.Find("F-14");
+            MyCameraParent.transform.parent = null;
+            MyCameraParent.transform.localPosition = new Vector3 (2.4f, 4.4f, 23.7f);
+            MyCameraParent.transform.localRotation = new Quaternion (0, -180, 0,0);
+            MyCameraParent.AddComponent<ArsenalCamera> ().Fighter = GameObject.Find("F-14");
 			Mycamera.GetComponent<AudioSource> ().Stop ();
 
 		}else if (scene == Scenes.Result) {
@@ -75,10 +94,10 @@ public class CameraSetting : MonoBehaviour {
 			camera.fieldOfView = 60;
 			camera.farClipPlane = 1000;
 			camera.hdr = true;
-			Mycamera.transform.localRotation = new Quaternion (0, 0, 0,0);
-			Mycamera.transform.parent = null;
-			Mycamera.transform.localPosition = new Vector3 (293, 252, 0);
-			if (Mycamera.GetComponent<ArsenalCamera> ()) {
+            MyCameraParent.transform.localRotation = new Quaternion (0, 0, 0,0);
+            MyCameraParent.transform.parent = null;
+            MyCameraParent.transform.localPosition = new Vector3 (293, 252, 0);
+			if (MyCameraParent.GetComponent<ArsenalCamera> ()) {
 				Destroy (Mycamera.GetComponent<ArsenalCamera> ());
 			}
 		}
