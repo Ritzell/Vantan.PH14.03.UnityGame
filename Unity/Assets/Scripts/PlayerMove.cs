@@ -16,6 +16,7 @@ public class PlayerMove : MonoBehaviour
 	[SerializeField]
 	private  List<ParticleSystem> Glow = new List<ParticleSystem>();
 
+    private static GameObject controller;
 	private static float speed = 300f;//戦闘機の速さ
 	private static Quaternion DefaltRotation;
 	private const short Accele = +1;
@@ -49,6 +50,11 @@ public class PlayerMove : MonoBehaviour
 
 	public void Manual ()
 	{
+        if (VRMode.isVRMode)
+        {
+            speed = MaxSpeed;
+            controller = GameObject.Find("Controller (left)");
+        }
 		gameObject.GetComponent<Animator>().Stop ();
 		CameraSystem cameraSystem = FindObjectOfType<CameraSetting>().MyCamera.GetComponent<CameraSystem>();
 		MotionBlur = FindObjectOfType<CameraMotionBlur> ();
@@ -73,8 +79,15 @@ public class PlayerMove : MonoBehaviour
 	private IEnumerator Move ()
 	{
 		while (!GameManager.IsGameOver) {
-			Rotation(InputController());
-			MoveForward ();
+            Quaternion crot = controller.transform.localRotation;
+            if (VRMode.isVRMode && InputVRController.GetPressStay(InputVRController.InputPress.PressPad, HandType.Left))
+            {
+                Rotation(new Vector3(crot.x*2f, crot.y*2f, crot.z*2f));//InputController());
+            }else if(!VRMode.isVRMode){
+                Rotation(InputController());
+
+            }
+            MoveForward ();
 			yield return null;
 		}
 	}
@@ -98,7 +111,7 @@ public class PlayerMove : MonoBehaviour
 	/// <returns>The speed.</returns>
 	private IEnumerator ChangeSpeed ()
 	{
-		while (!GameManager.IsGameOver) {
+		while (!GameManager.IsGameOver && !VRMode.isVRMode) {
             if (isAccele()) {
                 FuelInjector(Accele);
             } else if(isDecele()){
@@ -180,7 +193,8 @@ public class PlayerMove : MonoBehaviour
 	}
 
 	private void Rotation(Vector3 AddRot) {
-		transform.Rotate (AddRot.x / 1.5f, 0f, VRMode.isVRMode ? AddRot.y * 2 : AddRot.z * 2f);
+        transform.Rotate(AddRot);
+		//transform.Rotate (AddRot.x / 1.5f, 0f, VRMode.isVRMode ? AddRot.y * 2 : AddRot.z * 2f);
 		Airframe.AirFrame.transform.localRotation = new Quaternion (DefaltRotation.x + AddRot.x/50,DefaltRotation.y,DefaltRotation.z,DefaltRotation.w);
 //		var RotateX = (DefaltRotation.x + Mathf.Abs (AddRot.x)) < DefaltRotation.x + MaxAngle ? DefaltRotation.x + (AddRot.x * MaxAngle * (Time.deltaTime / 6)) : Airframe.AirFrame.transform.localRotation.x;
 //		Airframe.AirFrame.transform.localRotation = new Quaternion (RotateX, DefaltRotation.y, DefaltRotation.z, DefaltRotation.w);
@@ -188,7 +202,7 @@ public class PlayerMove : MonoBehaviour
     private Vector3 InputController() {
         if (!VRMode.isVRMode)
         {
-            return new Vector3(Input.GetAxis("Vertical") * 200 * Time.deltaTime, 0, Input.GetAxis("Horizontal") * 140 * Time.deltaTime);
+            return new Vector3(Mathf.Sign(Input.GetAxis("Vertical")) * 200 * Time.deltaTime, 0,Mathf.Sign( Input.GetAxis("Horizontal") * 140 * Time.deltaTime));
         } else
         {
             Vector2 Axis = InputVRController.GetAxis(HandType.Left);

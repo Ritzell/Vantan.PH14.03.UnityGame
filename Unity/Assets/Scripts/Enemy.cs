@@ -13,7 +13,7 @@ public class Enemy : MonoBehaviour
 	private GameManager Manager;
     public CameraSystem CameraS;
 	private bool isLife = true;
-	private float HP = 250;
+	private float HP = 40;
 	private float MaxHP;
 	public Material MyMaterial;
 	private Color MaterialColor;
@@ -42,7 +42,7 @@ public class Enemy : MonoBehaviour
 
 	void Start ()
 	{
-        HP = GetComponent<EnemyBase>() ? 450 : 250;
+        HP = GetComponent<EnemyBase>() ? 120 : 40;
 		MaxHP = HP;
 		ArmorMaterial.color = new Color (0.3f, 0.3f, 0.3f, 1);
 		MaterialColor = MyMaterial.GetColor ("_EmissionColor");

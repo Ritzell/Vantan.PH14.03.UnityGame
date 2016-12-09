@@ -30,7 +30,7 @@ public class Gun : MonoBehaviour
 			muzzle.transform.LookAt (Tgt);
 		}
 		}catch{
-			Debug.Log ("マズルの方向転換でエラーが出てます。");
+			//Debug.Log ("マズルの方向転換でエラーが出てます。");
 		}
 		yield return null;
 	}

@@ -66,7 +66,12 @@ public class Attack : MonoBehaviour
 	//略名 : MMIS 複数ミサイル迎撃システム
 	public IEnumerator MultipleMissileInterceptSystem ()
 	{
+        if (VRMode.isVRMode)
+        {
+            yield break;
 
+            yield return null;
+        }
 		while (!GameManager.IsGameOver) {
 			Reloading += Time.deltaTime;
 			if (Reloading >= MMIDelay) {

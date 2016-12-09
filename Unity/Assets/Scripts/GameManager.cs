@@ -125,7 +125,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator Timer()
     {
         Text Timetext = GameObject.Find("Timer").GetComponent<Text>();
-        TimeSpan LimitTime = new TimeSpan(00, 10, 00);
+        TimeSpan LimitTime = new TimeSpan(00, 6, 00);
         while (!IsGameOver) {
             StartCoroutine(DisplayTime(Timetext, LimitTime));
             yield return null;

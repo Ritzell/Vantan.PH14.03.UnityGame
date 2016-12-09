@@ -11,7 +11,7 @@ public class EnemyBase : MonoBehaviour
 
 	private static List<EnemyAttack> Childs = new List<EnemyAttack> ();
 	private static int RestChildren = 0;
-	private static float HP = 400;
+	private static float HP = 50;
     private static float MaxHP;
 	private static IEnumerator StateNotice;
 
